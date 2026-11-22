@@ -1,0 +1,60 @@
+html,body{margin:0!important;width:100%!important;height:100%!important;min-height:0!important;overflow:hidden!important;text-size-adjust:100%;-webkit-text-size-adjust:100%}
+[hidden]{display:none!important}body{display:flex!important;flex-direction:column}html.ime .device,html.ime main{box-sizing:border-box;display:flex!important;flex-direction:column;flex:1 1 0!important;min-height:0!important;height:100%!important;width:100%!important;max-width:none!important;margin:0!important;padding:2px!important;gap:3px!important}
+.ime header,.ime .heading,.ime #chat>.bar,.ime .messagebox,.ime #log,.ime .journal .messagebox,.ime .draftbox .meta,.ime .keyhead small{display:none!important}
+.ime .journal{display:block!important;flex:none}.ime #chat:not([hidden]){display:flex!important;flex-direction:column!important;flex:1;min-height:0!important;gap:3px!important;overflow:hidden}
+.ime .draftbox{flex:0 0 auto!important;padding:3px 8px!important;min-height:24px!important;margin:0!important}
+.ime #draft{font-size:17px!important;line-height:1.15!important;margin:0!important;min-height:1.15em!important;max-height:2.3em!important;overflow:auto}
+.ime .keyboard,.ime .field{display:flex!important;flex:1 1 0!important;flex-direction:column;min-height:0!important;gap:2px!important;margin:0!important;padding:2px!important}
+.ime .keyhead{height:25px!important;min-height:0!important;padding:0 5px!important;margin:0!important;flex:none}.ime .keyhead b{font-size:11px!important}.ime .keyhead .func{height:24px!important;min-height:0!important;width:50px!important;margin-left:auto!important;font-size:15px!important}
+.ime #rows.moving{height:auto!important;min-height:0!important;flex:1 1 0!important;margin:1px 3px!important}
+.ime .actions{display:grid!important;grid-template-columns:1fr 1.4fr 1fr!important;flex:none!important;margin:0!important;padding:0!important;gap:3px!important}
+.ime .actions button,.ime .bottom-row button{height:33px!important;min-height:0!important;padding:2px!important;font-size:12px!important;white-space:nowrap}
+.ime #offer:not([hidden]){min-height:25px;font-size:12px;padding:2px 8px;margin:1px auto}
+.ime .stage:not([hidden]){display:flex;flex-direction:column;height:100%!important;min-height:0!important;overflow:hidden!important;flex:1}
+.ime .stage .bar{min-height:26px!important;height:auto;font-size:12px;padding:3px 7px;flex:none}
+.ime .stagebody,.ime .poster{height:auto!important;min-height:0!important;flex:1 1 0;gap:4px!important;padding:5px!important;overflow:auto!important;justify-content:flex-start!important}
+.ime .stats,.ime .clock{margin:0 auto!important}.ime .stats>div,.ime .clock{padding:3px 9px!important}.ime .stats small,.ime .clock small{font-size:10px}.ime .stats strong,.ime .clock strong{font-size:18px!important}
+.ime .stage h2{font-size:15px!important;margin:0!important}.ime #rack,.ime #arena{width:min(100%,400px)!important;margin:0 auto!important;padding:3px!important}.ime #shake{height:clamp(76px,39vh,170px)!important}.ime #cv{height:100%!important;width:100%!important}
+.ime #result{min-height:1em;margin:0;padding:1px!important;font-size:12px!important}.ime .stage .preview{display:block!important;width:auto;max-width:100%;padding:0!important}.ime .preview small{font-size:10px}.ime .preview p{margin:0!important;font-size:12px!important;max-height:2em}
+.ime .track{height:61px!important;margin:0 auto 4px!important}.ime .socket,.ime #tile{top:3px!important;height:49px!important}.ime .primary,.ime .claim{min-height:28px!important;padding:4px 12px!important}
+.ime .adcard{width:min(100%,380px);margin:auto!important;padding:3px!important;display:flex;flex-direction:column;min-height:0;max-height:100%}.ime #adVideo{height:auto!important;min-height:0;max-height:calc(100vh - 78px);width:100%;object-fit:contain}.ime #xLogin{height:26px!important;width:32px!important}
+.ime #islandPlay,.ime #islandDownload{writing-mode:horizontal-tb!important;text-orientation:mixed;overflow-wrap:anywhere;letter-spacing:0;font:bold 10px/1.1 sans-serif;text-align:center;white-space:normal}
+.ime .verdictCard{padding:10px!important}.ime .verdictCard h2{margin:4px!important}
+.ime #bridgeStatus{position:fixed;z-index:99;left:4%;right:4%;bottom:3px;background:#20252d;color:#fff;padding:5px;font:12px/1.25 sans-serif;text-align:center;pointer-events:none}
+.ime.private #draft,.ime.private #preview,.ime.private #info{-webkit-text-security:disc}.ime.private #feedback,.ime.private #candidates,.ime.private #more{visibility:hidden}
+.ime.white .keyboard{overflow:auto!important;display:flex;gap:2px!important}
+.ime.white #feedback{font-size:10px!important;line-height:1.1;margin:2px 0!important}
+.ime.white #rows:not([hidden]),.ime.white #symbols:not([hidden]){display:flex;flex:1;min-height:90px;flex-direction:column;gap:2px}
+.ime.white .keyrow{display:flex;flex:1;min-height:25px;gap:2px}.ime.white .keyrow button{height:100%!important;min-height:25px!important;max-height:48px;padding:0!important}
+.ime.white .candidate-bar,.ime.white .candidate-meta,.ime.white .recovery,.ime.white .bottom-row{flex:none;margin:0!important;padding:0!important;min-height:0!important}
+.ime.white .text-button,.ime.white .candidate{min-height:22px!important;padding:1px 4px!important;font-size:11px!important}
+.ime.white .candidate-meta{font-size:9px}.ime.white #candidates{overflow:auto}.ime.white .sponsor{max-height:95vh;width:min(92%,400px);overflow:auto;padding:8px}.ime.white .sponsor p{font-size:12px;margin:2px}.ime.white .sponsor h2{font-size:18px;margin:2px}.ime.white #reloadAdVideo{max-height:48vh}
+.ime.white #game .stagebody{align-items:center}.ime.white #game .stagebody>*,.ime.white #reload .stagebody>*{flex-shrink:0}
+@media(max-height:280px){.ime .stage .bar{min-height:20px!important}.ime .draftbox{min-height:19px!important}.ime.white .candidate-meta{display:none}.ime .stagebody .preview{display:none!important}.ime.white #feedback{max-height:1.3em;overflow:auto}}
+.ime.white #chat{zoom:1!important;width:100%!important;margin:0!important}.ime.white #draft{padding:2px 5px!important}
+@media(max-height:255px){.ime.white #feedback{display:none}.ime.white .keyboard{overflow:auto!important}.ime.white .keyrow{margin:0!important}.ime.white #rows:not([hidden]),.ime.white #symbols:not([hidden]){min-height:72px!important}.ime.white .keyrow,.ime.white .keyrow button{min-height:20px!important}.ime.white .bottom-row{position:sticky;bottom:0;background:var(--panel);z-index:2}.ime.white .bottom-row button{height:24px!important}.ime.white .candidate{font-size:10px!important}}
+.ime #arena{width:100%!important;max-width:400px;touch-action:none}
+.ime #shake{display:block;width:100%;height:39vh!important;min-height:60px;max-height:170px}
+.ime #cv{display:block;width:100%;height:100%;touch-action:none}
+.ime.mystery #cv{shape-rendering:crispEdges}
+.ime.white .keyrow{margin:0!important;align-items:stretch}
+.ime.white .keyrow button{height:auto!important;max-height:none;align-self:stretch}
+.ime.white .bottom-row{grid-template-columns:.7fr 1.8fr 1fr}
+.ime.white dialog:not([open]){display:none}
+.ime .dialog-shade{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(27,40,64,.55);z-index:9}
+.ime .legacy-dialog[open]{display:block;position:fixed;top:50%;left:50%;right:auto;bottom:auto;transform:translate(-50%,-50%);margin:0;width:90%;max-height:90%;overflow:auto;z-index:10}
+.ime.white #game{position:relative}
+.ime.white #game .stagebody{display:flex;flex-direction:column}
+.ime.white #overlay.show{position:absolute;top:0;left:0;right:0;bottom:0;margin:0;z-index:3;display:flex;align-items:center;justify-content:center;background:rgba(40,52,73,.35)}
+.ime.white #overlay.show .verdictCard{min-width:60%;text-align:center}
+@media(max-height:235px){
+  .ime.white .candidate small{display:none}
+  .ime.white #game .stagebody{gap:1px!important}
+}
+
+
+.ime #draft{display:block!important;direction:ltr;text-align:left;white-space:pre!important;overflow:auto!important;overflow-y:hidden!important;touch-action:pan-x;user-select:none;min-height:28px!important;line-height:28px!important;padding:0 5px!important;max-width:100%;font-size:17px!important;scrollbar-width:none}
+.ime #draft::-webkit-scrollbar{display:none}
+.ime #draft:before,.ime #draft:after{display:none!important;content:none!important}
+.ime .draft-caret{display:inline-block;vertical-align:-.13em;height:1em;width:2px;background:currentColor}
+.ime.mystery .draftbox{background:#160b22;color:#ffd446;border:2px solid #ff3685}

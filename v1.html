@@ -1,0 +1,1040 @@
+<!doctype html><html class="ime v1"  lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Key Quota — Reverse UX Challenge</title><style>*{box-sizing:border-box} [hidden]{display:none!important}:root{--paper:#f6f4ed;--ink:#202521;--muted:#65685e;--edge:#c6c8bb;--blue:#344dde;--lime:#d7f387;--mono:'Courier New',monospace}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif}button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:disabled{cursor:default}button:focus-visible{outline:3px solid #ee9834;outline-offset:2px}header{border-bottom:1px solid var(--edge);display:flex;align-items:center;justify-content:space-between;padding:0 max(5vw,16px);height:56px}.brand{display:flex;align-items:center;gap:11px;font-size:23px;font-weight:850;letter-spacing:-1.2px}.logo{height:26px;width:28px;display:flex;align-items:center;justify-content:center;gap:2px;background:var(--ink);border-radius:6px;transform:rotate(-6deg)}.logo b{display:block;width:4px;height:13px;background:var(--lime);transform:skew(-12deg)}.logo b:last-child{height:8px;align-self:flex-end;margin-bottom:6px}.edition,.stock strong,.bar span,.meta span,.keyhead b,.stats strong,.posterkey,.caps,.key,#space{font-family:var(--mono)}.edition{font-size:12px;letter-spacing:.5px}main{width:min(860px,94%);margin:0 auto;min-height:0;height:calc(100dvh - 56px);display:flex;flex-direction:column;padding-bottom:max(14px,env(safe-area-inset-bottom))}.heading{display:flex;align-items:center;justify-content:space-between;padding:clamp(9px,2vh,23px) 0}.heading h1{margin:0;font-size:clamp(24px,4vh,39px);letter-spacing:-1.5px;line-height:1.2}.heading h1 span{color:var(--blue)}.heading p,.poster p{color:var(--muted);margin:5px 0 0;font-size:13px}.stock{display:flex;align-items:center;gap:10px}.stock small,.stagebody small,.meta,.keyhead small{font-size:11px}.stock strong{font-size:26px;border:1px solid var(--edge);border-radius:5px;padding:3px 8px;background:#fffdf7}.console{flex:1;min-height:0;display:flex;flex-direction:column;border:1px solid #94988a;border-radius:13px;overflow:hidden;background:#fffef9;box-shadow:0 3px 0 #d2d2c4}.bar,.meta,.keyhead,.stats{display:flex;justify-content:space-between;align-items:center}.bar{flex:none;height:36px;padding:0 18px;border-bottom:1px solid var(--edge);font-size:12px}.bar span{color:var(--muted);font-size:11px}.light{display:inline-block;width:8px;height:8px;background:var(--blue);border-radius:50%;margin-right:5px}.bar b{display:flex;align-items:center;gap:3px}#log{position:relative;flex:1;min-height:35px;overflow-y:auto;background-color:#faf9f3;background-image:radial-gradient(#cfcec1 .8px,transparent .8px);background-size:13px 13px}#empty{height:100%;min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}#empty strong{font-size:14px}#empty small{font-size:12px;color:var(--muted)}.caps{display:flex;gap:5px;margin:5px 0 12px;align-items:center}.caps i{width:44px;height:43px;background:#f3f1e5;display:grid;place-items:center;font-size:25px;font-weight:bold;font-style:normal;border:1.5px solid var(--ink);border-radius:7px;box-shadow:1px 4px 0 #b7b7a8;transform:rotate(-12deg)}.caps i:nth-child(2){background:var(--lime);transform:translateY(-7px) rotate(4deg)}.caps i:nth-child(3){background:var(--blue);color:white;transform:rotate(13deg)}#messages{display:flex;flex-direction:column;align-items:flex-end;gap:9px;padding:0 16px}#messages:not(:empty){padding-block:14px}.message{margin:0;border-radius:12px 12px 2px 12px;border:1px solid #c2c6ee;background:#e8ebff;padding:9px 14px;max-width:85%}.message,#draft,.preview p{white-space:pre-wrap;overflow-wrap:anywhere;font:16px/1.45 var(--mono)}.draftbox{border-top:1px solid var(--edge);padding:8px 17px}.meta{color:var(--muted)}#draft{overflow-y:auto;max-height:3em;min-height:1.45em;margin-top:3px}#draft:empty:before{content:'Type a message… · 在此输入英文消息…';font:14px "Segoe UI",sans-serif;color:#7b7e74}#draft:not(:empty):after{content:'';border-right:2px solid var(--blue)}.keyboard{flex:none;background:#e4e5db;border-top:1px solid #a7ab9e;padding:10px 14px 12px;position:relative}.keyhead{margin:0 1px 9px;font-size:12px}.keyhead span,.keyhead small{color:#575d52;font-weight:normal}.keyrow{display:flex;justify-content:center;gap:5px;margin-bottom:5px}.key,.func,#space,#send{border:1px solid #a6aa9c;border-bottom:2px solid #95998b;border-radius:6px;background:#fffef8}.key{width:calc((100% - 50px)/11);height:clamp(37px,5.7vh,57px);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:clamp(15px,2.6vh,24px);font-weight:bold;line-height:1.05}.key small{font:10px var(--mono);color:#555e51;margin-top:2px}.key:disabled:not(.spent){color:inherit}.key.spent,.key.spent small{color:#82857b;background:#c6c8bc}.func{width:calc((100% - 50px)/11);font-size:22px;background:var(--lime)}.func:disabled{background:#d3d5ca;color:#777c70}.actions{display:grid;grid-template-columns:1fr 2fr 1fr;align-items:center;gap:8px}.actions button{height:34px;font-weight:700;font-size:14px}#send{justify-self:start;background:var(--blue);color:white;border-color:#2938a5;padding:0 16px}#send:disabled{background:#d1d3c6;border-color:#aeb2a5;color:#73786b}.key:active:enabled,.func:active:enabled,#space:active:enabled{transform:translateY(1px);background:var(--lime)}#offer{position:absolute;bottom:calc(100% + 3px);right:12px;background:var(--lime);border:1px solid var(--ink);box-shadow:2px 2px var(--ink);padding:8px 12px;border-radius:6px;font-weight:700}.stagebody,.poster{flex:1;min-height:0;overflow:auto;padding:clamp(14px,3vw,32px);display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:16px}.stats{width:min(420px,100%);gap:12px}.stats>div{display:flex;flex-direction:column;gap:3px}.stats strong{font-size:clamp(25px,4vw,38px)}.stats>div:last-child{text-align:right}#rack,#arena{border:1px solid var(--edge);border-radius:12px;width:min(420px,100%);background:#eeefe5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px;user-select:none;touch-action:none}.track{position:relative;width:220px;height:88px;border-bottom:4px double #8a907e}.socket,#tile{position:absolute;height:64px;width:60px;top:10px;border-radius:7px}.socket{right:10px;background:#42483e;border:5px solid #7a806f}.socket:after{content:'';position:absolute;inset:7px;border:1px dashed #a7ab9e}#tile{left:10px;display:grid;place-items:center;background:var(--blue);color:white;font:700 35px var(--mono);box-shadow:0 3px #202e88}.load #tile{animation:slide .56s forwards}.jam #tile{animation:jam .56s forwards}@keyframes slide{65%,100%{transform:translateX(140px);background:#bce56d;color:#263022}}@keyframes jam{60%{transform:translateX(115px)}100%{transform:translateX(100px) rotate(-15deg);background:#ac422c}}.primary{background:var(--blue);color:white;border:0;border-radius:6px;font-weight:700;padding:11px 20px}.primary:disabled{opacity:.35}.poster{background:var(--lime)}.posterkey{display:grid;place-items:center;background:var(--blue);color:white;border:2px solid var(--ink);border-radius:14px;box-shadow:4px 8px var(--ink);font-size:70px;width:166px;height:94px;transform:rotate(-9deg)}h2{margin:0;font-size:clamp(21px,3vw,34px)}.poster h2{margin-top:12px}#closeAd{border:0;background:none;font-size:24px}.stage .bar span{margin-left:auto}#arena{background:#242a28;color:#f9f8ef;padding:14px}canvas{width:min(100%,34dvh,290px);height:auto;display:block}.preview{width:min(420px,100%)}.preview p{margin:3px 0 0;max-height:4em;overflow:auto}@media(max-width:580px){header{height:44px}.brand{font-size:19px}.edition{font-size:10px}main{height:calc(100dvh - 44px);width:calc(100% - 12px);padding-bottom:max(6px,env(safe-area-inset-bottom))}.heading{padding:12px 5px}.stock{gap:3px;align-items:flex-end;flex-direction:column}.stock small{font-size:10px}.stock strong{font-size:18px}.keyboard{padding:8px 4px}.keyrow{gap:2px;margin-bottom:4px}.key,.func{width:calc((100% - 20px)/11);padding:0}.key{height:43px}.keyhead{margin-inline:4px}.keyhead small{font-size:10px}.func{font-size:18px}.bar{padding:0 10px}.actions{gap:4px}.actions button{height:36px}.heading p{font-size:12px}}
+@media(max-height:650px){.caps{display:none}.heading{padding-block:6px}.heading h1{font-size:22px}.key{height:33px}.bar{height:28px}.stagebody{gap:8px}.keyhead{margin-bottom:4px}}
+@media(max-height:450px){header,.heading p,.keyhead,#empty small{display:none}main{height:100dvh}.key{height:28px;font-size:14px}.key small{font-size:9px;margin:0}.keyboard{padding-block:4px}.actions button{height:26px}.keyrow{margin-bottom:2px}.draftbox{padding-block:3px}.heading{padding-block:2px}.stock{flex-direction:row}.heading h1{font-size:17px}.draftbox .meta{display:none}}
+.keyboard:has(#offer:not([hidden])) .keyhead{visibility:hidden}.keyboard:has(#offer:not([hidden])){padding-top:38px}#offer{top:5px;bottom:auto;left:50%;right:auto;transform:translateX(-50%);white-space:nowrap;padding:5px 12px;font-size:13px}.keyboard:has(#offer:not([hidden])) .keyhead{display:none}#bootNotice{font-size:12px;line-height:1.4;color:#343925;margin:0 4px 6px}.key{appearance:none;-webkit-appearance:none;min-width:0}.key span{color:#202521;-webkit-text-fill-color:#202521}.key.spent span{color:#777c70;-webkit-text-fill-color:#777c70}#rows .key:disabled{opacity:1}main{height:calc(100vh - 56px);height:calc(100dvh - 56px)}@media(max-width:580px){main{height:calc(100vh - 44px);height:calc(100dvh - 44px)}}@media(max-height:450px){main{height:100vh;height:100dvh}}/* Shared arcade cabinet: indigo enamel, brass outlines, vermilion and cobalt keys. */
+:root{--paper:#171127;--ink:#ffe5ae;--muted:#c4b4c7;--edge:#695574;--blue:#4043ab;--lime:#a8e2b0;--mono:Consolas,"Courier New",monospace}
+body{background-color:#171127;background-image:linear-gradient(90deg,#32233a 1px,transparent 1px),linear-gradient(#32233a 1px,transparent 1px);background-size:26px 26px;font-family:var(--mono),"Microsoft YaHei",sans-serif}
+header{height:50px;background:#20172f;border-bottom:3px solid #ef777b}
+.brand{letter-spacing:-.6px;font-family:var(--mono);color:#ffe4a4}.logo{transform:none;border-radius:0;background:#c04a58;border:2px solid #ffd893;box-shadow:2px 2px #6b344e}.logo b{background:#ffe4a4}.edition{color:#e2c9c8}
+main{height:calc(100vh - 50px);height:calc(100dvh - 50px);width:min(860px,95%)}.heading h1{color:#fff0c5;text-shadow:2px 2px #8e425c}.heading h1 span{color:#ef777b}.heading p{color:#dacbd6}.stock strong,.stats strong{border-radius:0;color:#ffdda2;background:#291d3c;border:1px solid #88687b}.stock small{color:#d4c4ca}.console{border:2px solid #ffdda3;border-radius:2px;background:#21163e;box-shadow:4px 4px #a7425b}.bar{background:#30213e;border-color:#896479;color:#ffe2a4}.bar span,.meta span{color:#ddcbd5}.light{border-radius:0;background:#ef777b;box-shadow:2px 2px #953e59}
+#log{background-color:#1e1730;background-image:radial-gradient(#534357 1px,transparent 1px);background-size:13px 13px}#empty strong{color:#ffe2a4}#empty small{color:#cbbed2}.caps{gap:7px}.caps i,.caps i:nth-child(2),.caps i:nth-child(3){border:2px solid #ffe2a4;border-radius:2px;background:#b43848;color:#fff0ad;box-shadow:3px 4px #7e3446}.caps i:nth-child(2){background:#d35b56}.caps i:nth-child(3){background:#385bbb;box-shadow:3px 4px #293779}
+.draftbox{background:#292039;border-color:#87677e}.meta,.keyhead small,.keyhead span{color:#d6c6d2}#draft:empty:before{color:#bfafbd}#draft:not(:empty):after{border-color:#ffbd68}.message{background:#34325e;color:#fff0bd;border:1px solid #cfb7b7;border-radius:3px;box-shadow:2px 2px #171125}
+.keyboard{background:#20172b;border-color:#d16a70}.keyhead b{letter-spacing:1px}.key{border:1px solid #efd58b;border-radius:3px;background:#b62c40;box-shadow:inset 0 2px #e96b65,inset 0 -3px #86223d,0 2px #110b1b}.key span,.key:disabled:not(.spent) span{color:#fff1ac;-webkit-text-fill-color:#fff1ac;text-shadow:1px 1px #7d2137}.key small{color:#fff1c6}.key.spent,.key.spent small{color:#a791a7;background:#382e43}.key.spent{border-color:#64536b;box-shadow:inset 0 -2px #292234}.key.spent span{color:#a791a7;-webkit-text-fill-color:#a791a7;text-shadow:none}
+@keyframes keyJitter{0%,55%,100%{transform:translate(0,0)}65%{transform:translate(1px,-1px)}80%{transform:translate(-1px,1px)}}
+.key:enabled span{animation:keyJitter 1.8s steps(1,end) infinite}.key:nth-child(3n) span{animation-delay:-.6s}.key:nth-child(3n + 1) span{animation-delay:-1.15s}
+.func,#space,#send,.primary{border:1px solid #a8dcff;border-radius:2px;background:#3659b8;color:#ffebbb;box-shadow:inset 0 -3px #263a83,0 2px #171124}.func:disabled,#send:disabled{background:#40384d;color:#bbaaba;border-color:#706179;box-shadow:inset 0 -2px #312b3c}.key:active:enabled,.func:active:enabled,#space:active:enabled{background:#864058}.func:enabled{background:#405fb9;color:#fff7b5}#offer{background:#ffda85;color:#341c36;border-radius:1px;border-color:#ffeda9;box-shadow:2px 2px #9e4e55}#bootNotice{color:#ffe2a4}
+.stagebody{background-color:#211635;background-image:radial-gradient(#523b55 1px,transparent 1px);background-size:14px 14px}.stats>div{color:#e2cad3}.stats strong{border:0;background:none}.primary:disabled{opacity:.45}#rack,#arena{border:3px solid #ffdda3;box-shadow:4px 4px #a7425b;border-radius:0;background:#171035;color:#ffe2a4}.track{border-color:#ab7986}.socket,#tile{border-radius:1px}.socket{background:#161028;border-color:#835968}.socket:after{border-color:#fac889}#tile{background:#bf3849;border:2px solid #ffdd9c;color:#ffeab0;box-shadow:3px 3px #94394b}
+#dial{image-rendering:pixelated}#result{padding:4px 14px;background:#382344;border:1px solid #9e6f7a}.stage h2{color:#ffdf9e;text-shadow:2px 2px #99435b}.preview p{color:#fff1c0}.preview small{color:#c8b7cd}#arena[data-verdict=hit] #result{color:#a8e2b0}#arena[data-verdict=miss] #result{color:#ff9494}
+#ad .bar{height:42px}#timer{margin-right:8px}#closeAd{padding:0 7px;color:#ffdda3;background:#43263d;border:1px solid #d6a2a0}
+.poster{background:radial-gradient(ellipse at center,#44304c,#171124);padding:14px;justify-content:safe center}.adcard{position:relative;width:min(100%,420px);margin:auto;padding:10px;background:linear-gradient(145deg,#241a39,#15152c);border:3px solid #ffda85;box-shadow:4px 4px #b45661}.adcard video{width:100%;height:min(43vh,360px);display:block;background:#0e0b15;object-fit:contain}.claim{margin-top:10px;width:100%;padding:10px;border:2px solid #ffe7a0;border-radius:1px;background:linear-gradient(#ffdc72,#e9a44b);box-shadow:inset 0 -3px #cb783f;color:#29192d;font-size:19px;font-weight:900;letter-spacing:4px}.claim:disabled{background:#534451;color:#ffe0a4;box-shadow:none}.play-video{display:block;margin:6px auto 0;border:1px solid #ffdda3;background:#30223d;color:#ffe2a4;padding:4px 14px}
+@media(max-width:580px){header{height:44px}main{width:calc(100% - 12px);height:calc(100vh - 44px);height:calc(100dvh - 44px)}.keyhead b{letter-spacing:0}}
+@media(max-height:450px){main{height:100vh;height:100dvh}.adcard video{height:32vh}}
+@media(prefers-reduced-motion:reduce){.key:enabled span{animation:none}}
+
+.keyboard{display:flex;flex-direction:column;flex:0 1 60%;min-height:155px;position:relative;gap:5px}.keyboard .keyhead,.keyboard:has(#offer:not([hidden])) .keyhead{display:flex;visibility:visible;min-height:30px;flex:none;margin:0;gap:8px}.keyboard:has(#offer:not([hidden])){padding-top:8px}.keyhead small{margin-left:auto}.keyhead .func{width:44px;height:30px;font-size:19px;position:relative;z-index:1}.actions{flex:none}.keyboard #rows{flex:1;position:relative;overflow:hidden;border:1px solid #9d5164;background-color:#191221;background-image:radial-gradient(#594452 1px,transparent 1px);background-size:14px 14px}.moving .keyrow{display:contents}.moving .key{position:absolute;top:0;left:0;margin:0;will-change:transform;touch-action:none}.moving .key:enabled span{animation:none}.keyboard #offer{top:50%;z-index:2;max-width:95%;height:38px}.clock{display:flex;align-items:baseline;gap:10px;color:#ffe2a4}.clock strong{font:700 34px var(--mono);font-variant-numeric:tabular-nums}.clock small{letter-spacing:2px}#game{position:relative}#arena{padding:4px;width:min(100%,440px)}#shake{display:block;width:100%;height:clamp(130px,27dvh,310px)}#cv{display:block;width:100%;height:100%}#result{min-height:24px;font-size:13px}#result:empty:before{content:'Tap to stop · 按下判定'}#overlay{display:none;position:absolute;inset:0;background:rgba(19,12,43,.94);align-items:center;justify-content:center}#overlay.show{display:flex}.verdictCard{width:min(260px,86%);padding:24px;border:4px solid #ffdda3;box-shadow:6px 6px #d75f69;text-align:center;background:#21163e}.verdictCard h2{margin:14px 0}.hit{color:#a8e2b0}.miss{color:#ef6b70}#xLogin{display:grid;place-items:center;width:36px;height:36px;background:#17131f;border:1px solid #ffdda3;color:white}#xLogin svg{width:19px;height:19px}#closeAd{margin-right:8px}
+@media(max-height:480px){.keyboard{min-height:130px;flex-basis:60%}.keyboard .keyhead,.keyboard:has(#offer:not([hidden])) .keyhead{min-height:22px}.keyhead .func{height:22px;font-size:14px}}
+#caseKey{justify-self:end;border:1px solid #a8dcff;border-radius:2px;background:#3659b8;color:#ffebbb;box-shadow:inset 0 -3px #263a83;padding:0 8px;white-space:nowrap}#caseKey[aria-pressed=true]{background:#ffda85;color:#341c36;border-color:#ffeda9;box-shadow:inset 0 -3px #cb783f}#caseKey:disabled{opacity:.5}#launchStatus{margin:0;padding:16px max(16px,env(safe-area-inset-left));color:#ffe4a4;background:#30213e;border-bottom:2px solid #eb787e}#launchStatus strong{font-size:18px}#launchStatus p{font-size:14px;line-height:1.5;margin:5px 0 0}html:not(.script-started) #launchStatus:not([hidden])~main{display:none}
+@media(max-width:580px){body{margin:0;display:flex;flex-direction:column;height:100vh;height:100dvh}header{flex:none}body>main{height:auto;min-height:0;flex:1;padding-bottom:max(8px,env(safe-area-inset-bottom))}}
+
+.adPanel{display:flex;flex:1;min-height:0;flex-direction:column}
+.clipSpace{display:flex;flex:1;min-height:0;align-items:center;justify-content:center;overflow:hidden;background:#090810;container-type:size}
+#clipFrame{position:relative;isolation:isolate;flex:none;max-width:100%;background:#090810}
+#clipFrame.war{width:min(100%,40vh,430px);aspect-ratio:4/7}
+#clipFrame.island{width:min(100%,160vh,960px);aspect-ratio:80/37}
+@supports(width:1cqh){#clipFrame.war{width:min(100cqw,57.14286cqh)}#clipFrame.island{width:min(100cqw,216.2162cqh)}}
+#poolVideo,#clipStill{display:block;width:100%;height:100%;position:absolute;inset:0;object-fit:contain;pointer-events:none}
+#warLink,#warRed,#islandPlay,#islandDownload,#clipResume{position:absolute;z-index:1;touch-action:manipulation}
+#warLink{top:8px;right:8px;width:40px;height:40px;display:grid;place-items:center;border:1px solid #c0c0c0;background:#191919b8;color:#fff;font:24px/1 Arial;text-decoration:none;border-radius:50%}
+#warRed{left:50%;top:56.2%;transform:translate(-50%,-50%);width:clamp(30px,13%,52px);height:clamp(30px,7%,44px);padding:0;border:0;background:transparent}
+#islandPlay,#islandDownload{top:0;bottom:0;width:19%;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;text-orientation:upright;letter-spacing:.16em;font:bold clamp(14px,4vw,28px)/1.15 sans-serif;text-decoration:none;color:#4c3213;border:0;background:transparent}
+#islandPlay{left:0}#islandDownload{right:0}
+#islandPlay:disabled{opacity:.65}
+#clipResume{top:50%;left:50%;transform:translate(-50%,-50%);background:#20172f;color:#ffdda3;border:1px solid #ffdda3;padding:12px 18px}
+</style><link rel="stylesheet" href="ime.css"><script src="host.js"></script><script src="draft.js"></script><script src="dial-view.js"></script></head><body><aside id="launchStatus" role="status"><strong>Loading keyboard · 当前仅显示静态预览</strong><p>Update Android System WebView to load this keyboard. · 请更新系统 WebView。</p></aside>
+<script>(function () {
+    document.documentElement.classList.add('script-started');
+    var panel = document.getElementById('launchStatus');
+    panel.querySelector('strong').textContent = 'Starting keyboard · 正在启动键盘…';
+    panel.querySelector('p').textContent = '';
+    window.addEventListener('error', function (e) {
+        if (panel.hidden || !e.message)
+            return;
+        panel.querySelector('strong').textContent = 'Keyboard could not start · 键盘启动失败';
+        panel.querySelector('p').textContent = e.message + (e.lineno ? '（第 ' + e.lineno + ' 行）' : '');
+    });
+})();
+</script>
+<header><div class="brand"><i class="logo" aria-hidden="true"><b></b><b></b><b></b></i> Key Quota</div><span class="edition">Reverse UX Challenge</span></header>
+<main>
+<div class="heading"><div><h1>Chaos Keys · 混沌键盘<span>.</span></h1><p>Three uses per key. Reload when empty. · 每个字符只有三次机会。用完，换弹。</p></div><div class="stock"><small>Total uses · 字符总余量</small><strong id="stock">108</strong></div></div>
+<section class="console" id="chat">
+<div class="bar"><b><i class="light"></i> Messages · 消息记录</b><span id="count">00 sent · 已发送</span></div>
+<div id="log" role="log"><div id="empty"><div class="caps" aria-hidden="true"><i>H</i><i>E</i><i>Y</i></div><strong>No messages yet · 还没有发出的消息</strong><small>Tap a key to start. · 点击下方键盘，写下第一句。</small></div><div id="messages"></div></div>
+<div class="draftbox"><div class="meta"><b>Draft · 当前草稿</b><span id="length">0 chars · 字符</span></div><div id="draft" aria-label="Draft · 草稿"></div></div>
+<div class="keyboard"><div class="keyhead"><b>Collision field · 碰撞区</b><small>Numbers show uses left · 键帽数字为剩余次数</small><button type="button" id="del" class="func" aria-label="Delete this word · 删除当前整个词" disabled>⌫</button></div>
+<button id="offer" hidden></button>
+<div id="bootNotice" hidden></div>
+<div id="rows"><div class="keyrow"><button type="button" class="key" data-char="1" disabled><span>1</span><small>3</small></button><button type="button" class="key" data-char="2" disabled><span>2</span><small>3</small></button><button type="button" class="key" data-char="3" disabled><span>3</span><small>3</small></button><button type="button" class="key" data-char="4" disabled><span>4</span><small>3</small></button><button type="button" class="key" data-char="5" disabled><span>5</span><small>3</small></button><button type="button" class="key" data-char="6" disabled><span>6</span><small>3</small></button><button type="button" class="key" data-char="7" disabled><span>7</span><small>3</small></button><button type="button" class="key" data-char="8" disabled><span>8</span><small>3</small></button><button type="button" class="key" data-char="9" disabled><span>9</span><small>3</small></button><button type="button" class="key" data-char="0" disabled><span>0</span><small>3</small></button></div>
+<div class="keyrow"><button type="button" class="key" data-char="q" disabled><span>Q</span><small>3</small></button><button type="button" class="key" data-char="w" disabled><span>W</span><small>3</small></button><button type="button" class="key" data-char="e" disabled><span>E</span><small>3</small></button><button type="button" class="key" data-char="r" disabled><span>R</span><small>3</small></button><button type="button" class="key" data-char="t" disabled><span>T</span><small>3</small></button><button type="button" class="key" data-char="y" disabled><span>Y</span><small>3</small></button><button type="button" class="key" data-char="u" disabled><span>U</span><small>3</small></button><button type="button" class="key" data-char="i" disabled><span>I</span><small>3</small></button><button type="button" class="key" data-char="o" disabled><span>O</span><small>3</small></button><button type="button" class="key" data-char="p" disabled><span>P</span><small>3</small></button></div>
+<div class="keyrow"><button type="button" class="key" data-char="a" disabled><span>A</span><small>3</small></button><button type="button" class="key" data-char="s" disabled><span>S</span><small>3</small></button><button type="button" class="key" data-char="d" disabled><span>D</span><small>3</small></button><button type="button" class="key" data-char="f" disabled><span>F</span><small>3</small></button><button type="button" class="key" data-char="g" disabled><span>G</span><small>3</small></button><button type="button" class="key" data-char="h" disabled><span>H</span><small>3</small></button><button type="button" class="key" data-char="j" disabled><span>J</span><small>3</small></button><button type="button" class="key" data-char="k" disabled><span>K</span><small>3</small></button><button type="button" class="key" data-char="l" disabled><span>L</span><small>3</small></button></div>
+<div class="keyrow"><button type="button" class="key" data-char="z" disabled><span>Z</span><small>3</small></button><button type="button" class="key" data-char="x" disabled><span>X</span><small>3</small></button><button type="button" class="key" data-char="c" disabled><span>C</span><small>3</small></button><button type="button" class="key" data-char="v" disabled><span>V</span><small>3</small></button><button type="button" class="key" data-char="b" disabled><span>B</span><small>3</small></button><button type="button" class="key" data-char="n" disabled><span>N</span><small>3</small></button><button type="button" class="key" data-char="m" disabled><span>M</span><small>3</small></button></div></div><div class="actions"><button id="send" disabled>Aim ↗ · 判定</button><button id="space" disabled>Space · 空格 ∞</button><button id="caseKey" disabled aria-pressed="false" aria-label="Switch case · 切换大写输入">⇧ abc · ⇧ 小写</button></div></div></section>
+<section class="console stage" id="reload" hidden><div class="bar"><b><i class="light"></i> Reload a key · 字符换弹</b><span>RELOAD</span></div><div class="stagebody"><div class="stats"><div><small>Earned · 已获得</small><strong id="earned"></strong></div><div><small>Next odds · 下一发成功率</small><strong id="odds"></strong></div></div><button id="rack"><span class="track"><span class="socket"></span><span id="tile"></span></span><strong id="cue"></strong></button><button class="primary" id="finish">Bank uses ↗ · 完成换弹 ↗</button></div></section>
+<section class="console stage" id="ad" hidden><div id="classicAd" class="adPanel" hidden><div class="bar"><b>Sponsored · 模拟广告</b><span id="timer"></span><a id="xLogin" href="https://x.com/i/flow/login" target="_blank" rel="noopener noreferrer" aria-label="Open X login · 打开 X 登录页"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a></div><div class="poster"><div class="adcard"><video id="adVideo" muted playsinline loop preload="none"></video><button class="play-video" id="playVideo" hidden>Play video · 播放视频</button><button class="claim" id="claim">Claim · 待 查 收</button></div></div></div>
+<div id="clipAd" class="adPanel" hidden>
+  <div class="bar"><b>Sponsored · 模拟广告</b><span id="clipTime"></span></div>
+  <div class="clipSpace"><div id="clipFrame">
+    <video id="poolVideo" muted playsinline preload="none" disablepictureinpicture></video>
+    <img id="clipStill" hidden alt="">
+    <a id="warLink" href="https://warthunder.com/zh/game/about/" target="_blank" rel="noopener noreferrer" aria-label="打开战争雷霆游戏下载页面" hidden>×</a>
+    <button id="warRed" aria-label="Tap the red mark to return · 点击红色标志返回键盘" hidden></button>
+    <button id="islandPlay" hidden>Play · 点击即玩</button>
+    <a id="islandDownload" href="https://bb.qq.com/" target="_blank" rel="noopener noreferrer" hidden>Download · 立即下载</a>
+    <button id="clipResume" hidden>Play video · 播放视频</button>
+  </div></div>
+</div></section>
+<section class="console stage" id="game" hidden><div class="bar"><b><i class="light"></i> Send dial · 发送校准</b><span id="round"></span></div><div class="stagebody"><div class="clock"><small>TIME</small><strong id="dialTimer">10.0</strong></div><h2>Tap when the needle reaches red · 指针进入红区时按下</h2><button id="arena" aria-label="Aim for red · 尝试命中红区"><span id="shake"><svg id="cv" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg></span><strong id="result"></strong></button><div class="preview"><small>Pending · 待发送消息</small><p id="preview"></p></div></div><div id="overlay" aria-hidden="true"><div class="verdictCard"><small>Round result · 本局结果</small><h2 id="verdict"></h2><button id="again" class="primary"></button></div></div></section>
+</main><script>'use strict';
+const $ = id => document.getElementById(id);
+const config = { decay: 0.75, animationMs: 620, adMs: 5000, freezeMs: 500, arc: [30, 50], speed: [180, 270] };
+const remaining = Object.create(null);
+let phase = 'chat', draft = '', depleted = null, earned = 0, busy = false, messageCount = 0;
+let pending = '', roundNumber = 0;
+const buttons = new Map();
+let uppercase = false;
+const triple = () => /([a-zA-Z0-9])\1\1$/.test(KQDraft.before(draft));
+const chatPhase = () => phase === 'chat' || phase === 'depleted';
+function show(screen) {
+    for (const name of ['chat', 'reload', 'ad', 'game'])
+        $(name).hidden = name !== screen;
+}
+function renderChat() {
+    if (phase === 'chat') {
+        const empty = Object.keys(remaining).find(k => remaining[k] === 0);
+        if (empty) {
+            depleted = empty;
+            phase = 'depleted';
+        }
+    }
+    appSave();
+    const typing = phase === 'chat';
+    for (const [c, key] of buttons) {
+        key.disabled = !typing || remaining[c] === 0;
+        key.classList.toggle('spent', remaining[c] === 0);
+        key.lastChild.textContent = remaining[c];
+        const glyph = uppercase ? c.toUpperCase() : c;
+        key.firstElementChild.textContent = glyph;
+        key.setAttribute('aria-label', glyph + ' · uses left / 剩余 ' + remaining[c] + ' 次');
+    }
+    $('del').disabled = !chatPhase() || !triple();
+    $('space').disabled = !typing;
+    const toggle = $('caseKey');
+    toggle.disabled = !typing;
+    toggle.textContent = uppercase ? '⇧ ABC · ⇧ 大写' : '⇧ abc · ⇧ 小写';
+    toggle.setAttribute('aria-pressed', String(uppercase));
+    $('send').disabled = !typing || !draft.trim();
+    KQDraft.render(draft);
+    $('length').textContent = draft.length + ' chars · 字符';
+    $('stock').textContent = Object.values(remaining).reduce((a, b) => a + b, 0);
+    $('offer').hidden = phase !== 'depleted';
+    if (depleted)
+        $('offer').textContent = 'Reload · 获取【' + depleted.toUpperCase() + '】次数';
+}
+function type(c) {
+    if (phase !== 'chat' || (c !== ' ' && !remaining[c]))
+        return;
+    const edited = KQDraft.insert(draft,uppercase ? c.toUpperCase() : c);
+    draft = edited;
+    if (c !== ' ' && --remaining[c] === 0) {
+        depleted = c;
+        phase = 'depleted';
+    }
+    renderChat();
+}
+function erase() {
+    if (!chatPhase() || !triple())
+        return;
+    const edited = KQDraft.eraseWord(draft);
+    draft = edited;
+    renderChat();
+}
+const caps = document.querySelectorAll('#rows [data-char]');
+for (let i = 0; i < caps.length; i++) {
+    const key = caps[i];
+    const c = key.dataset.char;
+    remaining[c] = 3;
+    buttons.set(c, key);
+    press(key, () => type(c));
+}
+$('caseKey').onclick = () => { if (phase === 'chat') {
+    uppercase = !uppercase;
+    renderChat();
+} };
+$('del').onclick = erase;
+$('space').onclick = () => type(' ');
+function displayReload() {
+    appSave();
+    $('earned').textContent = '+' + earned;
+    $('odds').textContent = Number((100 * Math.pow(config.decay, earned)).toFixed(2)) + '%';
+    $('rack').disabled = busy;
+    $('finish').disabled = busy || !earned;
+}
+function animateRack(kind, label, done) {
+    busy = true;
+    displayReload();
+    const rack = $('rack');
+    rack.classList.remove('load', 'jam');
+    void rack.offsetWidth;
+    rack.classList.add(kind);
+    $('cue').textContent = label;
+    setTimeout(() => { rack.classList.remove(kind); done(); }, config.animationMs);
+}
+function ready(label) {
+    busy = false;
+    $('cue').textContent = label;
+    displayReload();
+}
+$('offer').onclick = () => {
+    if (phase !== 'depleted')
+        return;
+    phase = 'reload';
+    earned = 0;
+    show('reload');
+    $('tile').textContent = depleted.toUpperCase();
+    animateRack('load', 'Reload demo · 装填演示', () => ready('Tap the slot to reload · 点击卡槽，开始换弹'));
+};
+function attempt() {
+    if (phase !== 'reload' || busy)
+        return;
+    const success = Math.random() < Math.pow(config.decay, earned);
+    animateRack(success ? 'load' : 'jam', success ? 'Loaded · 装填成功' : 'Jammed · 卡槽受阻', () => {
+        if (success) {
+            earned++;
+            ready('Try again or bank your uses · 再装一发，或完成换弹');
+        }
+        else {
+            phase = 'ad';
+            show('ad');
+            adProvider.present(settle);
+        }
+    });
+}
+// Listen on press; a held touch released after an animation never becomes a new attempt.
+function press(button, handler) { KQDial.press(button, handler); }
+press($('rack'), attempt);
+function settle() {
+    if (!depleted || !earned || !(phase === 'ad' || (phase === 'reload' && !busy)))
+        return;
+    remaining[depleted] += earned;
+    depleted = null;
+    earned = 0;
+    busy = false;
+    phase = 'chat';
+    show('chat');
+    renderChat();
+}
+$('finish').onclick = settle;
+// Replace present(onDismiss) with an SDK adapter. Invoke onDismiss only after dismissal.
+function presentClassicAd(onDismiss) {
+    const end = performance.now() + config.adMs;
+    let dismissed = false;
+    const video = $('adVideo'), playButton = $('playVideo'), claim = $('claim');
+    if (!video.getAttribute('src')) {
+        video.src = 'media/adMedia.mp4';
+    }
+    video.currentTime = 0;
+    video.muted = true;
+    function play() {
+        playButton.hidden = true;
+        const playback = video.play();
+        if (playback && playback.catch)
+            playback.catch(() => { if (!dismissed)
+                playButton.hidden = false; });
+    }
+    playButton.onclick = play;
+    play();
+    claim.disabled = true;
+    claim.textContent = 'Claim · 待查收';
+    function tick() {
+        const seconds = Math.max(0, Math.ceil((end - performance.now()) / 1000));
+        $('timer').textContent = seconds ? seconds + 's to claim · 秒后可查收' : 'Ad finished · 广告已结束';
+        if (seconds === 0) {
+            claim.disabled = false;
+            clearInterval(clock);
+        }
+    }
+    const clock = setInterval(tick, 100);
+    tick();
+    claim.onclick = () => {
+        if (dismissed || claim.disabled || performance.now() < end)
+            return;
+        dismissed = true;
+        claim.disabled = true;
+        claim.onclick = null;
+        video.pause();
+        onDismiss();
+    };
+}
+const adPool = [
+    { kind: 'classic' },
+    { kind: 'war', media: 'warClip', poster: 'warEnd', duration: 8 },
+    { kind: 'island', media: 'islandClip', poster: 'islandEnd', duration: 8.057 }
+];
+let appAd = "";
+const adProvider = {
+    present(onDismiss, kind) {
+        const ad = adPool.find(entry => entry.kind === kind) || adPool[Math.floor(Math.random() * adPool.length)];
+        appAd = ad.kind;
+        appSave();
+        const classic = ad.kind === 'classic';
+        $('classicAd').hidden = !classic;
+        $('clipAd').hidden = classic;
+        if (classic) {
+            presentClassicAd(onDismiss);
+            return;
+        }
+        presentClipAd(ad, onDismiss);
+    }
+};
+function presentClipAd(ad, onDismiss) {
+    const war = ad.kind === 'war';
+    const video = $('poolVideo'), still = $('clipStill'), resume = $('clipResume');
+    const exitButton = war ? $('warRed') : $('islandPlay');
+    let ended = false, closed = false, fallbackClock = null;
+    $('clipFrame').className = ad.kind;
+    $('warLink').hidden = !war;
+    $('warRed').hidden = true;
+    $('islandPlay').hidden = war;
+    $('islandPlay').disabled = true;
+    $('islandDownload').hidden = war;
+    $('clipTime').textContent = '';
+    still.hidden = true;
+    still.src = 'media/' + ad.poster + '.jpg';
+    still.alt = war ? 'War Thunder 游戏名称和红色标志' : '海岛奇兵广告';
+    resume.hidden = true;
+    function finishClip() {
+        if (closed || ended)
+            return;
+        ended = true;
+        still.hidden = false;
+        resume.hidden = true;
+        $('clipTime').textContent = 'Ad finished · 广告已结束';
+        exitButton.hidden = false;
+        exitButton.disabled = false;
+    }
+    function updateTime() {
+        if (!ended && !closed && Number.isFinite(video.duration))
+            $('clipTime').textContent = Math.ceil(Math.max(0, video.duration - video.currentTime)) + 's · 秒';
+    }
+    function mediaUnavailable() {
+        if (closed || ended || fallbackClock !== null)
+            return;
+        still.hidden = false;
+        resume.hidden = true;
+        $('clipTime').textContent = 'Clip unavailable; timer running · 视频不可播放 · 等待广告结束';
+        fallbackClock = setTimeout(finishClip, Math.max(0, ad.duration - video.currentTime) * 1000);
+    }
+    function play() {
+        resume.hidden = true;
+        const result = video.play();
+        if (result && result.catch)
+            result.catch(() => {
+                if (!closed && !ended && fallbackClock === null)
+                    resume.hidden = false;
+            });
+    }
+    exitButton.onclick = () => {
+        if (!ended || closed)
+            return;
+        closed = true;
+        clearTimeout(fallbackClock);
+        exitButton.onclick = null;
+        resume.onclick = null;
+        video.onended = null;
+        video.ontimeupdate = null;
+        video.onerror = null;
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+        still.removeAttribute('src');
+        onDismiss();
+    };
+    video.onended = finishClip;
+    video.ontimeupdate = updateTime;
+    video.onerror = mediaUnavailable;
+    resume.onclick = play;
+    video.src = 'media/' + ad.media + '.mp4';
+    video.muted = true;
+    play();
+    const watchdog = setTimeout(() => { if (!closed && !ended && (video.paused || video.readyState < 3 || video.currentTime < .1))
+        mediaUnavailable(); }, 1200);
+    video.addEventListener('playing', () => clearTimeout(watchdog), { once: true });
+    const limit = setTimeout(() => { if (!closed && !ended)
+        finishClip(); }, ad.duration * 1000 + 4000);
+    const originalExit = exitButton.onclick;
+    exitButton.onclick = () => { if (ended) {
+        clearTimeout(watchdog);
+        clearTimeout(limit);
+    } originalExit(); };
+}
+function startKeyboard() {
+    const keyboard = $('rows');
+    let fieldWidth = 0, fieldHeight = 0, bodies = [], prev = 0, nextChange = 0;
+    const updateBounds = () => {
+        if (!keyboard.clientWidth || !keyboard.clientHeight)
+            return;
+        const oldW = fieldWidth, oldH = fieldHeight;
+        fieldWidth = keyboard.clientWidth;
+        fieldHeight = keyboard.clientHeight;
+        const size = Math.max(8, Math.min(44, Math.floor(Math.sqrt(fieldWidth * fieldHeight / 70)), Math.floor(fieldHeight / 4)));
+        if (!bodies.length) {
+            // Shuffle loose starting slots so all keys can be pressed on the first frame.
+            const cols = Math.floor(fieldWidth / size), rows = Math.floor(fieldHeight / size);
+            const slots = Array.from({ length: cols * rows }, (_, i) => i);
+            bodies = [...buttons.values()].map(el => {
+                const b = new KeyButton(el, size, size, 2);
+                const slot = slots.splice(Math.floor(Math.random() * slots.length), 1)[0];
+                b.x = (slot % cols + 0.5) * fieldWidth / cols - size / 2;
+                b.y = (Math.floor(slot / cols) + 0.5) * fieldHeight / rows - size / 2;
+                return b;
+            });
+        }
+        for (const b of bodies) {
+            if (oldW && oldH) {
+                b.x *= fieldWidth / oldW;
+                b.y *= fieldHeight / oldH;
+            }
+            b.width = b.height = size;
+            b.element.style.width = b.element.style.height = size + 'px';
+            b.element.style.fontSize = Math.max(10, Math.floor(size * .42)) + 'px';
+            place(b);
+        }
+        keyboard.classList.add('moving');
+    };
+    function place(b) {
+        b.x = Math.max(0, Math.min(fieldWidth - b.width, b.x));
+        b.y = Math.max(0, Math.min(fieldHeight - b.height, b.y));
+        b.element.style.transform = 'translate(' + Math.round(b.x) + 'px,' + Math.round(b.y) + 'px)';
+    }
+    class KeyButton {
+        constructor(element, width = 40, height = 40, speedMult = 1) {
+            this.element = element;
+            this.width = width;
+            this.height = height;
+            this.x = Math.random() * (fieldWidth - width);
+            this.y = Math.random() * (fieldHeight - height);
+            this.x = Math.max(0, Math.min(this.x, fieldWidth - width));
+            this.y = Math.max(0, Math.min(this.y, fieldHeight - height));
+            const baseSpeed = 3;
+            this.vx = (Math.random() - 0.5) * baseSpeed * speedMult;
+            this.vy = (Math.random() - 0.5) * baseSpeed * speedMult;
+        }
+        updateSpeed(speedMult) {
+            const baseSpeed = 3;
+            this.vx = (Math.random() - 0.5) * baseSpeed * speedMult;
+            this.vy = (Math.random() - 0.5) * baseSpeed * speedMult;
+        }
+        update(step) {
+            this.x += this.vx * step;
+            this.y += this.vy * step;
+            if (this.x <= 0) {
+                this.vx = Math.abs(this.vx) * 0.9;
+                this.x = 0;
+            }
+            else if (this.x + this.width >= fieldWidth) {
+                this.vx = -Math.abs(this.vx) * 0.9;
+                this.x = fieldWidth - this.width;
+            }
+            if (this.y <= 0) {
+                this.vy = Math.abs(this.vy) * 0.9;
+                this.y = 0;
+            }
+            else if (this.y + this.height >= fieldHeight) {
+                this.vy = -Math.abs(this.vy) * 0.9;
+                this.y = fieldHeight - this.height;
+            }
+        }
+        checkCollision(other) {
+            const centerX1 = this.x + this.width / 2;
+            const centerY1 = this.y + this.height / 2;
+            const centerX2 = other.x + other.width / 2;
+            const centerY2 = other.y + other.height / 2;
+            const dx = centerX2 - centerX1;
+            const dy = centerY2 - centerY1;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const minDistance = (this.width + other.width) / 2.2;
+            return distance < minDistance;
+        }
+        collideWith(other) {
+            const centerX1 = this.x + this.width / 2;
+            const centerY1 = this.y + this.height / 2;
+            const centerX2 = other.x + other.width / 2;
+            const centerY2 = other.y + other.height / 2;
+            const dx = centerX2 - centerX1;
+            const dy = centerY2 - centerY1;
+            const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+            const overlap = ((this.width + other.width) / 2.2) - distance;
+            const separationX = (dx / distance) * overlap / 2;
+            const separationY = (dy / distance) * overlap / 2;
+            this.x -= separationX;
+            this.y -= separationY;
+            other.x += separationX;
+            other.y += separationY;
+            const tempVx = this.vx;
+            const tempVy = this.vy;
+            this.vx = other.vx * 0.9;
+            this.vy = other.vy * 0.9;
+            other.vx = tempVx * 0.9;
+            other.vy = tempVy * 0.9;
+            this.x = Math.max(0, Math.min(this.x, fieldWidth - this.width));
+            this.y = Math.max(0, Math.min(this.y, fieldHeight - this.height));
+            other.x = Math.max(0, Math.min(other.x, fieldWidth - other.width));
+            other.y = Math.max(0, Math.min(other.y, fieldHeight - other.height));
+        }
+    }
+    let active = !document.hidden, frameTicket = null, nativeVisibility = false;
+    function queueFrame() {
+        if (active && !frameTicket) frameTicket = KQDial.frame(animate);
+    }
+    function setActive(visible) {
+        active = visible;
+        if (active) { updateBounds(); prev = performance.now(); queueFrame(); }
+        else { KQDial.cancelFrame(frameTicket); frameTicket = null; }
+    }
+    window.kqSetKeyboardVisible = visible => { nativeVisibility = true; setActive(visible); };
+    document.addEventListener('visibilitychange', () => { if (!nativeVisibility) setActive(!document.hidden); });
+    function animate(t) {
+        frameTicket = null;
+        if (!active) return;
+        if (chatPhase() && (fieldWidth !== keyboard.clientWidth || fieldHeight !== keyboard.clientHeight)) updateBounds();
+        if (phase === 'chat') {
+            if (!bodies.length && keyboard.clientWidth && keyboard.clientHeight)
+                updateBounds();
+            if (t >= nextChange) {
+                const speed = 2 + Math.random();
+                bodies.forEach(b => b.updateSpeed(speed));
+                nextChange = t + 500;
+            }
+            const step = Math.min(2, (t - prev) * .06);
+            bodies.forEach(b => b.update(step));
+            for (let i = 0; i < bodies.length; i++)
+                for (let j = i + 1; j < bodies.length; j++) {
+                    if (bodies[i].checkCollision(bodies[j]))
+                        bodies[i].collideWith(bodies[j]);
+                }
+            bodies.forEach(place);
+        }
+        prev = t;
+        queueFrame();
+    }
+    updateBounds();
+    if (typeof window.ResizeObserver === 'function') {
+        try {
+            new ResizeObserver(updateBounds).observe(keyboard);
+        }
+        catch (error) { /* resize and frame checks remain active */ }
+    }
+    window.addEventListener('resize', updateBounds);
+    queueFrame();
+}
+var DIAL_CONFIG = {
+    arcHalf: 80,
+    redWidthMin: 20,
+    redWidthMax: 45,
+    redCenterInsetDeg: 0,
+    roundSeconds: 10,
+    period: 1.6,
+    dwellMinSec: 0.14,
+    feedbackSec: 0.42,
+    colors: {
+        bg: "#171035",
+        text: "#FFE2A4",
+        tick: "#FFDEA1",
+        red: "#EF6B70",
+        hit: "#A8E2B0",
+        flash: "#FFE3A4",
+        pointer: "#FFE3A4",
+        overlay: "rgba(19,12,43,.94)"
+    },
+    style: {
+        arcThickness: 8,
+        redThickness: 14,
+        redGlow: 0,
+        pointerThickness: 3,
+        pointerDotR: 2.5,
+        hubR: 4,
+        tickStepDeg: 10,
+        tickMajorEveryDeg: 40,
+        tickLen: 10,
+        tickMajorLen: 18
+    },
+    hitFx: {
+        hitstopMs: 80,
+        shakeAmp: 8,
+        shakeMs: 200,
+        shakeSegments: 3,
+        particleCount: 24,
+        particleMax: 48,
+        particleLifeMs: 400,
+        particleSpeedMin: 200,
+        particleSpeedMax: 600,
+        particleSizeMin: 2,
+        particleSizeMax: 4,
+        particleDamping: 0.92,
+        flashWhiteMs: 100,
+        flashFadeMs: 300,
+        popMs: 120,
+        popScale: 1.35,
+        audio: {
+            baseA: 660,
+            baseB: 990,
+            toneMs: 60,
+            delayMs: 40,
+            gain: 0.16
+        }
+    },
+    missFx: {
+        shakeAmp: 4,
+        shakeMs: 120,
+        dimAlpha: 0.4,
+        audio: {
+            from: 220,
+            to: 110,
+            ms: 180,
+            gain: 0.09
+        }
+    }
+};
+var CFG = DIAL_CONFIG;
+var C = CFG.colors;
+var S = CFG.style;
+var HF = CFG.hitFx;
+var MF = CFG.missFx;
+var TAU = Math.PI * 2;
+var DEG = Math.PI / 180;
+var cv = document.getElementById("cv");
+const dialView = KQDial.create(cv, CFG);
+var shakeEl = document.getElementById("shake");
+var resultEl = document.getElementById("result");
+var overlayEl = document.getElementById("overlay");
+var verdictEl = document.getElementById("verdict");
+var timerEl = document.getElementById("dialTimer");
+var againBtn = document.getElementById("again");
+const CX = dialView.cx, CY = dialView.cy, R = dialView.radius;
+var pausedMs = 0, lastRaw = 0, vNow = 0;
+var gameState = {
+    phase0: 0,
+    phase: 0,
+    t0: null,
+    angle: 0,
+    redWidth: 0,
+    center: 0,
+    period: CFG.period,
+    running: true,
+    locked: false,
+    over: false,
+    armed: false,
+    feedback: null,
+    hitstopUntil: 0,
+    nextAt: 0,
+    flashT0: 0,
+    popT0: -1,
+    shake: null
+};
+var particles = [];
+var audioCtx = null;
+var gameFrameId = null;
+function rand(a, b) { return a + Math.random() * (b - a); }
+function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+function tri(p) { return p < 1 ? 2 * p - 1 : 3 - 2 * p; }
+function easeOut(x) { return 1 - Math.pow(1 - x, 3); }
+function hex2rgb(h) {
+    h = String(h).replace("#", "");
+    if (h.length === 3)
+        h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    var n = parseInt(h, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function mix(h1, h2, k) {
+    var a = hex2rgb(h1), b = hex2rgb(h2);
+    return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * k) + "," +
+        Math.round(a[1] + (b[1] - a[1]) * k) + "," +
+        Math.round(a[2] + (b[2] - a[2]) * k) + ")";
+}
+function pickZone(afterMiss) {
+    const oldWidth = gameState.redWidth;
+    const width = afterMiss ? oldWidth * rand(0.7, 0.9) : rand(CFG.redWidthMin, CFG.redWidthMax);
+    const limit = CFG.arcHalf - width / 2 - CFG.redCenterInsetDeg;
+    let center;
+    if (afterMiss) {
+        // Sample uniformly from legal centers outside the previous target.
+        const gap = (oldWidth + width) / 2;
+        const leftEnd = Math.max(-limit, gameState.center - gap);
+        const rightStart = Math.min(limit, gameState.center + gap);
+        const leftLength = leftEnd + limit;
+        const offset = rand(0, leftLength + limit - rightStart);
+        center = offset < leftLength ? -limit + offset : rightStart + (offset - leftLength);
+    }
+    else {
+        center = rand(-limit, limit);
+    }
+    gameState.redWidth = width;
+    gameState.center = center;
+}
+function newGameRound() {
+    hideOverlay();
+    gameState.over = false;
+    gameState.running = true;
+    gameState.locked = false;
+    gameState.feedback = null;
+    gameState.nextAt = 0;
+    gameState.popT0 = -1;
+    gameState.flashT0 = 0;
+    gameState.hitstopUntil = 0;
+    gameState.shake = null;
+    shakeEl.style.transform = "";
+    particles.length = 0;
+    resultEl.textContent = "";
+    resultEl.className = "num";
+    resultEl.style.transform = "";
+    gameState.phase0 = Math.random() * 2;
+    gameState.phase = gameState.phase0;
+    gameState.t0 = vNow;
+    timerEl.textContent = CFG.roundSeconds.toFixed(1);
+    gameState.secondsAtStart = CFG.roundSeconds;
+    gameState.clockRate = 1;
+    gameState.period = CFG.period;
+    pickZone(false);
+}
+function endGameRound() {
+    var hit = gameState.feedback === "hit";
+    gameState.over = true;
+    gameState.running = false;
+    gameState.locked = true;
+    verdictEl.textContent = hit ? "Hit · 命中" : "Time expired · 游戏失败 · 时间耗尽";
+    verdictEl.className = "verdict " + (hit ? "hit" : "miss");
+    againBtn.textContent = hit ? "Insert · 填入应用" : "Try again · 再试一次";
+    overlayEl.classList.add("show");
+    overlayEl.setAttribute("aria-hidden", "false");
+    if (hit) {
+        const wonRound = roundNumber;
+        setTimeout(() => {
+            if (phase === 'dial' && roundNumber === wonRound && gameState.over && gameState.feedback === 'hit') againBtn.click();
+        }, 0);
+    }
+}
+function hideOverlay() {
+    overlayEl.classList.remove("show");
+    overlayEl.setAttribute("aria-hidden", "true");
+}
+function judgeDialTap() {
+    if (gameState.over)
+        return;
+    if (!gameState.armed || !gameState.running || gameState.locked)
+        return;
+    if (secondsLeft(vNow) <= 0) {
+        timeout();
+        return;
+    }
+    ensureAudio();
+    var delta = Math.abs(gameState.angle - gameState.center);
+    if (delta <= gameState.redWidth / 2) {
+        onHit();
+    }
+    else {
+        onMiss();
+    }
+}
+function timeout() {
+    if (gameState.locked || gameState.over)
+        return;
+    gameState.feedback = "timeout";
+    gameState.locked = true;
+    timerEl.textContent = "0.0";
+    resultEl.textContent = "Time up · 时间到";
+    resultEl.className = "num miss";
+    endGameRound();
+}
+function showResult(hit) {
+    resultEl.textContent = hit ? "Hit · 命中" : "Miss. Keep going! · 未命中 · 继续点击";
+    resultEl.className = "num " + (hit ? "hit" : "miss");
+    gameState.popT0 = vNow;
+}
+function onHit() {
+    gameState.feedback = "hit";
+    gameState.flashT0 = vNow;
+    gameState.locked = true;
+    gameState.nextAt = vNow + CFG.feedbackSec;
+    gameState.hitstopUntil = performance.now() + HF.hitstopMs;
+    startShake(HF.shakeAmp, HF.shakeMs, HF.shakeSegments);
+    spawnBurst(HF.particleCount);
+    showResult(true);
+    playHit();
+}
+function onMiss() {
+    // Anchor both clocks at the tap before applying the new speeds.
+    gameState.secondsAtStart = secondsLeft(vNow);
+    gameState.phase0 = gameState.phase;
+    gameState.t0 = vNow;
+    gameState.clockRate *= 2;
+    gameState.period /= 1.5;
+    pickZone(true);
+    gameState.feedback = "miss";
+    gameState.missUntil = vNow + CFG.feedbackSec;
+    startShake(MF.shakeAmp, MF.shakeMs, 1);
+    showResult(false);
+    playMiss();
+}
+function startShake(amp, ms, segs) {
+    gameState.shake = { t0: vNow, amp: amp, dur: ms / 1000, segs: Math.max(1, segs | 0), seg: -1, x: 0, y: 0 };
+    updateShake(vNow);
+}
+function updateShake(t) {
+    var sh = gameState.shake;
+    if (!sh)
+        return;
+    var p = (t - sh.t0) / sh.dur;
+    if (p >= 1) {
+        gameState.shake = null;
+        shakeEl.style.transform = "";
+        return;
+    }
+    var seg = Math.min(sh.segs - 1, Math.floor(p * sh.segs));
+    if (seg !== sh.seg) {
+        sh.seg = seg;
+        var r = sh.amp * (1 - seg / sh.segs);
+        var a = Math.random() * TAU;
+        sh.x = Math.cos(a) * r;
+        sh.y = Math.sin(a) * r;
+    }
+    shakeEl.style.transform = "translate3d(" + sh.x.toFixed(2) + "px," + sh.y.toFixed(2) + "px,0)";
+}
+function spawnBurst(count) {
+    var a = (gameState.angle - 90) * DEG;
+    var ox = CX + Math.cos(a) * R;
+    var oy = CY + Math.sin(a) * R;
+    var room = HF.particleMax - particles.length;
+    if (room <= 0)
+        return;
+    count = Math.min(count, room);
+    for (var i = 0; i < count; i++) {
+        var ang = Math.random() * TAU;
+        var sp = rand(HF.particleSpeedMin, HF.particleSpeedMax);
+        var life = HF.particleLifeMs / 1000;
+        particles.push({
+            x: ox, y: oy,
+            vx: Math.cos(ang) * sp,
+            vy: Math.sin(ang) * sp,
+            size: rand(HF.particleSizeMin, HF.particleSizeMax),
+            life: life, ttl: life
+        });
+    }
+}
+function updateParticles(dt) {
+    var damp = Math.pow(HF.particleDamping, dt * 60);
+    for (var i = particles.length - 1; i >= 0; i--) {
+        var p = particles[i];
+        p.vx *= damp;
+        p.vy *= damp;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.life -= dt;
+        if (p.life <= 0)
+            particles.splice(i, 1);
+    }
+}
+function updatePop(t) {
+    if (gameState.popT0 < 0)
+        return;
+    var ms = (t - gameState.popT0) * 1000;
+    var total = HF.popMs, half = total / 2;
+    if (ms >= total) {
+        gameState.popT0 = -1;
+        resultEl.style.transform = "";
+        return;
+    }
+    var k = ms < half ? easeOut(ms / half) : easeOut(1 - (ms - half) / half);
+    var scale = 1 + (HF.popScale - 1) * k;
+    resultEl.style.transform = "scale(" + scale.toFixed(3) + ")";
+}
+function ensureAudio() {
+    if (audioCtx) {
+        if (audioCtx.state === "suspended") {
+            try {
+                audioCtx.resume();
+            }
+            catch (e) { }
+        }
+        return audioCtx;
+    }
+    try {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC)
+            return null;
+        audioCtx = new AC();
+    }
+    catch (e) {
+        audioCtx = null;
+    }
+    return audioCtx;
+}
+function tone(a, when, type, f0, f1, durMs, peak) {
+    var o = a.createOscillator();
+    var g = a.createGain();
+    var dur = durMs / 1000;
+    o.type = type;
+    o.frequency.setValueAtTime(f0, when);
+    o.frequency.linearRampToValueAtTime(f1, when + dur);
+    g.gain.setValueAtTime(0.0001, when);
+    g.gain.exponentialRampToValueAtTime(peak, when + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+    o.connect(g);
+    g.connect(a.destination);
+    o.start(when);
+    o.stop(when + dur + 0.03);
+}
+function playHit() {
+    var a = ensureAudio();
+    if (!a)
+        return;
+    try {
+        var A = HF.audio;
+        var t = a.currentTime + 0.001;
+        var d = A.delayMs / 1000;
+        tone(a, t, "sine", A.baseA, A.baseB, A.toneMs, A.gain);
+        tone(a, t + d, "sine", A.baseA, A.baseB, A.toneMs, A.gain);
+    }
+    catch (e) { }
+}
+function playMiss() {
+    var a = ensureAudio();
+    if (!a)
+        return;
+    try {
+        var M = MF.audio;
+        tone(a, a.currentTime + 0.001, "sawtooth", M.from, M.to, M.ms, M.gain);
+    }
+    catch (e) { }
+}
+function render(t) { dialView.paint(gameState, particles, t); }
+function secondsLeft(t) {
+    return Math.max(0, gameState.secondsAtStart - Math.max(0, t - gameState.t0) * gameState.clockRate);
+}
+function update(dt, t) {
+    updateParticles(dt);
+    updateShake(t);
+    updatePop(t);
+    if (gameState.feedback === "miss" && t >= gameState.missUntil) {
+        gameState.feedback = null;
+        resultEl.textContent = "";
+        resultEl.className = "num";
+    }
+    if (gameState.running && !gameState.locked) {
+        var remaining = secondsLeft(t);
+        timerEl.textContent = remaining.toFixed(1);
+        if (remaining <= 0)
+            timeout();
+    }
+    if (gameState.running && !gameState.locked) {
+        var p = (gameState.phase0 + 2 * (t - gameState.t0) / gameState.period) % 2;
+        if (p < 0)
+            p += 2;
+        gameState.phase = p;
+    }
+    gameState.angle = CFG.arcHalf * tri(gameState.phase);
+    if (gameState.locked && gameState.nextAt > 0 && t >= gameState.nextAt) {
+        gameState.nextAt = 0;
+        endGameRound();
+    }
+}
+function frame(now) {
+    var dt = lastRaw ? Math.min((now - lastRaw) / 1000, 0.1) : 0;
+    lastRaw = now;
+    if (gameState.hitstopUntil > 0) {
+        if (now < gameState.hitstopUntil) {
+            pausedMs += dt * 1000;
+            vNow = (now - pausedMs) / 1000;
+            render(vNow);
+            gameFrameId = KQDial.frame(frame);
+            return;
+        }
+        gameState.hitstopUntil = 0;
+    }
+    vNow = (now - pausedMs) / 1000;
+    if (gameState.t0 === null)
+        gameState.t0 = vNow;
+    update(dt, vNow);
+    render(vNow);
+    gameState.armed = true;
+    if (!gameState.over)
+        gameFrameId = KQDial.frame(frame);
+}
+function beginRound() {
+    KQDial.cancelFrame(gameFrameId);
+    phase = 'dial';
+    $('round').textContent = 'ROUND ' + String(++roundNumber).padStart(2, '0');
+    lastRaw = 0;
+    pausedMs = 0;
+    vNow = performance.now() / 1000;
+    newGameRound();
+    gameState.armed = true;
+    update(0, vNow);
+    render(vNow);
+    gameFrameId = KQDial.frame(frame);
+}
+press($('arena'), stamp => {
+    if (phase !== 'dial' || gameState.locked || gameState.over)
+        return;
+    vNow = Math.max(vNow, stamp / 1000);
+    update(0, vNow);
+    judgeDialTap();
+    render(vNow);
+});
+againBtn.onclick = () => {
+    if (phase !== 'dial' || !gameState.over)
+        return;
+    if (gameState.feedback !== 'hit') {
+        beginRound();
+        return;
+    }
+    if (!KQHost.deliver(pending))
+        return;
+    draft = KQDraft.clear(draft);
+    pending = '';
+    phase = 'chat';
+    hideOverlay();
+    show('chat');
+    renderChat();
+    $('log').scrollTop = $('log').scrollHeight;
+};
+$('send').onclick = () => {
+    if (phase !== 'chat' || !draft.trim())
+        return;
+    pending = draft;
+    roundNumber = 0;
+    $('preview').textContent = pending;
+    show('game');
+    beginRound();
+};
+const appTicket = KQHost.init(remaining);
+let appReady = true;
+window.kqIsIdle = () => phase === 'chat' && !draft;
+function appSave() {
+    if (!appReady)
+        return;
+    KQHost.save(remaining, depleted && (phase === 'reload' || phase === 'ad') ? { key: depleted, earned: earned, ad: phase === 'ad' ? appAd : '' } : null);
+}
+window.kqActivate = () => { KQHost.init(remaining); if (chatPhase())
+    renderChat(); };
+if (appTicket && appTicket.key in remaining) {
+    depleted = appTicket.key;
+    earned = appTicket.earned || 0;
+    if (appTicket.ad) {
+        phase = 'ad';
+        show('ad');
+        adProvider.present(settle, appTicket.ad);
+    }
+    else {
+        phase = 'reload';
+        show('reload');
+        $('tile').textContent = depleted.toUpperCase();
+        ready('Tap to reload · 点击换弹');
+    }
+}
+renderChat();
+startKeyboard();
+$('bootNotice').hidden = true;
+document.getElementById('launchStatus').hidden = true;
+</script><script type="application/octet-stream" id="adMedia" data-file="media/adMedia.mp4"></script><script type="application/octet-stream" id="warClip" data-file="media/warClip.mp4"></script><script type="application/octet-stream" id="islandClip" data-file="media/islandClip.mp4"></script><script type="application/octet-stream" id="warEnd" data-file="media/warEnd.jpg"></script><script type="application/octet-stream" id="islandEnd" data-file="media/islandEnd.jpg">
+</script><script>
+KQDraft.bind(() => { renderChat(); });
+</script></body></html>

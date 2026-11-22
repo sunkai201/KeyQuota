@@ -1,0 +1,74 @@
+[
+  {
+    "id": "v1",
+    "page": "v1.html",
+    "name": "Odd Arcade · 奇怪风",
+    "tag": "Arcade · 街机",
+    "intro": "Catch a drifting letter before it bounces away. The small number tells you how many taps you have left.\n追着字母敲。键帽上的小数字，是这个字符还剩的次数。",
+    "palette": "v1"
+  },
+  {
+    "id": "industrial",
+    "page": "industrial.html",
+    "name": "Monochrome · 黑白简约风",
+    "tag": "LCD · 仪表",
+    "intro": "Read the counter on each moving key. Spend the last use and that character needs a reload.\n看准移动键帽上的余量。用掉最后一次，这个字符就得换弹。",
+    "palette": "industrial"
+  },
+  {
+    "id": "pixel",
+    "page": "pixel.html",
+    "name": "Pixel Punk · 朋克风",
+    "tag": "Pixels · 像素",
+    "intro": "Track the red pixel keys across the dark grid. Three matching characters at the end unlock a whole-word delete.\n盯住暗色网格上的红色像素键。草稿末尾出现三连，就能整词删除。",
+    "palette": "pixel"
+  },
+  {
+    "id": "comic",
+    "page": "comic.html",
+    "name": "Pop Comic · 动漫风",
+    "tag": "Pop · 漫画",
+    "intro": "Tap the bouncing sticker you want. Miss a letter and it may take three matching taps to erase the word.\n点中弹跳的字母贴纸。拼错后，要让词尾凑出三连才能删词。",
+    "palette": "comic"
+  },
+  {
+    "id": "white",
+    "page": "white.html",
+    "name": "Chalk · 简约纯白",
+    "tag": "Swipe · 滑行",
+    "intro": "Tap letters or glide across them to form a word. Pick a suggestion, erase a word or undo the deletion.\n点按或滑过字母成词，可选候选词，也可删词后撤销。",
+    "palette": "industrial"
+  },
+  {
+    "id": "mystery",
+    "page": "mystery.html",
+    "name": "Phantom · 神秘风",
+    "tag": "Blind · 盲打",
+    "intro": "Type from memory as used keys dim. Adjust their speed or reload a missing character before you aim to send.\n用过的字符会变暗。记住盲打的内容，调节键速或换回字符，再瞄准发送。",
+    "palette": "pixel"
+  },
+  {
+    "id": "mist",
+    "page": "mist.html",
+    "name": "Silver Mist · 雾灰",
+    "tag": "Silver · 雾面",
+    "intro": "White keycaps move across a slate-grey field. Read the corner count and catch your next letter.\n白色键帽在雾灰底板上移动。看角标余量，点中下一个字母。",
+    "palette": "industrial"
+  },
+  {
+    "id": "oat",
+    "page": "oat.html",
+    "name": "Oat Paper · 燕麦纸",
+    "tag": "Cream · 奶油",
+    "intro": "Cream keys drift across a warm paper field. Keep your word in the draft while you reload a spent letter.\n奶油色键帽在燕麦纸面上漂移。某个字母用完，换弹时草稿会保留。",
+    "palette": "industrial"
+  },
+  {
+    "id": "rainbow",
+    "page": "rainbow.html",
+    "name": "Prism Pulse · 彩虹爆闪风",
+    "tag": "RGB · 八色",
+    "intro": "Catch the keys as their neon faces flash across the grid. A spent key loses its colour until you reload it.\n追着网格里轮流闪亮的霓虹键帽输入。字符耗尽会褪色，换弹后重新亮起。",
+    "palette": "rainbow"
+  }
+]

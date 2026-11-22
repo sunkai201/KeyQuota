@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html class="ime mystery"  lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>混沌键盘系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            height: 100vh;
+            height: 100dvh;
+        }
+
+        body {
+            background: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .header {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 2px solid #FF0000;
+            font-size: 12px;
+            color: #FFFF00;
+            text-shadow: 0 0 5px #FF0000;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .speed-btn {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            background: #FF0000;
+            color: #FFFF00;
+            border: 1px solid #FFFF00;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(255, 0, 0, 0.5);
+        }
+
+        .speed-btn:active {
+            background: #FF3333;
+            box-shadow: 0 0 10px rgba(255, 255, 0, 0.7);
+        }
+
+        .speed-display {
+            width: 60px;
+            text-align: center;
+            font-weight: bold;
+            color: #FFFF00;
+            text-shadow: 0 0 3px #FF0000;
+            font-size: 12px;
+            animation: speedFlicker 0.5s infinite;
+        }
+
+        @keyframes speedFlicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .keyboard-container {
+            flex: 1;
+            min-height: 0;
+            position: relative;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #FF0000;
+            overflow: hidden;
+        }
+
+        .key {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #FF0000;
+            color: #FFFF00;
+            border: 1px solid #FFFF00;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(255, 0, 0, 0.6);
+            text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+            animation: keyShake 0.06s infinite;
+            touch-action: manipulation;
+        }
+
+        .key:active {
+            background: #FF3333;
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.9);
+            transform: scale(0.9) !important;
+        }
+
+        @keyframes keyShake {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-0.5px, -0.5px); }
+            50% { transform: translate(0.5px, 0.5px); }
+            75% { transform: translate(-0.5px, 0.5px); }
+        }
+
+        .key.small {
+            width: 38px;
+            height: 38px;
+            font-size: 12px;
+        }
+
+        .key.space {
+            width: 50px;
+        }
+
+        .key.special {
+            background: #0066FF;
+            border-color: #00FFFF;
+            box-shadow: 0 2px 10px rgba(0, 102, 255, 0.6);
+        }
+
+        .key.special:active {
+            background: #0088FF;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.9);
+        }
+
+        .key.shift {
+            background: #FF6600;
+            border-color: #FFFF00;
+            box-shadow: 0 2px 10px rgba(255, 102, 0, 0.6);
+            width: 45px;
+            font-size: 11px;
+        }
+
+        .key.shift.active {
+            background: #FFB366;
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.9);
+        }
+
+        .info {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #FFFF00;
+            font-size: 24px;
+            text-shadow: 0 0 10px #FF0000;
+            z-index: 999;
+            pointer-events: none;
+            font-weight: bold;
+            text-align: center;
+            min-width: 200px;
+            white-space: pre-line;
+            max-width: 90%;
+            line-height: 1.4;
+        }
+
+        .game-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #171035;
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+            padding: 16px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .game-modal.show {
+            display: flex;
+        }
+
+        .game-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .timer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 126px;
+            padding: 5px 20px;
+            color: #ffe3a0;
+            background: #281944;
+            border: 4px solid #ffd79b;
+            box-shadow: 4px 4px #d65c65;
+            font: bold 32px/1.2 Consolas, monospace;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 3px 3px #d65c65;
+        }
+
+        .timer-label {
+            font-size: 12px;
+            letter-spacing: .2em;
+            color: #ffb19b;
+            text-shadow: none;
+        }
+
+        .hint {
+            margin: 0;
+            font-size: 13px;
+            letter-spacing: .06em;
+            line-height: 1.4;
+            color: #ffca9b;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .stage {
+            position: relative;
+            width: 100%;
+            max-width: 560px;
+            height: clamp(280px, 48vh, 390px);
+        }
+
+        .shakewrap {
+            position: absolute;
+            inset: 0;
+            will-change: transform;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            cursor: pointer;
+        }
+
+        .readout {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .num {
+            font-size: clamp(36px, 11vw, 52px);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: .04em;
+            transform-origin: 50% 50%;
+            will-change: transform;
+            font-family: Consolas, monospace;
+        }
+
+        .num.hit {
+            color: #A8E2B0;
+            text-shadow: 2px 2px #d65c65;
+        }
+
+        .num.miss {
+            color: #EF6B70;
+            text-shadow: 2px 2px #FFE3A4;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(19,12,43,.94);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .18s ease, visibility .18s ease;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .panel {
+            width: 100%;
+            max-width: 300px;
+            padding: 24px 20px 20px;
+            border: 4px solid #ffdda3;
+            border-radius: 0;
+            background: #21163e;
+            text-align: center;
+            box-shadow: 6px 6px #d75f69;
+        }
+
+        .panel h2 {
+            margin: 0 0 16px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .28em;
+            text-transform: uppercase;
+            opacity: 1;
+            color: #FFE2A4;
+        }
+
+        .verdict {
+            margin-bottom: 22px;
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: .12em;
+            line-height: 1.2;
+            font-family: Consolas, monospace;
+        }
+
+        .verdict.hit {
+            color: #A8E2B0;
+            text-shadow: 2px 2px #d65c65;
+        }
+
+        .verdict.miss {
+            color: #EF6B70;
+            text-shadow: 2px 2px #FFE3A4;
+        }
+
+        #again {
+            width: 100%;
+            height: 46px;
+            border: 4px solid #ffe2a0;
+            border-radius: 0;
+            background: #e7686a;
+            color: #fff1bc;
+            font-family: Consolas, monospace;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: .12em;
+            cursor: pointer;
+            transition: transform .1s ease;
+            box-shadow: 4px 4px #a7425b;
+        }
+
+        #again:active {
+            transform: scale(.98);
+            box-shadow: inset 4px 4px #a7425b;
+        }
+
+        .controls {
+            flex: 0 0 auto;
+            padding: 10px 8px;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            flex-wrap: wrap;
+            border-top: 2px solid #FF0000;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            background: #FF0000;
+            color: #FFFF00;
+            border: 1px solid #FFFF00;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            touch-action: manipulation;
+            box-shadow: 0 2px 8px rgba(255, 0, 0, 0.5);
+        }
+
+        .btn:active {
+            background: #FF3333;
+            box-shadow: 0 0 12px rgba(255, 255, 0, 0.8);
+        }
+
+        .btn.ammo-btn {
+            background: #FF6600;
+            border-color: #00FF00;
+            box-shadow: 0 2px 8px rgba(255, 102, 0, 0.5);
+        }
+
+        .btn.ammo-btn:active {
+            background: #FF8833;
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.8);
+        }
+
+        .btn.ammo-btn:disabled {
+            background: #666666;
+            border-color: #999999;
+            color: #999999;
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .ammo-hint {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 102, 0, 0.9);
+            color: #FFFF00;
+            padding: 15px 25px;
+            border-radius: 8px;
+            border: 2px solid #FFFF00;
+            font-weight: bold;
+            font-size: 16px;
+            z-index: 1000;
+            pointer-events: none;
+            text-shadow: 0 0 5px #FF0000;
+            animation: ammoHintPulse 0.3s ease-out;
+        }
+
+        @keyframes ammoHintPulse {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .ad-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ad-modal.show {
+            display: flex;
+        }
+
+        .ad-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+
+        .ad-close-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 0, 0, 0.9);
+            color: white;
+            border: 2px solid #FFFF00;
+            border-radius: 50%;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 3001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .ad-close-btn:hover {
+            background: rgba(255, 50, 50, 0.9);
+            box-shadow: 0 0 30px rgba(255, 255, 0, 0.8);
+        }
+
+        .ad-close-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* ============================================================
+           像素风美术覆盖层（保留原有刺眼撞色）
+           ============================================================ */
+        :root {
+            --pixel-font: "Fixedsys", "SimSun", "MS Gothic", "Courier New", monospace;
+            --px-red: #ff0000;
+            --px-yellow: #ffff00;
+            --px-magenta: #ff00ff;
+            --px-cyan: #00f0ff;
+            --px-green: #00ff66;
+            --px-blue: #2b00ff;
+            --px-orange: #ff6a00;
+            --px-ink: #000000;
+        }
+
+        body {
+            background-color: #07000d;
+            background-image:
+                repeating-linear-gradient(0deg, rgba(255, 0, 72, .05) 0 1px, transparent 1px 4px),
+                repeating-linear-gradient(90deg, rgba(0, 240, 255, .05) 0 1px, transparent 1px 4px),
+                repeating-conic-gradient(#0c0014 0% 25%, #07000d 0% 50%);
+            background-size: auto, auto, 12px 12px;
+            font-family: var(--pixel-font);
+            font-weight: bold;
+            letter-spacing: .04em;
+            image-rendering: pixelated;
+        }
+
+        /* 注意：不再使用覆盖在内容之上的全屏扫描线/相框，避免遮挡字符。
+           像素质感改由硬边框、硬阴影与撞色表现。 */
+
+        .header {
+            background: var(--px-ink);
+            border-bottom: 4px solid var(--px-red);
+            box-shadow: 0 4px 0 var(--px-yellow), 0 8px 0 var(--px-cyan);
+            color: var(--px-yellow);
+            font-size: 15px;
+            letter-spacing: .18em;
+            text-shadow: 2px 2px 0 var(--px-ink);
+            padding-bottom: 10px;
+        }
+
+        .header > div:first-child::after {
+            content: "█";
+            margin-left: 8px;
+            color: var(--px-green);
+            animation: cursorBlink 1s steps(1) infinite;
+        }
+
+        @keyframes cursorBlink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        .speed-btn {
+            width: 30px;
+            height: 30px;
+            background: var(--px-red);
+            color: var(--px-yellow);
+            border: 3px solid var(--px-ink);
+            border-radius: 0;
+            font-family: var(--pixel-font);
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: inset -3px -3px 0 rgba(0, 0, 0, .5), inset 3px 3px 0 rgba(255, 255, 255, .25), 4px 4px 0 var(--px-yellow);
+        }
+
+        .speed-btn:active {
+            background: var(--px-yellow);
+            color: var(--px-red);
+            transform: translate(3px, 3px);
+            box-shadow: inset 3px 3px 0 rgba(0, 0, 0, .5), 1px 1px 0 var(--px-yellow);
+        }
+
+        .speed-display {
+            width: 64px;
+            color: var(--px-green);
+            font-family: var(--pixel-font);
+            font-size: 14px;
+            letter-spacing: .12em;
+            text-shadow: 2px 2px 0 var(--px-ink);
+            animation: speedFlicker .6s steps(2, end) infinite;
+        }
+
+        @keyframes speedFlicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .45; }
+        }
+
+        .keyboard-container {
+            background-color: #060009;
+            background-image:
+                repeating-linear-gradient(0deg, rgba(255, 0, 72, .10) 0 1px, transparent 1px 16px),
+                repeating-linear-gradient(90deg, rgba(0, 240, 255, .10) 0 1px, transparent 1px 16px),
+                repeating-conic-gradient(#0d0016 0% 25%, #07000b 0% 50%);
+            background-size: auto, auto, 16px 16px;
+            border: 4px solid var(--px-red);
+            box-shadow:
+                inset 0 0 0 3px var(--px-ink),
+                inset 0 0 0 6px var(--px-yellow),
+                inset 0 0 0 9px var(--px-ink);
+        }
+
+        .key {
+            border: 3px solid var(--px-ink);
+            border-radius: 0;
+            font-family: var(--pixel-font);
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 0;
+            box-shadow:
+                inset -4px -4px 0 rgba(0, 0, 0, .45),
+                inset 4px 4px 0 rgba(255, 255, 255, .22),
+                4px 4px 0 var(--px-ink);
+            text-shadow: 2px 2px 0 var(--px-ink);
+            animation: keyShake .12s steps(2, end) infinite;
+            image-rendering: pixelated;
+        }
+
+        @keyframes keyShake {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-1px, 0); }
+            50% { transform: translate(1px, 1px); }
+            75% { transform: translate(0, -1px); }
+        }
+
+        .key.small {
+            width: 38px;
+            height: 38px;
+            font-size: 14px;
+        }
+
+        .key.space {
+            width: 50px;
+        }
+
+        .key:active {
+            background: var(--px-yellow) !important;
+            color: var(--px-red) !important;
+            box-shadow:
+                inset 4px 4px 0 rgba(0, 0, 0, .55),
+                2px 2px 0 var(--px-ink) !important;
+            transform: translate(2px, 2px) !important;
+        }
+
+        /* 按键随机撞色：红黄品红青绿橙循环，保持刺眼杂乱 */
+        .key:not(.special):not(.shift):nth-child(6n+1) {
+            background: var(--px-red);
+            color: var(--px-yellow);
+            box-shadow: inset -4px -4px 0 rgba(0,0,0,.45), inset 4px 4px 0 rgba(255,255,255,.22), 4px 4px 0 var(--px-yellow);
+        }
+        .key:not(.special):not(.shift):nth-child(6n+2) {
+            background: var(--px-yellow);
+            color: var(--px-red);
+            text-shadow: 2px 2px 0 var(--px-magenta);
+            box-shadow: inset -4px -4px 0 rgba(0,0,0,.25), inset 4px 4px 0 rgba(255,255,255,.45), 4px 4px 0 var(--px-cyan);
+        }
+        .key:not(.special):not(.shift):nth-child(6n+3) {
+            background: var(--px-magenta);
+            color: var(--px-green);
+            box-shadow: inset -4px -4px 0 rgba(0,0,0,.45), inset 4px 4px 0 rgba(255,255,255,.25), 4px 4px 0 var(--px-cyan);
+        }
+        .key:not(.special):not(.shift):nth-child(6n+4) {
+            background: var(--px-cyan);
+            color: var(--px-red);
+            text-shadow: 2px 2px 0 var(--px-ink);
+            box-shadow: inset -4px -4px 0 rgba(0,0,0,.35), inset 4px 4px 0 rgba(255,255,255,.5), 4px 4px 0 var(--px-magenta);
+        }
+        .key:not(.special):not(.shift):nth-child(6n+5) {
+            background: var(--px-green);
+            color: var(--px-magenta);
+            box-shadow: inset -4px -4px 0 rgba(0,0,0,.4), inset 4px 4px 0 rgba(255,255,255,.3), 4px 4px 0 var(--px-red);
+        }
+        .key:not(.special):not(.shift):nth-child(6n+6) {
+            background: var(--px-orange);
+            color: var(--px-cyan);
+            box-shadow: inset -4px -4px 0 rgba(0,0,0,.4), inset 4px 4px 0 rgba(255,255,255,.3), 4px 4px 0 var(--px-magenta);
+        }
+
+        .key.special {
+            background: var(--px-blue);
+            border-color: var(--px-ink);
+            color: var(--px-cyan);
+            box-shadow: inset -4px -4px 0 rgba(0,0,0,.5), inset 4px 4px 0 rgba(255,255,255,.2), 4px 4px 0 var(--px-green);
+        }
+
+        .key.special:active {
+            background: var(--px-cyan);
+            color: var(--px-blue);
+        }
+
+        .key.shift {
+            background: var(--px-orange);
+            border-color: var(--px-ink);
+            color: var(--px-yellow);
+            font-size: 12px;
+            box-shadow: inset -4px -4px 0 rgba(0,0,0,.5), inset 4px 4px 0 rgba(255,255,255,.2), 4px 4px 0 var(--px-magenta);
+        }
+
+        .key.shift.active {
+            background: var(--px-yellow);
+            color: var(--px-red);
+        }
+
+        .info {
+            color: var(--px-yellow);
+            font-family: var(--pixel-font);
+            font-size: 26px;
+            letter-spacing: .06em;
+            text-shadow: 3px 3px 0 var(--px-ink);
+        }
+
+        .game-modal {
+            background-color: #0b0014;
+            background-image: repeating-conic-gradient(#13001e 0% 25%, #080010 0% 50%);
+            background-size: 18px 18px;
+        }
+
+        .timer {
+            color: var(--px-yellow);
+            background: var(--px-ink);
+            border: 4px solid var(--px-red);
+            border-radius: 0;
+            box-shadow: 6px 6px 0 var(--px-cyan);
+            font-family: var(--pixel-font);
+            font-size: 34px;
+            font-weight: bold;
+            line-height: 1.2;
+            text-shadow: 3px 3px 0 var(--px-ink);
+        }
+
+        .timer-label {
+            color: var(--px-green);
+            font-family: var(--pixel-font);
+            text-shadow: 2px 2px 0 var(--px-ink);
+        }
+
+        .hint {
+            color: var(--px-green);
+            font-family: var(--pixel-font);
+            font-size: 14px;
+            text-shadow: 2px 2px 0 var(--px-ink);
+        }
+
+        .stage {
+            border: 4px solid var(--px-magenta);
+            box-shadow: 6px 6px 0 var(--px-cyan), 12px 12px 0 rgba(255, 0, 72, .35);
+            background: var(--px-ink);
+        }
+
+        canvas {
+            image-rendering: pixelated;
+        }
+
+        .num {
+            font-family: var(--pixel-font);
+            letter-spacing: .1em;
+        }
+
+        .num.hit {
+            color: var(--px-green);
+            text-shadow: 3px 3px 0 var(--px-ink);
+        }
+
+        .num.miss {
+            color: var(--px-red);
+            text-shadow: 3px 3px 0 var(--px-ink);
+        }
+
+        .overlay {
+            background-color: rgba(9, 0, 15, .94);
+            background-image: repeating-conic-gradient(rgba(255, 0, 255, .10) 0% 25%, transparent 0% 50%);
+            background-size: 12px 12px;
+            transition: none;
+        }
+
+        .panel {
+            border: 4px solid var(--px-yellow);
+            border-radius: 0;
+            background: #14001f;
+            box-shadow: 8px 8px 0 var(--px-red), 14px 14px 0 var(--px-cyan);
+            font-family: var(--pixel-font);
+        }
+
+        .panel h2 {
+            color: var(--px-cyan);
+            font-family: var(--pixel-font);
+            text-shadow: 2px 2px 0 var(--px-ink);
+        }
+
+        .verdict {
+            font-family: var(--pixel-font);
+        }
+
+        .verdict.hit {
+            color: var(--px-green);
+            text-shadow: 3px 3px 0 var(--px-ink);
+        }
+
+        .verdict.miss {
+            color: var(--px-red);
+            text-shadow: 3px 3px 0 var(--px-ink);
+        }
+
+        #again {
+            border: 4px solid var(--px-ink);
+            border-radius: 0;
+            background: var(--px-red);
+            color: var(--px-yellow);
+            font-family: var(--pixel-font);
+            font-weight: bold;
+            letter-spacing: .14em;
+            box-shadow: inset -4px -4px 0 rgba(0, 0, 0, .5), inset 4px 4px 0 rgba(255, 255, 255, .25), 6px 6px 0 var(--px-yellow);
+            transition: none;
+        }
+
+        #again:active {
+            transform: translate(3px, 3px);
+            box-shadow: inset 4px 4px 0 rgba(0, 0, 0, .55), 2px 2px 0 var(--px-yellow);
+        }
+
+        .controls {
+            background: var(--px-ink);
+            border-top: 4px solid var(--px-red);
+            box-shadow: 0 -4px 0 var(--px-cyan);
+            padding-bottom: 16px;
+        }
+
+        .btn {
+            border: 3px solid var(--px-ink);
+            border-radius: 0;
+            background: var(--px-red);
+            color: var(--px-yellow);
+            font-family: var(--pixel-font);
+            font-size: 13px;
+            letter-spacing: .06em;
+            box-shadow: inset -3px -3px 0 rgba(0, 0, 0, .5), inset 3px 3px 0 rgba(255, 255, 255, .25), 4px 4px 0 var(--px-magenta);
+        }
+
+        .btn:active {
+            background: var(--px-yellow);
+            color: var(--px-red);
+            transform: translate(3px, 3px);
+            box-shadow: inset 3px 3px 0 rgba(0, 0, 0, .5), 1px 1px 0 var(--px-magenta);
+        }
+
+        .btn.ammo-btn {
+            background: var(--px-orange);
+            color: var(--px-cyan);
+            border-color: var(--px-ink);
+            box-shadow: inset -3px -3px 0 rgba(0, 0, 0, .5), inset 3px 3px 0 rgba(255, 255, 255, .25), 4px 4px 0 var(--px-green);
+        }
+
+        .btn.ammo-btn:active {
+            background: var(--px-green);
+            color: var(--px-orange);
+        }
+
+        .btn.ammo-btn:disabled {
+            background: #333333;
+            border-color: var(--px-ink);
+            color: #777777;
+            box-shadow: none;
+        }
+
+        .ammo-hint {
+            background: var(--px-orange);
+            color: var(--px-cyan);
+            border: 4px solid var(--px-ink);
+            border-radius: 0;
+            font-family: var(--pixel-font);
+            font-weight: bold;
+            text-shadow: 2px 2px 0 var(--px-ink);
+            box-shadow: 6px 6px 0 var(--px-magenta);
+            animation: ammoHintPulse .24s steps(3, end) 1;
+        }
+
+        @keyframes ammoHintPulse {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(.6); }
+            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .ad-close-btn {
+            width: 54px;
+            height: 54px;
+            background: var(--px-red);
+            color: var(--px-yellow);
+            border: 4px solid var(--px-yellow);
+            border-radius: 0;
+            font-family: var(--pixel-font);
+            font-size: 30px;
+            box-shadow: 4px 4px 0 var(--px-cyan), 8px 8px 0 var(--px-ink);
+            transition: none;
+        }
+
+        .ad-close-btn:hover {
+            background: var(--px-magenta);
+            color: var(--px-green);
+            box-shadow: 4px 4px 0 var(--px-yellow), 8px 8px 0 var(--px-ink);
+        }
+
+        .ad-close-btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 1px 1px 0 var(--px-cyan);
+        }
+
+        @media (orientation: landscape) {
+            .header {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+
+            .keyboard-container {
+                border: 3px solid #FF0000;
+            }
+
+            .key {
+                width: 36px;
+                height: 36px;
+                font-size: 12px;
+            }
+
+            .key.small {
+                width: 34px;
+                height: 34px;
+                font-size: 10px;
+            }
+
+            .controls {
+                padding: 8px 6px;
+            }
+
+            .btn {
+                padding: 8px 12px;
+                font-size: 11px;
+            }
+
+            .info {
+                font-size: 20px;
+            }
+        }
+    </style>
+<link rel="stylesheet" href="ime.css"><script src="host.js"></script><script src="draft.js"></script><script src="dial-view.js"></script><style>.ime.mystery body{display:flex;height:100vh}.mystery .header,.mystery .controls{padding:3px 5px}.mystery .header{font-size:14px}.mystery .info{min-height:16px;height:23px;padding:1px;font-size:12px!important}.mystery .keyboard-container{min-height:50px;flex:1}.mystery .controls .btn,.mystery .speed-btn{min-height:24px;font-size:11px;padding:3px 6px}.mystery .keyboard-container button{touch-action:none}.mystery .key.special,.mystery .key.shift,.mystery .key.space{font-size:9px;white-space:normal}.mystery .game-wrapper{max-height:100vh;overflow:auto;padding:4px}.mystery .shakewrap{height:47vh;min-height:65px}.mystery .hint,.mystery .timer{margin:2px;font-size:12px}.mystery .ad-container{height:100%;width:100%}.mystery .ad-close-btn{top:4px;right:4px;width:34px;height:34px}.mystery .ammo-hint{pointer-events:none;font-size:12px}
+.ime.mystery .game-modal{padding:4px;overflow:hidden}
+.ime.mystery .game-wrapper{width:100%;height:100%;max-height:100%;gap:3px;padding:2px;overflow:hidden}
+.ime.mystery .game-wrapper .stage{height:auto!important;min-height:0!important;flex:1 1 0;width:100%;touch-action:none}
+.ime.mystery #shake{position:absolute;top:0;right:0;bottom:0;left:0;height:100%!important;min-height:0;max-height:none}
+.ime.mystery .game-wrapper .timer{padding:1px 10px;font-size:16px}
+.ime.mystery .game-wrapper .hint{font-size:11px}
+</style></head>
+<body>
+    <div class="header">
+        <div>Chaos Keys · 混沌键盘</div>
+        <div class="speed-control">
+            <button class="speed-btn" onclick="decreaseSpeed()">-</button>
+            <div class="speed-display" id="speedDisplay">2x</div>
+            <button class="speed-btn" onclick="increaseSpeed()">+</button>
+        </div>
+    </div>
+
+    <div class="draftbox"><div id="draft"></div></div>
+    <div class="info" id="info"></div>
+
+    <div class="keyboard-container" id="keyboard"></div>
+
+    <div class="game-modal" id="gameModal">
+        <div class="game-wrapper">
+            <div class="timer" id="gameTimer">
+                <span class="timer-label">TIME</span>
+                <span id="timer">10.0</span>
+            </div>
+            <p class="hint">Tap red. One try per round. · 指针进入红区时点击（每局只判一次）</p>
+            <div class="stage">
+                <div class="shakewrap" id="shake">
+                    <svg id="cv" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+                </div>
+                <div class="readout">
+                    <div class="num" id="result"></div>
+                </div>
+            </div>
+        </div>
+    <div class="overlay" id="overlay" aria-hidden="true">
+        <div class="panel" role="dialog" aria-label="Round result · 本局结果">
+            <h2>Round result · 本局结果</h2>
+            <div class="verdict" id="verdict">Hit · 命中</div>
+            <button id="again" type="button">Back · 返回</button>
+        </div>
+    </div>
+    </div>
+
+    <div class="ad-modal" id="adModal">
+        <div class="ad-container">
+            <button class="ad-close-btn" onclick="closeAd()">✕</button>
+            <!-- file:// 页面中的 iframe 属于跨源上下文：必须显式委托 autoplay 权限，
+                 否则广告里的 <video autoplay> 会被浏览器策略拦截，表现为黑屏/不显示 -->
+            <video id="adFrame" muted playsinline preload="none" style="width:100%;height:100%;object-fit:contain"></video>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="copyText()">Copy · 复制</button>
+        <button class="btn" onclick="toggleAnimation()" id="toggleBtn">Pause · 暂停</button>
+        <button class="btn ammo-btn" onclick="handleAmmoClick()" id="ammoBtn">Reload · 换弹</button>
+    </div>
+
+    <script>/* ===== 广告系统变量（必须在开头定义！） ===== */
+const adUrls = ['adMedia', 'warClip', 'islandClip'];
+let currentAdShowing = false;
+let lastAdTime = 0;
+let adCloseTimer = null;
+function showAd(filePath) {
+    // 打字时显示广告，不检查游戏状态
+    if (currentAdShowing)
+        return;
+    currentAdShowing = true;
+    const adModal = document.getElementById('adModal');
+    const adFrame = document.getElementById('adFrame');
+    if (adCloseTimer) {
+        clearTimeout(adCloseTimer);
+        adCloseTimer = null;
+    }
+    // 等 iframe 文档真正加载完成后再开始计 5 秒展示时间，
+    // 否则大体积内嵌视频可能还没渲染就被关掉。
+    adFrame.onloadeddata = function () {
+        if (!currentAdShowing)
+            return;
+        if (adCloseTimer)
+            clearTimeout(adCloseTimer);
+        adCloseTimer = setTimeout(function () {
+            adCloseTimer = null;
+            closeAd();
+        }, 5000);
+    };
+    // 兜底：即使 load 事件没有触发也不会一直卡住
+    adCloseTimer = setTimeout(function () {
+        adCloseTimer = null;
+        closeAd();
+    }, 12000);
+    adFrame.src = 'media/' + filePath + '.mp4';
+    adFrame.play().catch(() => { });
+    adModal.classList.add('show');
+}
+function closeAd() {
+    if (adCloseTimer) {
+        clearTimeout(adCloseTimer);
+        adCloseTimer = null;
+    }
+    currentAdShowing = false;
+    const adModal = document.getElementById('adModal');
+    adModal.classList.remove('show');
+    const adFrame = document.getElementById('adFrame');
+    adFrame.onloadeddata = null;
+    adFrame.pause();
+    adFrame.removeAttribute('src');
+    adFrame.load();
+}
+/* ===== 游戏配置 ===== */
+const DIAL_CONFIG = {
+    arcHalf: 80,
+    redWidthMin: 20,
+    redWidthMax: 45,
+    redCenterInsetDeg: 0,
+    roundSeconds: 10,
+    period: 1.6,
+    dwellMinSec: 0.14,
+    feedbackSec: 0.42,
+    colors: {
+        bg: "#12001f",
+        text: "#FFFF00",
+        tick: "#FF00FF",
+        red: "#FF0000",
+        hit: "#00FF66",
+        flash: "#FFFFFF",
+        pointer: "#00FFFF",
+        overlay: "rgba(9,0,15,.94)"
+    },
+    style: {
+        arcThickness: 10,
+        redThickness: 18,
+        redGlow: 0,
+        pointerThickness: 4,
+        pointerDotR: 3,
+        hubR: 5,
+        tickStepDeg: 10,
+        tickMajorEveryDeg: 40,
+        tickLen: 12,
+        tickMajorLen: 22
+    },
+    hitFx: {
+        hitstopMs: 80,
+        shakeAmp: 8,
+        shakeMs: 200,
+        shakeSegments: 3,
+        particleCount: 24,
+        particleMax: 48,
+        particleLifeMs: 400,
+        particleSpeedMin: 200,
+        particleSpeedMax: 600,
+        particleSizeMin: 2,
+        particleSizeMax: 4,
+        particleDamping: 0.92,
+        flashWhiteMs: 100,
+        flashFadeMs: 300,
+        popMs: 120,
+        popScale: 1.35,
+        audio: {
+            baseA: 660,
+            baseB: 990,
+            toneMs: 60,
+            delayMs: 40,
+            gain: 0.16
+        }
+    },
+    missFx: {
+        shakeAmp: 4,
+        shakeMs: 120,
+        dimAlpha: 0.4,
+        audio: {
+            from: 220,
+            to: 110,
+            ms: 180,
+            gain: 0.09
+        }
+    }
+};
+const CFG = DIAL_CONFIG;
+const C = CFG.colors;
+const S = CFG.style;
+const HF = CFG.hitFx;
+const MF = CFG.missFx;
+const TAU = Math.PI * 2;
+const DEG = Math.PI / 180;
+/* ===== 键盘部分 ===== */
+const keyboard = document.getElementById('keyboard');
+const speedDisplay = document.getElementById('speedDisplay');
+const info = document.getElementById('info');
+const toggleBtn = document.getElementById('toggleBtn');
+const gameModal = document.getElementById('gameModal');
+const keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split('');
+const specialKeys = [
+    { text: 'Space · 空格', value: ' ', isSpecial: false },
+    { text: 'Clear · 删除', value: 'BACKSPACE', isSpecial: true },
+    { text: 'Aim · 判定', value: 'ENTER', isSpecial: true },
+    { text: 'Case · 大小写', value: 'SHIFT', isSpecial: false }
+];
+let keyButtons = [];
+let isAnimating = true;
+let animationId = null;
+let speedMultiplier = 2;
+let inputContent = '';
+let speedChangeInterval = null;
+let isUpperCase = false;
+let shiftButtonEl = null;
+let ammoBtn = document.getElementById('ammoBtn');
+// 换弹系统
+let availableCharacters = new Set();
+let usedCharacters = new Set();
+let ammoCount = 0;
+let ammoAttempts = 0; // 换弹次数计数器
+let ammoCooldownEnd = 0;
+let ammoSuccessRate = 1.0;
+class KeyButton {
+    constructor(element, width = 40, height = 40, speedMult = 1) {
+        this.element = element;
+        this.width = width;
+        this.height = height;
+        this.x = Math.random() * (keyboard.clientWidth - width);
+        this.y = Math.random() * (keyboard.clientHeight - height);
+        this.x = Math.max(0, Math.min(this.x, keyboard.clientWidth - width));
+        this.y = Math.max(0, Math.min(this.y, keyboard.clientHeight - height));
+        const baseSpeed = 3;
+        this.vx = (Math.random() - 0.5) * baseSpeed * speedMult;
+        this.vy = (Math.random() - 0.5) * baseSpeed * speedMult;
+        this.element.style.left = this.x + 'px';
+        this.element.style.top = this.y + 'px';
+    }
+    updateSpeed(speedMult) {
+        const baseSpeed = 3;
+        this.vx = (Math.random() - 0.5) * baseSpeed * speedMult;
+        this.vy = (Math.random() - 0.5) * baseSpeed * speedMult;
+    }
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x <= 0) {
+            this.vx = Math.abs(this.vx) * 0.9;
+            this.x = 0;
+        }
+        else if (this.x + this.width >= keyboard.clientWidth) {
+            this.vx = -Math.abs(this.vx) * 0.9;
+            this.x = keyboard.clientWidth - this.width;
+        }
+        if (this.y <= 0) {
+            this.vy = Math.abs(this.vy) * 0.9;
+            this.y = 0;
+        }
+        else if (this.y + this.height >= keyboard.clientHeight) {
+            this.vy = -Math.abs(this.vy) * 0.9;
+            this.y = keyboard.clientHeight - this.height;
+        }
+        this.element.style.left = Math.round(this.x) + 'px';
+        this.element.style.top = Math.round(this.y) + 'px';
+    }
+    checkCollision(other) {
+        const centerX1 = this.x + this.width / 2;
+        const centerY1 = this.y + this.height / 2;
+        const centerX2 = other.x + other.width / 2;
+        const centerY2 = other.y + other.height / 2;
+        const dx = centerX2 - centerX1;
+        const dy = centerY2 - centerY1;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const minDistance = (this.width + other.width) / 2.0;
+        return distance < minDistance;
+    }
+    collideWith(other) {
+        const centerX1 = this.x + this.width / 2;
+        const centerY1 = this.y + this.height / 2;
+        const centerX2 = other.x + other.width / 2;
+        const centerY2 = other.y + other.height / 2;
+        const dx = centerX2 - centerX1;
+        const dy = centerY2 - centerY1;
+        const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+        const overlap = ((this.width + other.width) / 2.0) - distance;
+        const separationX = (dx / distance) * overlap / 2;
+        const separationY = (dy / distance) * overlap / 2;
+        this.x -= separationX;
+        this.y -= separationY;
+        other.x += separationX;
+        other.y += separationY;
+        const tempVx = this.vx;
+        const tempVy = this.vy;
+        this.vx = other.vx * 0.9;
+        this.vy = other.vy * 0.9;
+        other.vx = tempVx * 0.9;
+        other.vy = tempVy * 0.9;
+        this.x = Math.max(0, Math.min(this.x, keyboard.clientWidth - this.width));
+        this.y = Math.max(0, Math.min(this.y, keyboard.clientHeight - this.height));
+        other.x = Math.max(0, Math.min(other.x, keyboard.clientWidth - other.width));
+        other.y = Math.max(0, Math.min(other.y, keyboard.clientHeight - other.height));
+    }
+}
+function maybeShowKeyAd() {
+    const now = Date.now();
+    if (now - lastAdTime < 2000 || Math.random() >= 0.25) return;
+    lastAdTime = now;
+    showAd(adUrls[Math.floor(Math.random() * adUrls.length)]);
+}
+function createKeyboard() {
+    keyboard.innerHTML = '';
+    keyButtons = [];
+    availableCharacters.clear();
+    usedCharacters.clear();
+    keys.forEach((key, index) => {
+        const button = document.createElement('button');
+        button.className = 'key';
+        if (index > 25)
+            button.classList.add('small');
+        const displayKey = isUpperCase ? key : key.toLowerCase();
+        button.textContent = displayKey;
+        availableCharacters.add(isUpperCase ? key : key.toLowerCase());
+        KQDial.press(button, () => {
+            if (currentAdShowing || gameModal.classList.contains('show')) return;
+            addCharacter(isUpperCase ? key : key.toLowerCase());
+            maybeShowKeyAd();
+        });
+        keyboard.appendChild(button);
+        const keyBtn = new KeyButton(button, button.offsetWidth, button.offsetHeight, speedMultiplier);
+        keyButtons.push(keyBtn);
+    });
+    specialKeys.forEach(key => {
+        const button = document.createElement('button');
+        if (key.value === 'SHIFT') {
+            button.className = 'key shift';
+            shiftButtonEl = button;
+        }
+        else {
+            button.className = key.isSpecial ? 'key special' : 'key';
+        }
+        if (key.value === ' ')
+            button.classList.add('space');
+        button.textContent = key.text;
+        KQDial.press(button, () => {
+            if (currentAdShowing || gameModal.classList.contains('show')) return;
+            handleSpecialKey(key.value);
+            if (key.value !== 'ENTER') maybeShowKeyAd();
+        });
+        keyboard.appendChild(button);
+        // Size the collision box to match the painted button.
+        const keyBtn = new KeyButton(button, button.offsetWidth, button.offsetHeight, speedMultiplier);
+        keyButtons.push(keyBtn);
+    });
+    startAnimation();
+}
+function startAnimation() {
+    if (animationId)
+        KQDial.cancelFrame(animationId);
+    let frameCount = 0;
+    function animate() {
+        frameCount++;
+        if (isAnimating) {
+            keyButtons.forEach(btn => btn.update());
+            if (frameCount % 3 === 0) {
+                for (let i = 0; i < keyButtons.length; i++) {
+                    for (let j = i + 1; j < keyButtons.length; j++) {
+                        if (keyButtons[i].checkCollision(keyButtons[j])) {
+                            keyButtons[i].collideWith(keyButtons[j]);
+                        }
+                    }
+                }
+            }
+        }
+        animationId = KQDial.frame(animate);
+    }
+    animate();
+}
+window.kqSetKeyboardVisible = visible => {
+    if (visible) startAnimation();
+    else { KQDial.cancelFrame(animationId); animationId = null; }
+};
+function addCharacter(char) {
+    // 检查冷却状态
+    if (Date.now() < ammoCooldownEnd) {
+        info.textContent = `Cooling down · 冷却中\n${Math.ceil((ammoCooldownEnd - Date.now()) / 1000)}秒`;
+        info.style.color = '#FF0000';
+        setTimeout(() => {
+            info.textContent = '';
+            info.style.color = '#FFFF00';
+        }, 500);
+        triggerFeedback(true);
+        return;
+    }
+    // 检查字符是否已使用
+    if (usedCharacters.has(char)) {
+        showAmmoHint();
+        return;
+    }
+    const edited = KQDraft.insert(inputContent,char);
+    inputContent = edited;
+    usedCharacters.add(char);
+    availableCharacters.delete(char);
+    ammoCount++;
+    triggerFeedback();
+    // 显示"Reload · 换弹"提示
+    showAmmoHint();
+    // 从键盘上移除字符按钮
+    const keyElement = Array.from(keyboard.querySelectorAll('.key')).find(el => (isUpperCase ? el.textContent : el.textContent.toLowerCase()) === char);
+    if (keyElement && !keyElement.classList.contains('special')) {
+        keyElement.style.opacity = '0.3';
+        keyElement.style.pointerEvents = 'none';
+    }
+}
+function showAmmoHint() {
+    const hint = document.createElement('div');
+    hint.className = 'ammo-hint';
+    hint.textContent = 'Key vanished. Tap Reload. · 已消失！点击"Reload · 换弹"恢复';
+    document.body.appendChild(hint);
+    setTimeout(() => {
+        hint.remove();
+    }, 3000);
+}
+function handleSpecialKey(key) {
+    if (key === 'BACKSPACE') {
+        const edited = KQDraft.clear(inputContent);
+    inputContent = edited;
+        info.textContent = 'Cleared · 清空';
+        setTimeout(() => {
+            info.textContent = '';
+        }, 800);
+        triggerFeedback();
+    }
+    else if (key === ' ') {
+        const edited = KQDraft.insert(inputContent,' ');
+    inputContent = edited;
+        triggerFeedback();
+    }
+    else if (key === 'SHIFT') {
+        isUpperCase = !isUpperCase;
+        if (shiftButtonEl) {
+            if (isUpperCase) {
+                shiftButtonEl.classList.add('active');
+            }
+            else {
+                shiftButtonEl.classList.remove('active');
+            }
+        }
+        createKeyboard();
+        triggerFeedback();
+    }
+    else if (key === 'ENTER') {
+        if (inputContent.trim()) {
+            startGameFlow();
+        }
+    }
+}
+function toggleAnimation() {
+    isAnimating = !isAnimating;
+    toggleBtn.textContent = isAnimating ? 'Pause · 暂停' : 'Resume · 继续';
+    if (isAnimating) {
+        keyButtons.forEach(btn => {
+            if (Math.abs(btn.vx) < 0.1 && Math.abs(btn.vy) < 0.1) {
+                btn.vx = (Math.random() - 0.5) * 2 * speedMultiplier;
+                btn.vy = (Math.random() - 0.5) * 2 * speedMultiplier;
+            }
+        });
+    }
+}
+function increaseSpeed() {
+    if (speedMultiplier < 3) {
+        speedMultiplier += 0.5;
+        speedDisplay.textContent = `${speedMultiplier.toFixed(1)}x`;
+        keyButtons.forEach(btn => btn.updateSpeed(speedMultiplier));
+        triggerFeedback();
+    }
+}
+function decreaseSpeed() {
+    if (speedMultiplier > 0.5) {
+        speedMultiplier -= 0.5;
+        speedDisplay.textContent = `${speedMultiplier.toFixed(1)}x`;
+        keyButtons.forEach(btn => btn.updateSpeed(speedMultiplier));
+        triggerFeedback();
+    }
+}
+function copyText() {
+    if (inputContent.trim() && KQHost.copy(inputContent))
+        KQHost.notice('Copied · 已复制');
+}
+function handleAmmoClick() {
+    // 检查冷却状态
+    if (Date.now() < ammoCooldownEnd) {
+        info.textContent = `Cooling down · 冷却中\nReload locked · 无法换弹`;
+        info.style.color = '#FF0000';
+        setTimeout(() => {
+            info.textContent = '';
+            info.style.color = '#FFFF00';
+        }, 1000);
+        return;
+    }
+    // 如果没有消失的字符
+    if (usedCharacters.size === 0) {
+        info.textContent = 'No missing keys · 没有可恢复的字符';
+        info.style.color = '#FFFF00';
+        setTimeout(() => {
+            info.textContent = '';
+        }, 800);
+        return;
+    }
+    // 计算成功概率（100%, 75%, 50%, 25%, 0%, 循环）
+    const cyclePosition = ammoAttempts % 4;
+    const successRates = [1.0, 0.75, 0.5, 0.25];
+    const currentRate = successRates[cyclePosition];
+    // 判定成功失败
+    const isSuccess = Math.random() < currentRate;
+    // 增加换弹计数
+    ammoAttempts++;
+    if (isSuccess) {
+        // 成功：恢复一个随机消失的字符
+        const usedArray = Array.from(usedCharacters);
+        const charToRestore = usedArray[Math.floor(Math.random() * usedArray.length)];
+        usedCharacters.delete(charToRestore);
+        availableCharacters.add(charToRestore);
+        info.textContent = `✓ Reloaded · 换弹成功\n恢复: ${charToRestore}`;
+        info.style.color = '#00FF00';
+        // 恢复按钮样式
+        const keyElement = Array.from(keyboard.querySelectorAll('.key')).find(el => (isUpperCase ? el.textContent : el.textContent.toLowerCase()) === charToRestore);
+        if (keyElement && !keyElement.classList.contains('special')) {
+            keyElement.style.opacity = '1';
+            keyElement.style.pointerEvents = 'auto';
+        }
+        triggerFeedback(true);
+        setTimeout(() => {
+            info.textContent = '';
+            info.style.color = '#FFFF00';
+        }, 1500);
+    }
+    else {
+        // 失败：进入30秒冷却 + 显示广告（100%）
+        ammoCooldownEnd = Date.now() + 30000;
+        ammoBtn.disabled = true;
+        info.textContent = `✗ Jammed · 换弹失败\n30s cooldown · 冷却30秒`;
+        info.style.color = '#FF0000';
+        triggerFeedback(true);
+        // 显示广告（100%触发）
+        const randomAd = adUrls[Math.floor(Math.random() * adUrls.length)];
+        setTimeout(() => {
+            showAd(randomAd);
+        }, 500);
+        // 倒计时
+        const cooldownInterval = setInterval(() => {
+            const remaining = Math.ceil((ammoCooldownEnd - Date.now()) / 1000);
+            if (remaining > 0) {
+                info.textContent = `Cooling down · 冷却中 ${remaining}秒`;
+            }
+            else {
+                clearInterval(cooldownInterval);
+                ammoCooldownEnd = 0;
+                ammoBtn.disabled = false;
+                info.textContent = 'Ready · 冷却结束！';
+                setTimeout(() => {
+                    info.textContent = '';
+                }, 1000);
+            }
+        }, 500);
+        setTimeout(() => {
+            if (remaining <= 0) {
+                info.textContent = '';
+            }
+        }, 500);
+    }
+}
+function triggerFeedback(isStrong = false) {
+    if (navigator.vibrate) {
+        if (isStrong) {
+            navigator.vibrate([50, 30, 50]);
+        }
+        else {
+            navigator.vibrate(30);
+        }
+    }
+}
+function startRandomSpeedChange() {
+    if (speedChangeInterval)
+        clearInterval(speedChangeInterval);
+    speedChangeInterval = setInterval(() => {
+        speedMultiplier = 2.0 + Math.random() * 1.0;
+        speedDisplay.textContent = `${speedMultiplier.toFixed(1)}x`;
+        keyButtons.forEach(btn => btn.updateSpeed(speedMultiplier));
+    }, 500);
+}
+createKeyboard();
+startRandomSpeedChange();
+// 更新冷却状态显示
+setInterval(() => {
+    if (Date.now() < ammoCooldownEnd) {
+        const remaining = Math.ceil((ammoCooldownEnd - Date.now()) / 1000);
+        ammoBtn.textContent = `Wait · 冷却 ${remaining}s`;
+        ammoBtn.disabled = true;
+    }
+    else {
+        ammoBtn.textContent = 'Reload · 换弹';
+        ammoBtn.disabled = false;
+    }
+}, 100);
+window.addEventListener('orientationchange', () => {
+    setTimeout(() => {
+        createKeyboard();
+    }, 100);
+});
+window.addEventListener('resize', () => { keyButtons.forEach(k => { k.x = Math.max(0, Math.min(k.x, keyboard.clientWidth - k.width)); k.y = Math.max(0, Math.min(k.y, keyboard.clientHeight - k.height)); k.element.style.left = k.x + 'px'; k.element.style.top = k.y + 'px'; }); });
+/* ===== 游戏部分 ===== */
+const cv = document.getElementById("cv");
+const dialView = KQDial.create(cv, CFG);
+const shakeEl = document.getElementById("shake");
+const resultEl = document.getElementById("result");
+const overlayEl = document.getElementById("overlay");
+const verdictEl = document.getElementById("verdict");
+const timerEl = document.getElementById("timer");
+const againBtn = document.getElementById("again");
+const CX = dialView.cx, CY = dialView.cy, R = dialView.radius;
+let pausedMs = 0, lastRaw = 0, vNow = 0;
+const gameState = {
+    phase0: 0,
+    phase: 0,
+    t0: null,
+    angle: 0,
+    redWidth: 0,
+    center: 0,
+    period: CFG.period,
+    running: true,
+    locked: false,
+    over: false,
+    armed: false,
+    feedback: null,
+    hitstopUntil: 0,
+    nextAt: 0,
+    flashT0: 0,
+    popT0: -1,
+    shake: null,
+    endTimer: null
+};
+let particles = [];
+let audioCtx = null;
+let gameFrameId = null;
+function rand(a, b) { return a + Math.random() * (b - a); }
+function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+function tri(p) { return p < 1 ? 2 * p - 1 : 3 - 2 * p; }
+function easeOut(x) { return 1 - Math.pow(1 - x, 3); }
+function hex2rgb(h) {
+    h = String(h).replace("#", "");
+    if (h.length === 3)
+        h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    const n = parseInt(h, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function mix(h1, h2, k) {
+    const a = hex2rgb(h1), b = hex2rgb(h2);
+    return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * k) + "," +
+        Math.round(a[1] + (b[1] - a[1]) * k) + "," +
+        Math.round(a[2] + (b[2] - a[2]) * k) + ")";
+}
+function pickZone() {
+    let w = rand(CFG.redWidthMin, CFG.redWidthMax);
+    if (w > CFG.arcHalf * 2)
+        w = CFG.arcHalf * 2;
+    let maxC = CFG.arcHalf - w / 2 - CFG.redCenterInsetDeg;
+    if (maxC < 0)
+        maxC = 0;
+    const c = rand(-maxC, maxC);
+    let period = CFG.period;
+    const dwell = w * period / 160;
+    if (dwell < CFG.dwellMinSec) {
+        period = CFG.dwellMinSec * 160 / w;
+    }
+    gameState.redWidth = w;
+    gameState.center = c;
+    gameState.period = period;
+}
+function newGameRound() {
+    hideOverlay();
+    if (gameState.endTimer) {
+        clearTimeout(gameState.endTimer);
+        gameState.endTimer = null;
+    }
+    gameState.over = false;
+    gameState.running = true;
+    gameState.locked = false;
+    gameState.armed = true; // 立即设置为armed，允许玩家点击
+    gameState.feedback = null;
+    gameState.nextAt = 0;
+    gameState.popT0 = -1;
+    gameState.flashT0 = 0;
+    gameState.hitstopUntil = 0;
+    gameState.shake = null;
+    shakeEl.style.transform = "";
+    particles.length = 0;
+    resultEl.textContent = "";
+    resultEl.className = "num";
+    resultEl.style.transform = "";
+    gameState.phase0 = Math.random() * 2;
+    gameState.phase = gameState.phase0;
+    // 关键：t0 不能在这里用 vNow（startGameFlow 中 vNow=0，会导致第一帧
+    // 立刻判定超时）。交给 frame() 用首帧的真实时间戳初始化。
+    gameState.t0 = null;
+    timerEl.textContent = CFG.roundSeconds.toFixed(1);
+    pickZone();
+}
+function endGameRound() {
+    const hit = gameState.feedback === "hit";
+    gameState.over = true;
+    gameState.running = false;
+    gameState.locked = true;
+    verdictEl.textContent = gameState.feedback === "timeout" ? "Time up · 时间到" : (hit ? "Hit · 命中" : "Miss · 未命中");
+    verdictEl.className = "verdict " + (hit ? "hit" : "miss");
+    // 清理上一次尚未触发的收尾定时器，避免重开后误关游戏
+    if (gameState.endTimer) {
+        clearTimeout(gameState.endTimer);
+        gameState.endTimer = null;
+    }
+    if (hit) {
+        // 成功时直接返回，不显示结算面板
+        gameState.endTimer = setTimeout(() => {
+            gameState.endTimer = null;
+            if (!gameState.over)
+                return; // 期间已重开，忽略
+            onGameComplete(true);
+        }, 500);
+    }
+    else {
+        // 失败/超时显示结算面板
+        overlayEl.classList.add("show");
+        overlayEl.setAttribute("aria-hidden", "false");
+        gameState.endTimer = setTimeout(() => {
+            gameState.endTimer = null;
+            if (!gameState.over)
+                return; // 期间已重开，忽略
+            onGameComplete(false);
+        }, 1000);
+    }
+}
+function hideOverlay() {
+    overlayEl.classList.remove("show");
+    overlayEl.setAttribute("aria-hidden", "true");
+}
+function stop() {
+    if (gameState.over) return;
+    if (!gameState.armed || !gameState.running || gameState.locked)
+        return;
+    // t0 还没由首帧设置好时忽略点击，避免被误判为超时
+    if (gameState.t0 === null)
+        return;
+    if (vNow - gameState.t0 >= CFG.roundSeconds) {
+        timeout();
+        return;
+    }
+    ensureAudio();
+    const delta = Math.abs(gameState.angle - gameState.center);
+    const isHit = delta <= gameState.redWidth / 2;
+    if (isHit) {
+        onHit();
+    }
+    else {
+        onMiss();
+    }
+}
+function timeout() {
+    if (gameState.locked || gameState.over)
+        return;
+    gameState.feedback = "timeout";
+    gameState.locked = true;
+    timerEl.textContent = "0.0";
+    resultEl.textContent = "Time up · 时间到";
+    resultEl.className = "num miss";
+    endGameRound();
+}
+function showResult(hit) {
+    resultEl.textContent = hit ? "Hit · 命中" : "Miss · 未命中";
+    resultEl.className = "num " + (hit ? "hit" : "miss");
+    gameState.popT0 = vNow;
+}
+function onHit() {
+    gameState.feedback = "hit";
+    gameState.flashT0 = vNow;
+    gameState.locked = true;
+    gameState.nextAt = vNow + CFG.feedbackSec;
+    gameState.hitstopUntil = performance.now() + HF.hitstopMs;
+    startShake(HF.shakeAmp, HF.shakeMs, HF.shakeSegments);
+    spawnBurst(HF.particleCount);
+    showResult(true);
+    playHit();
+}
+function onMiss() {
+    gameState.feedback = "miss";
+    gameState.locked = true;
+    gameState.nextAt = vNow + CFG.feedbackSec;
+    startShake(MF.shakeAmp, MF.shakeMs, 1);
+    showResult(false);
+    playMiss();
+}
+function startShake(amp, ms, segs) {
+    gameState.shake = { t0: vNow, amp: amp, dur: ms / 1000, segs: Math.max(1, segs | 0), seg: -1, x: 0, y: 0 };
+    updateShake(vNow);
+}
+function updateShake(t) {
+    const sh = gameState.shake;
+    if (!sh)
+        return;
+    const p = (t - sh.t0) / sh.dur;
+    if (p >= 1) {
+        gameState.shake = null;
+        shakeEl.style.transform = "";
+        return;
+    }
+    const seg = Math.min(sh.segs - 1, Math.floor(p * sh.segs));
+    if (seg !== sh.seg) {
+        sh.seg = seg;
+        const r = sh.amp * (1 - seg / sh.segs);
+        const a = Math.random() * TAU;
+        sh.x = Math.cos(a) * r;
+        sh.y = Math.sin(a) * r;
+    }
+    shakeEl.style.transform = "translate3d(" + sh.x.toFixed(2) + "px," + sh.y.toFixed(2) + "px,0)";
+}
+function spawnBurst(count) {
+    const a = (gameState.angle - 90) * DEG;
+    const ox = CX + Math.cos(a) * R;
+    const oy = CY + Math.sin(a) * R;
+    let room = HF.particleMax - particles.length;
+    if (room <= 0)
+        return;
+    count = Math.min(count, room);
+    for (let i = 0; i < count; i++) {
+        const ang = Math.random() * TAU;
+        const sp = rand(HF.particleSpeedMin, HF.particleSpeedMax);
+        const life = HF.particleLifeMs / 1000;
+        particles.push({
+            x: ox, y: oy,
+            vx: Math.cos(ang) * sp,
+            vy: Math.sin(ang) * sp,
+            size: rand(HF.particleSizeMin, HF.particleSizeMax),
+            life: life, ttl: life
+        });
+    }
+}
+function updateParticles(dt) {
+    const damp = Math.pow(HF.particleDamping, dt * 60);
+    for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.vx *= damp;
+        p.vy *= damp;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.life -= dt;
+        if (p.life <= 0)
+            particles.splice(i, 1);
+    }
+}
+function updatePop(t) {
+    if (gameState.popT0 < 0)
+        return;
+    const ms = (t - gameState.popT0) * 1000;
+    const total = HF.popMs, half = total / 2;
+    if (ms >= total) {
+        gameState.popT0 = -1;
+        resultEl.style.transform = "";
+        return;
+    }
+    const k = ms < half ? easeOut(ms / half) : easeOut(1 - (ms - half) / half);
+    const scale = 1 + (HF.popScale - 1) * k;
+    resultEl.style.transform = "scale(" + scale.toFixed(3) + ")";
+}
+function ensureAudio() {
+    if (audioCtx) {
+        if (audioCtx.state === "suspended") {
+            try {
+                audioCtx.resume();
+            }
+            catch (e) { }
+        }
+        return audioCtx;
+    }
+    try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC)
+            return null;
+        audioCtx = new AC();
+    }
+    catch (e) {
+        audioCtx = null;
+    }
+    return audioCtx;
+}
+function tone(a, when, type, f0, f1, durMs, peak) {
+    const o = a.createOscillator();
+    const g = a.createGain();
+    const dur = durMs / 1000;
+    o.type = type;
+    o.frequency.setValueAtTime(f0, when);
+    o.frequency.linearRampToValueAtTime(f1, when + dur);
+    g.gain.setValueAtTime(0.0001, when);
+    g.gain.exponentialRampToValueAtTime(peak, when + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+    o.connect(g);
+    g.connect(a.destination);
+    o.start(when);
+    o.stop(when + dur + 0.03);
+}
+function playHit() {
+    const a = ensureAudio();
+    if (!a)
+        return;
+    try {
+        const A = HF.audio;
+        const t = a.currentTime + 0.001;
+        const d = A.delayMs / 1000;
+        tone(a, t, "sine", A.baseA, A.baseB, A.toneMs, A.gain);
+        tone(a, t + d, "sine", A.baseA, A.baseB, A.toneMs, A.gain);
+    }
+    catch (e) { }
+}
+function playMiss() {
+    const a = ensureAudio();
+    if (!a)
+        return;
+    try {
+        const M = MF.audio;
+        tone(a, a.currentTime + 0.001, "sawtooth", M.from, M.to, M.ms, M.gain);
+    }
+    catch (e) { }
+}
+function render(t) { dialView.paint(gameState, particles, t); }
+function update(dt, t) {
+    updateParticles(dt);
+    updateShake(t);
+    updatePop(t);
+    // t0 尚未由首帧初始化时，先不做计时/相位推进
+    const timingReady = gameState.t0 !== null;
+    if (timingReady && gameState.running && !gameState.locked) {
+        const remaining = Math.max(0, CFG.roundSeconds - (t - gameState.t0));
+        timerEl.textContent = remaining.toFixed(1);
+        if (remaining <= 0) {
+            timeout();
+            return;
+        }
+    }
+    if (timingReady && gameState.running && !gameState.locked) {
+        const p = (gameState.phase0 + 2 * (t - gameState.t0) / gameState.period) % 2;
+        gameState.phase = p < 0 ? p + 2 : p;
+    }
+    gameState.angle = CFG.arcHalf * tri(gameState.phase);
+    if (gameState.locked && gameState.nextAt > 0 && t >= gameState.nextAt) {
+        gameState.nextAt = 0;
+        endGameRound();
+    }
+}
+function frame(now) {
+    const dt = lastRaw ? Math.min((now - lastRaw) / 1000, 0.1) : 0;
+    lastRaw = now;
+    if (gameState.hitstopUntil > 0) {
+        if (now < gameState.hitstopUntil) {
+            pausedMs += dt * 1000;
+            vNow = (now - pausedMs) / 1000;
+            render(vNow);
+            gameFrameId = KQDial.frame(frame);
+            return;
+        }
+        gameState.hitstopUntil = 0;
+    }
+    vNow = (now - pausedMs) / 1000;
+    // t0 应该在 newGameRound 时初始化，但这里作为备份
+    // 如果游戏运行但 t0 未被正确设置，则重新初始化
+    if (gameState.running && gameState.t0 === null) {
+        gameState.t0 = vNow;
+    }
+    update(dt, vNow);
+    render(vNow);
+    gameFrameId = KQDial.frame(frame);
+}
+KQDial.press(gameModal.querySelector('.stage'), stop);
+KQDial.bindTouchRelease(againBtn);
+window.addEventListener("keydown", function (e) {
+    if (!gameModal.classList.contains('show') || gameState.over || e.target.tagName === 'BUTTON') return;
+    if (e.code === "Space" || e.code === "Enter" || e.key === " " || e.key === "Enter") {
+        e.preventDefault();
+        stop();
+    }
+});
+againBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    onGameComplete(gameState.feedback === "hit");
+});
+function startGameFlow() {
+    if (gameModal.classList.contains("show") || currentAdShowing) return;
+    isAnimating = false;
+    gameModal.classList.add('show');
+    pausedMs = 0;
+    lastRaw = 0;
+    vNow = 0;
+    newGameRound();
+    if (gameFrameId)
+        KQDial.cancelFrame(gameFrameId);
+    frame(performance.now());
+}
+function onGameComplete(success) {
+    if (!gameModal.classList.contains('show'))
+        return;
+    if (gameState.endTimer) clearTimeout(gameState.endTimer);
+    gameState.endTimer = null;
+    KQDial.cancelFrame(gameFrameId);
+    gameFrameId = null;
+    gameState.running = false;
+    hideOverlay();
+    gameModal.classList.remove('show');
+    if (success && !KQHost.deliver(inputContent)) {
+        isAnimating = true;
+        return;
+    }
+    if (!success) {
+        const edited = KQDraft.clear(inputContent);
+        if (edited === null) { isAnimating = true; return; }
+        inputContent = edited;
+    }
+    // 重置消失字符系统
+    usedCharacters.clear();
+    availableCharacters.clear();
+    ammoCount = 0;
+    ammoAttempts = 0; // 重置换弹次数
+    ammoCooldownEnd = 0;
+    ammoBtn.disabled = false;
+    ammoBtn.textContent = 'Reload · 换弹';
+    // 恢复按键样式
+    document.querySelectorAll('.key').forEach(el => {
+        if (!el.classList.contains('special')) {
+            el.style.opacity = '1';
+            el.style.pointerEvents = 'auto';
+        }
+    });
+    // 恢复按键速度
+    const baseSpeed = 3;
+    keyButtons.forEach(btn => {
+        btn.vx = (Math.random() - 0.5) * baseSpeed * speedMultiplier;
+        btn.vy = (Math.random() - 0.5) * baseSpeed * speedMultiplier;
+    });
+    if (success) {
+        // 成功：显示内容 + 自动复制
+        info.textContent = 'Confirmed · 已确认\n' + inputContent;
+        info.style.fontSize = '18px';
+        inputContent = KQDraft.clear(inputContent);
+        triggerFeedback(true);
+        setTimeout(() => {
+            info.textContent = '';
+            info.style.fontSize = '24px';
+            isAnimating = true;
+        }, 2000);
+    }
+    else {
+        // 失败或超时：清空内容
+        info.textContent = 'Draft cleared · 已清空';
+        info.style.fontSize = '20px';
+        triggerFeedback(true);
+        setTimeout(() => {
+            info.textContent = '';
+            info.style.fontSize = '24px';
+            isAnimating = true;
+        }, 1500);
+    }
+}
+// 为广告关闭按钮添加事件监听
+document.addEventListener('DOMContentLoaded', function () {
+    const closeBtn = document.querySelector('.ad-close-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeAd);
+    }
+});
+</script>
+<script>window.kqIsIdle = () => !inputContent && !currentAdShowing && !gameModal.classList.contains('show');
+
+KQDraft.bind(() => {});
+</script></body>
+</html>

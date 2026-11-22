@@ -1,0 +1,1440 @@
+<!doctype html>
+<html class="ime white"  lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#edf0f5">
+  <title>混沌键盘 · Key Quota</title>
+  <style>
+
+:root {
+  color-scheme: light;
+  --page: #edf0f5;
+  --surface: #fff;
+  --panel: #e1e5ed;
+  --key: #fbfcff;
+  --ink: #1b2840;
+  --muted: #4e607a;
+  --line: #c8d0dd;
+  --accent: #3649bc;
+  --accent-bg: #e7ebff;
+  --warm: #7b380b;
+  --warm-bg: #fff0d9;
+  font-family: system-ui, "Microsoft YaHei", sans-serif;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--page); color: var(--ink); }
+body:has(> main > #chat:not([hidden])) {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+body:has(> main > #chat:not([hidden])) > main {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+button:disabled { cursor: default; }
+button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.site-header { border-bottom: 1px solid var(--line); background: var(--surface); }
+.site-header > div { width: min(100% - 28px, 560px); margin: auto; display: flex; align-items: center; gap: 9px; min-height: 51px; font-weight: 750; }
+.logo { width: 26px; height: 26px; display: grid; place-items: center; background: var(--accent); color: white; border-radius: 8px; font-size: 13px; }
+main { width: min(100% - 26px, 560px); margin: 0 auto; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+.heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; padding: clamp(10px, 3.2vw, 23px) 1px 12px; }
+.heading h1 { margin: 0; font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: 1.03; letter-spacing: -.05em; }
+.heading h1 span { color: var(--accent); }
+.heading p { margin: 5px 0 0; color: var(--muted); font-size: .82rem; }
+.stock { flex: 0 0 auto; min-width: 75px; padding: 5px 8px; color: var(--muted); border: 1px solid var(--line); border-radius: 11px; background: var(--surface); text-align: center; font-size: .7rem; }
+.stock strong { display: block; color: var(--accent); font-size: 1.2rem; font-variant-numeric: tabular-nums; }
+.console { border: 1px solid var(--line); border-radius: 19px; overflow: hidden; background: var(--surface); box-shadow: 0 10px 32px #27395613; }
+#chat { display: flex; flex: 1 0 auto; flex-direction: column; }
+#chat > :not(#log) { flex: none; }
+@media (min-width: 700px) {
+  @supports (zoom: 1.2) {
+    #chat {
+      --chat-scale: 1.2;
+      width: 560px;
+      margin-inline: calc((560px / var(--chat-scale) - 560px) / 2);
+      zoom: var(--chat-scale);
+    }
+  }
+}
+.bar, .meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 13px; font-size: .83rem; }
+.bar { border-bottom: 1px solid var(--line); }
+.bar span, .meta span { color: var(--muted); font-size: .75rem; }
+#log { flex: 1 0 60px; min-height: 60px; contain: size; overflow: auto; padding: 8px 13px; background: #f6f8fc; }
+#empty { padding: 9px 0; font-size: .8rem; color: var(--muted); }
+.message { width: fit-content; max-width: 88%; margin: 3px 0 5px auto; padding: 7px 10px; background: var(--accent-bg); border-radius: 11px 11px 3px 11px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.draftbox { padding: 0 12px 8px; }
+.draftbox .meta { padding-inline: 0; }
+#draft { min-height: 53px; max-height: 116px; overflow: auto; padding: 8px 10px; border: 1px solid var(--line); border-radius: 9px; background: #fbfcff; white-space: pre-wrap; overflow-wrap: anywhere; }
+#draft:empty::before { content: 'Type a message… · 输入任意英文消息…'; color: var(--muted); }
+#feedback { min-height: 1.25em; margin: 4px 0 0; color: var(--muted); font-size: .78rem; }
+.keyboard { padding: 8px; border-top: 1px solid var(--line); background: var(--panel); }
+.candidate-meta { min-height: 17px; padding: 0 2px 3px; color: var(--muted); font-size: .72rem; }
+.candidate-bar { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 5px; margin-bottom: 5px; }
+#candidates { display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; gap: 4px; }
+.candidate, .key, .func, .text-button { border: 1px solid transparent; border-radius: 7px; background: var(--key); }
+.candidate { min-width: 0; min-height: 39px; padding: 2px 4px; overflow-wrap: anywhere; font-size: .78rem; line-height: 1.16; }
+.candidate small { display: block; margin-bottom: 2px; font-size: .63rem; color: var(--muted); }
+.candidate.hot { background: var(--accent-bg); color: #2536a0; }
+.candidate.hot small { color: inherit; }
+#more { padding: 4px 9px; }
+.recovery { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin: 0 0 6px; }
+.text-button { min-height: 33px; padding: 4px 8px; color: var(--accent); font-size: .78rem; font-weight: 650; }
+.text-button:disabled { background: transparent; color: #65738a; }
+#offer { color: var(--warm); background: var(--warm-bg); }
+#rows, #symbols { touch-action: none; user-select: none; -webkit-user-select: none; }
+.keyrow { display: flex; justify-content: center; gap: 4px; margin: 0 0 5px; }
+.key, .func { height: clamp(37px, 7vh, 45px); box-shadow: 0 2px 0 #abb6c8; }
+.key { flex: 0 1 9.2%; min-width: 0; padding: 1px 0; display: grid; place-content: center; line-height: 1; font-weight: 650; }
+.key span, .key small { pointer-events: none; }
+.key small { margin-top: 3px; color: var(--muted); font-size: .6rem; font-weight: 600; }
+.key.spent { box-shadow: none; background: #cdd4e0; color: #4e5a6f; }
+.key.traced, .key:active, .func:active:enabled { background: #c1cbfb; }
+.func { padding: 0 5px; background: #c7d0df; font-weight: 730; font-size: .81rem; }
+.func:disabled { opacity: .6; }
+#del, #caseKey, #symbolDel { flex: 0 1 13%; min-width: 0; }
+#caseKey[aria-pressed="true"] { background: var(--accent); color: white; }
+.bottom-row { display: grid; grid-template-columns: .7fr 2fr .85fr; gap: 5px; }
+#space { background: var(--key); }
+#send { background: var(--accent); color: white; }
+#send:disabled { opacity: .55; }
+.stagebody { padding: 14px 16px 17px; }
+.stats { display: flex; gap: 22px; margin: 0 0 12px; }
+.stats small { display: block; color: var(--muted); }
+.stats strong { color: var(--accent); font-size: 1.18rem; font-variant-numeric: tabular-nums; }
+.primary { min-height: 41px; padding: 6px 14px; border: 1px solid transparent; border-radius: 9px; color: white; background: var(--accent); font-weight: 700; }
+.primary:disabled { opacity: .55; }
+#rack { width: 100%; min-height: 105px; margin-bottom: 10px; padding: 10px; border: 1px solid var(--line); border-radius: 11px; background: var(--page); }
+.track { position: relative; display: block; height: 43px; border-radius: 8px; background: var(--panel); margin-bottom: 6px; }
+.socket, #tile { position: absolute; top: 5px; width: 34px; height: 34px; border-radius: 6px; }
+.socket { right: 8px; border: 2px dashed var(--muted); }
+#tile { display: grid; place-items: center; left: 8px; background: var(--accent); color: white; font-weight: 750; }
+#rack.load #tile { animation: load-tile .62s ease; }
+#rack.jam #tile { animation: jam-tile .62s ease; }
+@keyframes load-tile { to { left: calc(100% - 42px); } }
+@keyframes jam-tile { 40% { left: 45%; transform: rotate(-7deg); } }
+#arena { position: relative; width: 100%; padding: 0; border: 1px solid var(--line); border-radius: 11px; background: #f6f8fc; overflow: hidden; }
+#shake { display: block; height: clamp(170px, 42vh, 285px); }
+#cv { display: block; }
+#result { position: absolute; left: 0; right: 0; bottom: 8px; text-align: center; pointer-events: none; }
+.clock { color: var(--accent); font-size: 1.3rem; font-variant-numeric: tabular-nums; }
+.clock small, .preview small { color: var(--muted); font-size: .74rem; }
+.stage h2 { margin: 7px 0; font-size: 1.04rem; }
+.preview p { margin: 4px 0 8px; white-space: pre-wrap; overflow-wrap: anywhere; }
+#overlay { display: none; margin-top: 10px; }
+#overlay.show { display: block; }
+.verdictCard { border: 1px solid var(--line); border-radius: 10px; padding: 9px; background: var(--page); }
+.verdictCard button { margin-right: 5px; }
+.sponsor { width: min(400px, calc(100% - 28px)); padding: 18px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface); color: var(--ink); box-shadow: 0 17px 55px #1b284054; }
+.sponsor::backdrop { background: #1b284087; }
+.sponsor h2 { margin: 5px 0; overflow-wrap: anywhere; font-size: 1.3rem; }
+.sponsor p { margin: 7px 0 13px; color: var(--muted); }
+.sponsor-label { color: var(--warm); font-size: .78rem; font-weight: 700; }
+.video-ad { width: min(480px, calc(100% - 28px)); }
+.video-ad video { display: block; width: 100%; max-height: 50vh; aspect-ratio: 4 / 3; margin: 10px 0; border-radius: 10px; background: var(--ink); }
+.video-ad-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 360px) {
+  main { width: calc(100% - 14px); }
+  .keyboard { padding-inline: 5px; }
+  .keyrow { gap: 3px; }
+}
+@media (prefers-reduced-motion: reduce) { #rack #tile { animation: none !important; } }
+
+  </style>
+<link rel="stylesheet" href="ime.css"><script src="host.js"></script><script src="draft.js"></script><script src="dial-view.js"></script></head>
+<body>
+  <header class="site-header"><div><span class="logo" aria-hidden="true">KQ</span> Key Quota</div></header>
+  <main>
+    <div class="heading">
+      <div><h1>Chaos Keys · 混沌键盘<span>.</span></h1><p>Each key starts with three uses. · 每个字母和数字可用三次。耗尽后可以换弹。</p></div>
+      <div class="stock"><span>Total uses · 字符总余量</span><strong id="stock">108</strong></div>
+    </div>
+    <section class="console" id="chat" aria-label="Chat and keyboard · 消息和键盘">
+      <div class="bar"><b>Messages · 消息记录</b><span id="count">00 sent · 已发送</span></div>
+      <div id="log" role="log"><div id="empty">No messages yet · 还没有发出的消息</div><div id="messages"></div></div>
+      <div class="draftbox">
+        <div class="meta"><b id="draft-label">Draft · 当前草稿</b><span id="length">0 chars · 字符</span></div>
+        <div id="draft" role="textbox" aria-labelledby="draft-label" aria-readonly="true" aria-multiline="true" tabindex="0"></div>
+        <p id="feedback" role="status">Tap or swipe to type. · 点击或滑过字母键开始输入。</p>
+      </div>
+      <div class="keyboard" aria-label="English QWERTY · 英文 QWERTY 键盘">
+        <div id="trend-source" class="candidate-meta">Trends: demo list · 热词来源：演示词表</div>
+        <div class="candidate-bar">
+          <div id="candidates" aria-label="Suggestions · 候选词"></div>
+          <button type="button" id="more" class="text-button" aria-pressed="false">More · 更多</button>
+        </div>
+        <div class="recovery">
+          <button type="button" class="text-button" id="single">Delete one · 删一字</button>
+          <button type="button" class="text-button" id="undo" hidden>Undo word · 撤销整词删除</button>
+          <button type="button" class="text-button" id="offer" hidden></button>
+        </div>
+        <div id="rows"></div>
+        <div id="symbols" hidden></div>
+        <div class="bottom-row">
+          <button type="button" id="layout" class="func" aria-pressed="false">123</button>
+          <button type="button" id="space" class="func">Space · 空格</button>
+          <button type="button" id="send" class="func">Aim · 判定</button>
+        </div>
+      </div>
+    </section>
+    <section class="console stage" id="reload" aria-label="Reload a key · 字符换弹" hidden>
+      <div class="bar"><b>Reload a key · 字符换弹</b><button type="button" class="text-button" id="cancelReload">Back to draft · 返回草稿</button></div>
+      <div class="stagebody">
+        <div class="stats"><div><small>Earned · 已获得</small><strong id="earned"></strong></div><div><small>Next odds · 下一发成功率</small><strong id="odds"></strong></div></div>
+        <button type="button" id="rack"><span class="track" aria-hidden="true"><span class="socket"></span><span id="tile"></span></span><strong id="cue"></strong></button>
+        <button type="button" class="primary" id="finish">Bank uses · 完成换弹</button>
+      </div>
+    </section>
+    <section class="console stage" id="game" aria-label="Send dial · 发送校准" hidden>
+      <div class="bar"><b>Send dial · 发送校准</b><span id="round"></span></div>
+      <div class="stagebody">
+        <div class="clock"><small>Seconds left · 剩余秒数</small> <strong id="dialTimer">10.0</strong></div>
+        <h2>Tap when the needle reaches red · 指针进入红区时按下</h2>
+        <button type="button" id="arena" aria-label="Aim for red · 尝试命中红区"><span id="shake"><svg id="cv" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg></span><strong id="result"></strong></button>
+        <div class="preview"><small>Pending · 待发送消息</small><p id="preview"></p></div>
+        <div id="overlay" aria-hidden="true"><div class="verdictCard"><h2 id="verdict"></h2><button type="button" id="again" class="primary"></button><button type="button" id="sendAnyway" class="text-button" hidden>Insert anyway · 继续填入</button></div></div>
+        <button type="button" id="backToDraft" class="text-button">Back to draft · 返回草稿</button>
+      </div>
+    </section>
+  </main>
+  <dialog id="sponsor" class="sponsor" aria-labelledby="sponsor-title" aria-describedby="sponsor-copy">
+    <span class="sponsor-label">Sponsored break · 模拟赞助广告</span>
+    <h2 id="sponsor-title"></h2>
+    <p id="sponsor-copy"></p>
+    <button type="button" class="primary" id="closeSponsor" autofocus>Close and continue · 关闭并继续</button>
+  </dialog>
+  <dialog id="reloadAd" class="sponsor video-ad" aria-labelledby="reloadAdTitle" aria-describedby="reloadAdTimer">
+    <span class="sponsor-label">Sponsored clip · 模拟视频广告</span>
+    <h2 id="reloadAdTitle">Reload sponsor · 换弹赞助</h2>
+    <video id="reloadAdVideo" muted playsinline preload="none" aria-label="Reload clip · 换弹赞助短片"></video>
+    <p id="reloadAdTimer" role="status">Return in 8s · 8 秒后可返回</p>
+    <div class="video-ad-actions">
+      <button type="button" id="playReloadAd" class="text-button" hidden>Play video · 播放视频</button>
+      <button type="button" id="closeReloadAd" class="primary" disabled>Back to draft · 返回草稿</button>
+    </div>
+  </dialog>
+  <script type="application/octet-stream" id="reloadSprintClip" data-file="media/reloadSprintClip.mp4"></script>
+  <script type="application/octet-stream" id="reloadPixelClip" data-file="media/reloadPixelClip.mp4"></script>
+  <script>'use strict';
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+const $ = id => document.getElementById(id);
+const design = { initialQuota: 3, reloadDecay: .75, reloadAnimationMs: 620, undoMs: 6000, adCooldownMs: 1800 };
+const remaining = Object.fromEntries([...'abcdefghijklmnopqrstuvwxyz0123456789'].map(char => [char, design.initialQuota]));
+const keys = new Map();
+const placeholder = 'Tap or swipe to type. · 点击或滑过字母键开始输入。';
+const sampleTrends = ['rizz', 'delulu', 'game night'];
+// Earlier entries represent more frequent words in this local demo lexicon.
+const vocabulary = ('the of and to in a is that for it on as with be at by this have from or one had not what all were when we there can ' +
+    'an your which their said if do will each how up about out them then she many some so these would other into has more her two him ' +
+    'see time could no make than first been its who now people down only way find use may water long little very after words called just ' +
+    'where most know get through back much before go good new write our me too any same tell does here take even give day both want ' +
+    'come made such should because work those well went need think help over right great old place around still hand home every small ' +
+    'look move again change off world night house point play school last never while might next important story under start left end ' +
+    'meet call later thanks tomorrow tonight today arrive practice airport flight library coffee pizza dinner lunch breakfast movie ' +
+    'tomato pasta burger sauce bake oven ride drive train room table book books trip travel team game games soccer ball music city park ' +
+    'walking walk talk session running run blue green rain shop store market flowers flower desk line please really sorry available final ' +
+    'send message answer plan ready finish break center north south east west bright light dark ship shop stop step worth north never').split(/\s+/);
+const words = [...new Set(vocabulary)];
+// Scores rank fictional offers within each topic.
+const campaigns = [
+    { keywords: /\b(pizzas?|burgers?|dinner|lunch|food|hungry|takeout)\b/i, score: 98, name: 'Slice Sprint', title: 'Pizza break? · 来份披萨？', copy: 'A hot slice could get there before your next message. · 热披萨可能比下一条消息先到。' },
+    { keywords: /\b(pizzas?|dinner|lunch|food)\b/i, score: 74, name: 'Meal Parade', title: 'Dinner plans? · 晚餐计划？', copy: 'Get meal ideas while your message waits. · 等待时看看晚餐灵感。' },
+    { keywords: /\b(flights?|airports?|travel|hotels?|vacation|trips?)\b/i, score: 97, name: 'CloudHop', title: 'Compare flight deals · 比较机票', copy: 'Find a seat before you finish your sentence. · 写完这句前，先找个座位。' },
+    { keywords: /\b(coffee|latte|cafe|espresso)\b/i, score: 96, name: 'Grand Brew Café', title: 'Coffee first? · 先喝咖啡？', copy: 'A little caffeine for the rest of that message. · 用咖啡给剩下的话提提神。' },
+    { keywords: /\b(games?|gaming|esports|xbox|playstation|switch)\b/i, score: 95, name: 'PixelPass', title: 'Game night awaits · 游戏之夜', copy: 'Discover a new game during this brief keyboard break. · 趁键盘休息，发现新游戏。' },
+    { keywords: /\b(movies?|films?|cinema|tv|streaming)\b/i, score: 94, name: 'Reel Room', title: 'Movie night picks · 今晚看什么', copy: 'Find a movie while your keyboard takes an intermission. · 键盘中场休息，挑部电影。' },
+    { keywords: /\b(books?|library|study|homework|school|class)\b/i, score: 93, name: 'Page Pop', title: 'One more chapter? · 再读一章？', copy: 'Browse study picks while your draft waits. · 等待草稿时，看看学习精选。' }
+].sort((first, second) => second.score - first.score);
+let phase = 'chat';
+let draft = '';
+let pending = '';
+let messageCount = 0;
+let roundNumber = 0;
+let uppercase = false;
+let symbols = false;
+let showMore = false;
+let undoDraft = null, undoCursor = 0;
+let undoTimer;
+let swipeChoice = null;
+let gesture = null;
+let reloadKey = null;
+let earned = 0;
+let busy = false;
+let hint = placeholder;
+let trends = [];
+let trendLabel = 'Offline list · 演示词表';
+let wordsUntilAd = adSpacing();
+let lastAdClosed = -Infinity;
+let dismissAction = null;
+const sponsor = $('sponsor');
+KQHost.prepareDialogs();
+function show(screen) {
+    for (const section of ['chat', 'reload', 'game'])
+        $(section).hidden = section !== screen;
+}
+function adSpacing() {
+    return 2 + Math.floor(Math.random() * 4);
+}
+function contextWords(text) {
+    var _a;
+    return (_a = text.toLowerCase().match(/[a-z0-9]+/g)) !== null && _a !== void 0 ? _a : [];
+}
+function chooseAd() {
+    const recentWords = contextWords(draft).slice(-8);
+    const recent = ' ' + recentWords.join(' ') + ' ';
+    const matchingTrend = trends.find(term => recent.includes(' ' + contextWords(term).join(' ') + ' '));
+    if (!matchingTrend) {
+        for (const word of recentWords.reverse()) {
+            const campaign = campaigns.find(item => item.keywords.test(word));
+            if (campaign)
+                return campaign;
+        }
+    }
+    const topic = matchingTrend !== null && matchingTrend !== void 0 ? matchingTrend : trends[0];
+    return {
+        name: 'Trend Flash',
+        title: topic !== null && topic !== void 0 ? topic : 'Trend Flash 热门速递',
+        copy: topic ? 'A sponsor break for this trending topic. · 键盘为这条热门话题安排了一次赞助展示。' : 'A short break from typing. · 键盘为你安排了一次热门话题休息。'
+    };
+}
+function openSponsor(action) {
+    const ad = chooseAd();
+    dismissAction = action;
+    $('sponsor-title').textContent = ad.title;
+    $('sponsor-copy').textContent = ad.name + ' · ' + ad.copy;
+    sponsor.showModal();
+}
+function closeSponsor() {
+    if (!dismissAction)
+        return;
+    const action = dismissAction;
+    dismissAction = null;
+    sponsor.close();
+    action();
+}
+function requestSpace() {
+    if (phase !== 'chat' || sponsor.open)
+        return;
+    if (/\S$/.test(draft))
+        wordsUntilAd--;
+    if (wordsUntilAd <= 0 && /\S$/.test(draft) && performance.now() - lastAdClosed >= design.adCooldownMs) {
+        openSponsor(() => {
+            wordsUntilAd = adSpacing();
+            lastAdClosed = performance.now();
+            appendText(' ');
+            $('draft').focus();
+        });
+        return;
+    }
+    appendText(' ');
+}
+function clearUndo() {
+    clearTimeout(undoTimer);
+    undoDraft = null;
+    $('undo').hidden = true;
+}
+function editWord() {
+    if (phase !== 'chat' || sponsor.open || !draft)
+        return;
+    clearUndo();
+    undoDraft = draft; undoCursor = KQDraft.cursor;
+    swipeChoice = null;
+    const edited = KQDraft.replace(draft,KQDraft.before(draft).replace(/(?:\S+\s*|\s+)$/, '').length,KQDraft.cursor,'');
+    draft = edited;
+    hint = 'Word deleted. · 已删除整词。';
+    $('undo').hidden = false;
+    undoTimer = setTimeout(clearUndo, design.undoMs);
+    renderChat();
+}
+function editCharacter() {
+    if (phase !== 'chat' || sponsor.open || !draft)
+        return;
+    clearUndo();
+    swipeChoice = null;
+    const edited = KQDraft.replace(draft,Math.max(0,KQDraft.cursor-1),KQDraft.cursor,'');
+    draft = edited;
+    hint = 'Character deleted. · 已删一字。';
+    renderChat();
+}
+function restoreWord() {
+    if (phase !== 'chat' || sponsor.open || undoDraft === null)
+        return;
+    const edited = KQDraft.replace(draft,0,KQDraft.cursor,undoDraft.slice(0,undoCursor));
+    draft = edited;
+    clearUndo();
+    hint = 'Word restored. · 已恢复整词。';
+    renderChat();
+    $('draft').focus();
+}
+function characterCost(text) {
+    var _a;
+    const cost = new Map();
+    for (const char of text.toLowerCase()) {
+        if (char in remaining)
+            cost.set(char, ((_a = cost.get(char)) !== null && _a !== void 0 ? _a : 0) + 1);
+    }
+    return cost;
+}
+function insertText(start, text, previous = '') {
+    var _a;
+    const cost = characterCost(text);
+    const refund = characterCost(previous);
+    for (const [char, count] of cost) {
+        if (remaining[char] + ((_a = refund.get(char)) !== null && _a !== void 0 ? _a : 0) < count) {
+            reloadKey = char;
+            hint = '「' + char.toUpperCase() + '」 needs a reload · 配额不足。';
+            renderChat();
+            return false;
+        }
+    }
+    const edited = KQDraft.replace(draft,start,KQDraft.cursor,text);
+    clearUndo();
+    for (const [char, count] of refund)
+        remaining[char] += count;
+    for (const [char, count] of cost)
+        remaining[char] -= count;
+    if (reloadKey && remaining[reloadKey] > 0)
+        reloadKey = null;
+    draft = edited;
+    return true;
+}
+function appendText(text) {
+    if (phase !== 'chat' || sponsor.open)
+        return;
+    const output = uppercase ? text.toUpperCase() : text;
+    if (!insertText(KQDraft.cursor, output))
+        return;
+    swipeChoice = null;
+    showMore = false;
+    hint = placeholder;
+    renderChat();
+}
+function applyCandidate(word, prefix) {
+    if (phase !== 'chat' || sponsor.open)
+        return;
+    if (swipeChoice) {
+        const { prefix: start, inserted } = swipeChoice;
+        const output = uppercase ? word.toUpperCase() : word;
+        if (!insertText(start, output, inserted))
+            return;
+        swipeChoice = null;
+        hint = 'Selected · 已采用候选「' + word + '」。';
+    }
+    else {
+        const fragment = KQDraft.before(draft).slice(KQDraft.cursor - prefix.length);
+        const output = uppercase ? word.toUpperCase() : word;
+        const completion = output.toLowerCase().startsWith(fragment.toLowerCase());
+        const inserted = completion ? output.slice(fragment.length) : output;
+        const start = completion ? KQDraft.cursor : KQDraft.cursor - prefix.length;
+        if (!insertText(start, inserted))
+            return;
+        hint = 'Inserted · 已插入「' + word + '」。';
+    }
+    showMore = false;
+    renderChat();
+    $('draft').focus();
+}
+function addCandidate(word, kind, flag, prefix) {
+    const button = document.createElement('button');
+    const label = document.createElement('small');
+    const text = document.createElement('span');
+    button.type = 'button';
+    button.className = 'candidate' + (flag ? ' hot' : '');
+    label.textContent = kind;
+    text.textContent = word;
+    button.append(label, text);
+    button.addEventListener('click', () => applyCandidate(word, prefix));
+    $('candidates').append(button);
+}
+function renderCandidates() {
+    var _a, _b;
+    $('candidates').replaceChildren();
+    const prefix = ((_b = (_a = KQDraft.before(draft).match(/[a-z]+$/i)) === null || _a === void 0 ? void 0 : _a[0]) !== null && _b !== void 0 ? _b : '').toLowerCase();
+    const featured = trends.length ? trends : sampleTrends;
+    $('more').textContent = swipeChoice ? 'Hide choices · 关闭候选' : (showMore ? 'Trending · 热词' : 'More · 更多');
+    $('more').setAttribute('aria-pressed', String(showMore));
+    if (swipeChoice) {
+        for (const word of swipeChoice.alternatives.slice(0, 3))
+            addCandidate(word, 'Swipe · 滑行候选', false, prefix);
+        return;
+    }
+    const ordinary = words.filter(word => word !== prefix && word.startsWith(prefix));
+    const matches = prefix ? featured.filter(word => word.toLowerCase().startsWith(prefix)) : [];
+    const preferred = matches.length ? matches.slice(0, 2) : featured.slice(0, 1);
+    if (showMore) {
+        for (const word of ordinary.slice(0, 3))
+            addCandidate(word, 'Word · 普通', false, prefix);
+    }
+    else {
+        for (const word of preferred)
+            addCandidate(word, 'Trending · 热词', true, prefix);
+    }
+}
+function renderChat() {
+    if (typeof appSave === 'function')
+        appSave();
+    for (const [char, key] of keys) {
+        const depleted = remaining[char] === 0;
+        const glyph = uppercase ? char.toUpperCase() : char;
+        key.classList.toggle('spent', depleted);
+        key.firstElementChild.textContent = glyph;
+        key.lastElementChild.textContent = remaining[char];
+        key.setAttribute('aria-label', glyph + ' · uses left / 剩余 ' + remaining[char] + ' 次');
+    }
+    $('stock').textContent = Object.values(remaining).reduce((total, count) => total + count, 0);
+    KQDraft.render(draft);
+    $('length').textContent = draft.length + ' chars · 字符';
+    $('feedback').textContent = hint;
+    $('trend-source').textContent = 'Trends · 热词来源：' + trendLabel;
+    $('single').disabled = $('del').disabled = $('symbolDel').disabled = KQDraft.cursor === 0;
+    $('caseKey').setAttribute('aria-pressed', String(uppercase));
+    $('layout').setAttribute('aria-pressed', String(symbols));
+    $('layout').textContent = symbols ? 'ABC' : '123';
+    $('send').disabled = !draft.trim();
+    $('rows').hidden = symbols;
+    $('symbols').hidden = !symbols;
+    const spent = reloadKey !== null && reloadKey !== void 0 ? reloadKey : Object.keys(remaining).find(char => remaining[char] === 0);
+    $('offer').hidden = !spent;
+    if (spent)
+        $('offer').textContent = 'Reload · 为 ' + spent.toUpperCase() + ' 换弹';
+    renderCandidates();
+}
+function handleTap(char) {
+    if (char === 'shift') {
+        uppercase = !uppercase;
+        renderChat();
+    }
+    else if (char === 'delete') {
+        editWord();
+    }
+    else {
+        appendText(char);
+    }
+}
+function keyButton(char, symbolLayout) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    if (char === 'shift' || char === 'delete') {
+        button.className = 'func';
+        button.id = char === 'shift' ? 'caseKey' : (symbolLayout ? 'symbolDel' : 'del');
+        button.textContent = char === 'shift' ? '⇧' : '⌫';
+        button.setAttribute('aria-label', char === 'shift' ? 'Change case · 切换大小写' : 'Delete word · 删除整词');
+    }
+    else {
+        button.className = 'key';
+        button.dataset.char = char;
+        button.append(document.createElement('span'));
+        if (char in remaining) {
+            button.append(document.createElement('small'));
+            keys.set(char, button);
+        }
+        else {
+            button.firstElementChild.textContent = char;
+        }
+    }
+    button.addEventListener('click', event => {
+        // A letter's touch sequence is resolved by the pointer handlers.
+        if (event.detail > 0 && button === handledKey && performance.now() - handledAt < 800)
+            return;
+        handleTap(char);
+        if (event.detail > 0)
+            $('draft').focus();
+    });
+    return button;
+}
+function buildKeyboard(target, rows, symbolLayout = false) {
+    for (const layout of rows) {
+        const row = document.createElement('div');
+        row.className = 'keyrow';
+        for (const char of layout)
+            row.append(keyButton(char, symbolLayout));
+        target.append(row);
+    }
+}
+buildKeyboard($('rows'), ['qwertyuiop', 'asdfghjkl', ['shift', ...'zxcvbnm', 'delete']]);
+buildKeyboard($('symbols'), ['1234567890', '@#$%&*-+=', ['"', "'", ',', '.', '?', '!', ';', ':', '/', 'delete']], true);
+function swipeSignature(path) {
+    return path.replace(/([a-z])\1+/g, '$1');
+}
+function followsPath(word, path) {
+    const pattern = swipeSignature(word);
+    if (pattern.length < 2 || pattern[0] !== path[0] || pattern[pattern.length - 1] !== path[path.length - 1])
+        return false;
+    let next = 0;
+    for (const letter of path) {
+        if (letter === pattern[next])
+            next++;
+    }
+    return next === pattern.length && path.length - pattern.length <= 4;
+}
+function completeSwipe(path) {
+    var _a;
+    const candidates = words.filter(word => followsPath(word, path));
+    const preferred = (_a = candidates[0]) !== null && _a !== void 0 ? _a : path;
+    const prefix = KQDraft.cursor;
+    const spacer = /\S$/.test(KQDraft.before(draft)) ? ' ' : '';
+    const output = uppercase ? preferred.toUpperCase() : preferred;
+    if (!insertText(prefix, spacer + output))
+        return;
+    swipeChoice = { prefix: prefix+spacer.length, inserted: output, alternatives: candidates.slice(1) };
+    hint = 'Swipe choice · 滑行优先选择「' + preferred + '」。' + (swipeChoice.alternatives.length ? ' Tap to change · 可改选。' : '');
+    renderChat();
+}
+const swipeRows = $('rows');
+let handledKey = null, handledAt = -Infinity;
+function traceAt(x, y) {
+    const el = document.elementFromPoint(x, y);
+    const key = el && el.closest('#rows button[data-char]');
+    if (!key || gesture.path[gesture.path.length - 1] === key.dataset.char) return;
+    gesture.path.push(key.dataset.char);
+    gesture.keys.add(key);
+    key.classList.add('traced');
+}
+function beginStroke(event, id) {
+    const key = event.target.closest('button[data-char]');
+    if (!key || gesture || phase !== 'chat' || sponsor.open || reloadAd.open) return;
+    if (event.cancelable) event.preventDefault();
+    gesture = {id:id, first:key, path:[key.dataset.char], keys:new Set([key])};
+    key.classList.add('traced');
+}
+function finishStroke(commit) {
+    if (!gesture) return;
+    const stroke = gesture;
+    gesture = null;
+    stroke.keys.forEach(key => key.classList.remove('traced'));
+    handledKey = stroke.first;
+    handledAt = performance.now();
+    if (!commit || phase !== 'chat') return;
+    if (stroke.path.length === 1) appendText(stroke.path[0]);
+    else completeSwipe(stroke.path.join(''));
+}
+if (typeof window.PointerEvent === 'function') {
+    swipeRows.addEventListener('pointerdown', event => {
+        if (event.isPrimary !== false && (event.pointerType !== 'mouse' || event.button === 0))
+            beginStroke(event, event.pointerId);
+    });
+    document.addEventListener('pointermove', event => {
+        if (gesture && event.pointerId === gesture.id) traceAt(event.clientX, event.clientY);
+    });
+    document.addEventListener('pointerup', event => {
+        if (!gesture || event.pointerId !== gesture.id) return;
+        traceAt(event.clientX, event.clientY);
+        finishStroke(true);
+    });
+    document.addEventListener('pointercancel', event => {
+        if (gesture && event.pointerId === gesture.id) finishStroke(false);
+    });
+} else {
+    swipeRows.addEventListener('touchstart', event => {
+        if (event.touches.length === 1) beginStroke(event, event.changedTouches[0].identifier);
+    }, {passive:false});
+    function touchStroke(event, end, cancel) {
+        if (!gesture) return;
+        for (let i = 0; i < event.changedTouches.length; i++) {
+            const point = event.changedTouches[i];
+            if (point.identifier !== gesture.id) continue;
+            if (event.cancelable) event.preventDefault();
+            if (!cancel) traceAt(point.clientX, point.clientY);
+            if (end) finishStroke(!cancel);
+            break;
+        }
+    }
+    document.addEventListener('touchmove', event => touchStroke(event,false,false), {passive:false});
+    document.addEventListener('touchend', event => touchStroke(event,true,false), {passive:false});
+    document.addEventListener('touchcancel', event => touchStroke(event,true,true), {passive:false});
+}
+window.addEventListener('blur', () => finishStroke(false));
+document.addEventListener('visibilitychange', () => { if (document.hidden) finishStroke(false); });
+// Android WebViews can suppress the next compatibility click after a slide.
+// Resolve a stationary touch on its original control; let drags scroll as usual.
+let controlTouch = null;
+document.addEventListener('touchstart', event => {
+    controlTouch = null;
+    if (event.touches.length !== 1) return;
+    const button = event.target.closest && event.target.closest('button');
+    if (!button || button.disabled || button.id === 'arena' || button.matches('#rows [data-char]')) return;
+    const p = event.changedTouches[0];
+    controlTouch = {button:button, id:p.identifier, x:p.clientX, y:p.clientY};
+}, true);
+document.addEventListener('touchmove', event => {
+    if (!controlTouch) return;
+    const p = event.touches[0];
+    if (!p || p.identifier !== controlTouch.id || Math.abs(p.clientX-controlTouch.x)>10 || Math.abs(p.clientY-controlTouch.y)>10)
+        controlTouch=null;
+}, true);
+document.addEventListener('touchcancel', () => { controlTouch = null; }, true);
+document.addEventListener('touchend', event => {
+    const current = controlTouch;
+    controlTouch = null;
+    if (!current || !event.cancelable || current.button.disabled) return;
+    const p = event.changedTouches[0];
+    if (!p || p.identifier !== current.id || Math.abs(p.clientX-current.x)>10 || Math.abs(p.clientY-current.y)>10 ||
+        !current.button.contains(document.elementFromPoint(p.clientX,p.clientY))) return;
+    event.preventDefault();
+    current.button.click();
+}, {capture:true,passive:false});
+$('layout').addEventListener('click', () => { symbols = !symbols; renderChat(); });
+$('more').addEventListener('click', () => {
+    if (swipeChoice) {
+        swipeChoice = null;
+        hint = 'Keep typing. · 可以继续逐字输入。';
+        renderChat();
+    }
+    else {
+        showMore = !showMore;
+        renderCandidates();
+    }
+    $('draft').focus();
+});
+$('space').addEventListener('click', requestSpace);
+$('single').addEventListener('click', editCharacter);
+$('undo').addEventListener('click', restoreWord);
+$('closeSponsor').addEventListener('click', closeSponsor);
+sponsor.addEventListener('cancel', event => { event.preventDefault(); closeSponsor(); });
+function displayReload() {
+    appSave();
+    $('earned').textContent = '+' + earned;
+    $('odds').textContent = Number((100 * Math.pow(design.reloadDecay, earned)).toFixed(2)) + '%';
+    $('rack').disabled = busy;
+    $('finish').disabled = busy || earned === 0;
+    $('cancelReload').disabled = busy;
+}
+function animateRack(kind, label, done) {
+    busy = true;
+    displayReload();
+    const rack = $('rack');
+    rack.classList.remove('load', 'jam');
+    void rack.offsetWidth;
+    rack.classList.add(kind);
+    $('cue').textContent = label;
+    setTimeout(() => { rack.classList.remove(kind); done(); }, design.reloadAnimationMs);
+}
+function readyReload(label) {
+    busy = false;
+    $('cue').textContent = label;
+    displayReload();
+}
+$('offer').addEventListener('click', () => {
+    if (phase !== 'chat' || sponsor.open)
+        return;
+    reloadKey !== null && reloadKey !== void 0 ? reloadKey : (reloadKey = Object.keys(remaining).find(char => remaining[char] === 0));
+    if (!reloadKey)
+        return;
+    phase = 'reload';
+    earned = 0;
+    show('reload');
+    $('tile').textContent = reloadKey.toUpperCase();
+    animateRack('load', 'Reload demo · 装填演示', () => readyReload('Tap the slot to reload · 点击卡槽，开始换弹'));
+});
+function settleReload() {
+    if (phase !== 'reload')
+        return;
+    if (earned) {
+        remaining[reloadKey] += earned;
+        hint = 'Refilled · 已为「' + reloadKey.toUpperCase() + '」 + ' + earned + ' uses · 次。';
+        reloadKey = null;
+    }
+    phase = 'chat';
+    busy = false;
+    earned = 0;
+    show('chat');
+    renderChat();
+    $('draft').focus();
+}
+const reloadAd = $('reloadAd');
+const reloadAdVideo = $('reloadAdVideo');
+const reloadAdDuration = 8000;
+let reloadAdClock;
+function allowReloadAdClose() {
+    clearInterval(reloadAdClock);
+    $('reloadAdTimer').textContent = 'Clip finished. Return to draft. · 广告已结束，可以返回草稿。';
+    $('closeReloadAd').disabled = false;
+}
+function playReloadAd() {
+    var _a;
+    $('playReloadAd').hidden = true;
+    (_a = reloadAdVideo.play()) === null || _a === void 0 ? void 0 : _a.catch(() => {
+        if (reloadAd.open && $('closeReloadAd').disabled)
+            $('playReloadAd').hidden = false;
+    });
+}
+function presentReloadAd(title) {
+    if (phase !== 'reload' || reloadAd.open)
+        return;
+    busy = true;
+    displayReload();
+    $('reloadAdTitle').textContent = title;
+    $('closeReloadAd').disabled = true;
+    $('reloadAdTimer').textContent = 'Return in 8s · 8 秒后可返回';
+    reloadAdVideo.muted = true;
+    const assets = ['reloadSprintClip', 'reloadPixelClip'];
+    const clip = $(assets[Math.floor(Math.random() * assets.length)]);
+    reloadAdVideo.src = clip.dataset.file;
+    reloadAd.showModal();
+    appSave();
+    const deadline = performance.now() + reloadAdDuration;
+    reloadAdClock = setInterval(() => {
+        const seconds = Math.max(0, Math.ceil((deadline - performance.now()) / 1000));
+        if (seconds === 0)
+            allowReloadAdClose();
+        else {
+            const caption = seconds + 's to return · 秒后可返回';
+            if ($('reloadAdTimer').textContent !== caption)
+                $('reloadAdTimer').textContent = caption;
+        }
+    }, 140);
+    playReloadAd();
+}
+function closeReloadAd() {
+    if (!reloadAd.open || $('closeReloadAd').disabled)
+        return;
+    clearInterval(reloadAdClock);
+    reloadAd.close();
+    reloadAdVideo.pause();
+    reloadAdVideo.removeAttribute('src');
+    reloadAdVideo.load();
+    settleReload();
+}
+reloadAdVideo.addEventListener('ended', () => { if (reloadAd.open)
+    allowReloadAdClose(); });
+reloadAdVideo.addEventListener('error', () => { $('playReloadAd').hidden = true; });
+$('playReloadAd').addEventListener('click', playReloadAd);
+$('closeReloadAd').addEventListener('click', closeReloadAd);
+reloadAd.addEventListener('cancel', event => { event.preventDefault(); closeReloadAd(); });
+$('rack').addEventListener('click', () => {
+    if (phase !== 'reload' || busy || sponsor.open)
+        return;
+    const success = Math.random() < Math.pow(design.reloadDecay, earned);
+    animateRack(success ? 'load' : 'jam', success ? 'Loaded · 装填成功' : 'Jammed · 卡槽受阻', () => {
+        if (success) {
+            earned++;
+            readyReload('Try again or bank your uses · 再装一发，或完成换弹');
+        }
+        else {
+            presentReloadAd('Reload jam · 换弹卡住了');
+        }
+    });
+});
+$('finish').addEventListener('click', () => {
+    if (!busy && earned > 0)
+        presentReloadAd('Reload complete · 换弹完成');
+});
+$('cancelReload').addEventListener('click', settleReload);
+function loadSavedTrends() {
+    var _a;
+    try {
+        const saved = JSON.parse((_a = localStorage.getItem('key-quota-trends')) !== null && _a !== void 0 ? _a : 'null');
+        if (Array.isArray(saved === null || saved === void 0 ? void 0 : saved.terms) && saved.terms.every(term => typeof term === 'string')) {
+            trends = saved.terms;
+            trendLabel = 'Cached English trends · 英文维基百科榜单缓存';
+        }
+    }
+    catch ( /* Some browsers restrict storage for local files. */_b) { /* Some browsers restrict storage for local files. */ }
+}
+function refreshTrends() {
+    return __awaiter(this, void 0, void 0, function* () {
+        var _a, _b, _c;
+        const date = new Date(Date.now() - 2 * 86400000).toISOString().slice(0, 10).replace(/-/g, '/');
+        const base = 'https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia.org/all-access/';
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 6000);
+        try {
+            const response = yield fetch(base + date, { signal: controller.signal });
+            if (!response.ok)
+                return;
+            const data = yield response.json();
+            const terms = ((_c = (_b = (_a = data.items) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.articles) !== null && _c !== void 0 ? _c : [])
+                .map(entry => { var _a; return (_a = entry.article) === null || _a === void 0 ? void 0 : _a.replace(/_/g, ' '); })
+                .filter(title => typeof title === 'string' && title !== 'Main Page' && !title.includes(':')
+                && title.length <= 40 && /^[a-z0-9 ,.&'!?()-]+$/i.test(title) && /[a-z]/i.test(title)).slice(0, 12);
+            if (!terms.length)
+                return;
+            trends = [...new Set(terms)];
+            trendLabel = 'English trends · 英文维基百科热门页面';
+            try {
+                localStorage.setItem('key-quota-trends', JSON.stringify({ terms: trends }));
+            }
+            catch (_d) { }
+            if (phase === 'chat' && !sponsor.open && !gesture)
+                renderChat();
+        }
+        catch ( /* The previous list is still usable offline. */_e) { /* The previous list is still usable offline. */ }
+        finally {
+            clearTimeout(timeout);
+        }
+    });
+}
+document.addEventListener('keydown', event => {
+    if (phase !== 'chat' || sponsor.open || event.ctrlKey || event.metaKey || event.altKey || event.isComposing)
+        return;
+    if ((event.key === ' ' || event.key === 'Enter') && event.target.tagName === 'BUTTON')
+        return;
+    if (event.key === 'Backspace') {
+        event.preventDefault();
+        if (event.shiftKey)
+            editCharacter();
+        else
+            editWord();
+    }
+    else if (event.key === ' ') {
+        event.preventDefault();
+        requestSpace();
+    }
+    else if (event.key === 'Enter') {
+        event.preventDefault();
+        sendDraft();
+    }
+    else if (/^[\x21-\x7e]$/.test(event.key)) {
+        event.preventDefault();
+        appendText(event.key);
+    }
+});
+function press(button, handler) { KQDial.press(button, handler); }
+var DIAL_CONFIG = {
+    arcHalf: 80,
+    redWidthMin: 20,
+    redWidthMax: 45,
+    redCenterInsetDeg: 0,
+    roundSeconds: 10,
+    period: 1.6,
+    dwellMinSec: 0.14,
+    feedbackSec: 0.42,
+    colors: {
+        bg: "#f6f8fc",
+        text: "#4e607a",
+        tick: "#7684a2",
+        red: "#be3d52",
+        hit: "#09834f",
+        flash: "#3649bc",
+        pointer: "#3649bc",
+        overlay: "rgba(19,12,43,.94)"
+    },
+    style: {
+        arcThickness: 8,
+        redThickness: 14,
+        redGlow: 0,
+        pointerThickness: 3,
+        pointerDotR: 2.5,
+        hubR: 4,
+        tickStepDeg: 10,
+        tickMajorEveryDeg: 40,
+        tickLen: 10,
+        tickMajorLen: 18
+    },
+    hitFx: {
+        hitstopMs: 80,
+        shakeAmp: 8,
+        shakeMs: 200,
+        shakeSegments: 3,
+        particleCount: 24,
+        particleMax: 48,
+        particleLifeMs: 400,
+        particleSpeedMin: 200,
+        particleSpeedMax: 600,
+        particleSizeMin: 2,
+        particleSizeMax: 4,
+        particleDamping: 0.92,
+        flashWhiteMs: 100,
+        flashFadeMs: 300,
+        popMs: 120,
+        popScale: 1.35,
+        audio: {
+            baseA: 660,
+            baseB: 990,
+            toneMs: 60,
+            delayMs: 40,
+            gain: 0.16
+        }
+    },
+    missFx: {
+        shakeAmp: 4,
+        shakeMs: 120,
+        dimAlpha: 0.4,
+        audio: {
+            from: 220,
+            to: 110,
+            ms: 180,
+            gain: 0.09
+        }
+    }
+};
+var CFG = DIAL_CONFIG;
+var C = CFG.colors;
+var S = CFG.style;
+var HF = CFG.hitFx;
+var MF = CFG.missFx;
+var TAU = Math.PI * 2;
+var DEG = Math.PI / 180;
+var cv = document.getElementById("cv");
+const dialView = KQDial.create(cv, CFG);
+var shakeEl = document.getElementById("shake");
+var resultEl = document.getElementById("result");
+var overlayEl = document.getElementById("overlay");
+var verdictEl = document.getElementById("verdict");
+var timerEl = document.getElementById("dialTimer");
+var againBtn = document.getElementById("again");
+const CX = dialView.cx, CY = dialView.cy, R = dialView.radius;
+var pausedMs = 0, lastRaw = 0, vNow = 0;
+var gameState = {
+    phase0: 0,
+    phase: 0,
+    t0: null,
+    angle: 0,
+    redWidth: 0,
+    center: 0,
+    period: CFG.period,
+    running: true,
+    locked: false,
+    over: false,
+    armed: false,
+    feedback: null,
+    hitstopUntil: 0,
+    nextAt: 0,
+    flashT0: 0,
+    popT0: -1,
+    shake: null
+};
+var particles = [];
+var audioCtx = null;
+var gameFrameId = null;
+function rand(a, b) { return a + Math.random() * (b - a); }
+function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+function tri(p) { return p < 1 ? 2 * p - 1 : 3 - 2 * p; }
+function easeOut(x) { return 1 - Math.pow(1 - x, 3); }
+function hex2rgb(h) {
+    h = String(h).replace("#", "");
+    if (h.length === 3)
+        h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    var n = parseInt(h, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function mix(h1, h2, k) {
+    var a = hex2rgb(h1), b = hex2rgb(h2);
+    return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * k) + "," +
+        Math.round(a[1] + (b[1] - a[1]) * k) + "," +
+        Math.round(a[2] + (b[2] - a[2]) * k) + ")";
+}
+function pickZone(afterMiss) {
+    const oldWidth = gameState.redWidth;
+    const width = afterMiss ? oldWidth * rand(0.7, 0.9) : rand(CFG.redWidthMin, CFG.redWidthMax);
+    const limit = CFG.arcHalf - width / 2 - CFG.redCenterInsetDeg;
+    let center;
+    if (afterMiss) {
+        // Sample uniformly from legal centers outside the previous target.
+        const gap = (oldWidth + width) / 2;
+        const leftEnd = Math.max(-limit, gameState.center - gap);
+        const rightStart = Math.min(limit, gameState.center + gap);
+        const leftLength = leftEnd + limit;
+        const offset = rand(0, leftLength + limit - rightStart);
+        center = offset < leftLength ? -limit + offset : rightStart + (offset - leftLength);
+    }
+    else {
+        center = rand(-limit, limit);
+    }
+    gameState.redWidth = width;
+    gameState.center = center;
+}
+function newGameRound() {
+    hideOverlay();
+    gameState.over = false;
+    gameState.running = true;
+    gameState.locked = false;
+    gameState.feedback = null;
+    gameState.nextAt = 0;
+    gameState.popT0 = -1;
+    gameState.flashT0 = 0;
+    gameState.hitstopUntil = 0;
+    gameState.shake = null;
+    shakeEl.style.transform = "";
+    particles.length = 0;
+    resultEl.textContent = "";
+    resultEl.className = "num";
+    resultEl.style.transform = "";
+    gameState.phase0 = Math.random() * 2;
+    gameState.phase = gameState.phase0;
+    gameState.t0 = vNow;
+    timerEl.textContent = CFG.roundSeconds.toFixed(1);
+    gameState.secondsAtStart = CFG.roundSeconds;
+    gameState.clockRate = 1;
+    gameState.period = CFG.period;
+    pickZone(false);
+}
+function endGameRound() {
+    var hit = gameState.feedback === "hit";
+    gameState.over = true;
+    gameState.running = false;
+    gameState.locked = true;
+    verdictEl.textContent = hit ? "Hit · 命中" : "Time expired · 游戏失败 · 时间耗尽";
+    verdictEl.className = "verdict " + (hit ? "hit" : "miss");
+    againBtn.textContent = hit ? "Insert · 填入应用" : "Try again · 再试一次";
+    $("sendAnyway").hidden = hit;
+    overlayEl.classList.add("show");
+    overlayEl.setAttribute("aria-hidden", "false");
+    if (hit) {
+        const wonRound = roundNumber;
+        setTimeout(() => {
+            if (phase === 'dial' && roundNumber === wonRound && gameState.over && gameState.feedback === 'hit') againBtn.click();
+        }, 0);
+    }
+}
+function hideOverlay() {
+    overlayEl.classList.remove("show");
+    overlayEl.setAttribute("aria-hidden", "true");
+}
+function judgeDialTap() {
+    if (gameState.over)
+        return;
+    if (!gameState.armed || !gameState.running || gameState.locked)
+        return;
+    if (secondsLeft(vNow) <= 0) {
+        timeout();
+        return;
+    }
+    ensureAudio();
+    var delta = Math.abs(gameState.angle - gameState.center);
+    if (delta <= gameState.redWidth / 2) {
+        onHit();
+    }
+    else {
+        onMiss();
+    }
+}
+function timeout() {
+    if (gameState.locked || gameState.over)
+        return;
+    gameState.feedback = "timeout";
+    gameState.locked = true;
+    timerEl.textContent = "0.0";
+    resultEl.textContent = "Time up · 时间到";
+    resultEl.className = "num miss";
+    endGameRound();
+}
+function showResult(hit) {
+    resultEl.textContent = hit ? "Hit · 命中" : "Miss. Keep going! · 未命中 · 继续点击";
+    resultEl.className = "num " + (hit ? "hit" : "miss");
+    gameState.popT0 = vNow;
+}
+function onHit() {
+    gameState.feedback = "hit";
+    gameState.flashT0 = vNow;
+    gameState.locked = true;
+    gameState.nextAt = vNow + CFG.feedbackSec;
+    gameState.hitstopUntil = performance.now() + HF.hitstopMs;
+    startShake(HF.shakeAmp, HF.shakeMs, HF.shakeSegments);
+    spawnBurst(HF.particleCount);
+    showResult(true);
+    playHit();
+}
+function onMiss() {
+    // Anchor both clocks at the tap before applying the new speeds.
+    gameState.secondsAtStart = secondsLeft(vNow);
+    gameState.phase0 = gameState.phase;
+    gameState.t0 = vNow;
+    gameState.clockRate *= 2;
+    gameState.period /= 1.5;
+    pickZone(true);
+    gameState.feedback = "miss";
+    gameState.missUntil = vNow + CFG.feedbackSec;
+    startShake(MF.shakeAmp, MF.shakeMs, 1);
+    showResult(false);
+    playMiss();
+}
+function startShake(amp, ms, segs) {
+    gameState.shake = { t0: vNow, amp: amp, dur: ms / 1000, segs: Math.max(1, segs | 0), seg: -1, x: 0, y: 0 };
+    updateShake(vNow);
+}
+function updateShake(t) {
+    var sh = gameState.shake;
+    if (!sh)
+        return;
+    var p = (t - sh.t0) / sh.dur;
+    if (p >= 1) {
+        gameState.shake = null;
+        shakeEl.style.transform = "";
+        return;
+    }
+    var seg = Math.min(sh.segs - 1, Math.floor(p * sh.segs));
+    if (seg !== sh.seg) {
+        sh.seg = seg;
+        var r = sh.amp * (1 - seg / sh.segs);
+        var a = Math.random() * TAU;
+        sh.x = Math.cos(a) * r;
+        sh.y = Math.sin(a) * r;
+    }
+    shakeEl.style.transform = "translate3d(" + sh.x.toFixed(2) + "px," + sh.y.toFixed(2) + "px,0)";
+}
+function spawnBurst(count) {
+    var a = (gameState.angle - 90) * DEG;
+    var ox = CX + Math.cos(a) * R;
+    var oy = CY + Math.sin(a) * R;
+    var room = HF.particleMax - particles.length;
+    if (room <= 0)
+        return;
+    count = Math.min(count, room);
+    for (var i = 0; i < count; i++) {
+        var ang = Math.random() * TAU;
+        var sp = rand(HF.particleSpeedMin, HF.particleSpeedMax);
+        var life = HF.particleLifeMs / 1000;
+        particles.push({
+            x: ox, y: oy,
+            vx: Math.cos(ang) * sp,
+            vy: Math.sin(ang) * sp,
+            size: rand(HF.particleSizeMin, HF.particleSizeMax),
+            life: life, ttl: life
+        });
+    }
+}
+function updateParticles(dt) {
+    var damp = Math.pow(HF.particleDamping, dt * 60);
+    for (var i = particles.length - 1; i >= 0; i--) {
+        var p = particles[i];
+        p.vx *= damp;
+        p.vy *= damp;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.life -= dt;
+        if (p.life <= 0)
+            particles.splice(i, 1);
+    }
+}
+function updatePop(t) {
+    if (gameState.popT0 < 0)
+        return;
+    var ms = (t - gameState.popT0) * 1000;
+    var total = HF.popMs, half = total / 2;
+    if (ms >= total) {
+        gameState.popT0 = -1;
+        resultEl.style.transform = "";
+        return;
+    }
+    var k = ms < half ? easeOut(ms / half) : easeOut(1 - (ms - half) / half);
+    var scale = 1 + (HF.popScale - 1) * k;
+    resultEl.style.transform = "scale(" + scale.toFixed(3) + ")";
+}
+function ensureAudio() {
+    if (audioCtx) {
+        if (audioCtx.state === "suspended") {
+            try {
+                audioCtx.resume();
+            }
+            catch (e) { }
+        }
+        return audioCtx;
+    }
+    try {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC)
+            return null;
+        audioCtx = new AC();
+    }
+    catch (e) {
+        audioCtx = null;
+    }
+    return audioCtx;
+}
+function tone(a, when, type, f0, f1, durMs, peak) {
+    var o = a.createOscillator();
+    var g = a.createGain();
+    var dur = durMs / 1000;
+    o.type = type;
+    o.frequency.setValueAtTime(f0, when);
+    o.frequency.linearRampToValueAtTime(f1, when + dur);
+    g.gain.setValueAtTime(0.0001, when);
+    g.gain.exponentialRampToValueAtTime(peak, when + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+    o.connect(g);
+    g.connect(a.destination);
+    o.start(when);
+    o.stop(when + dur + 0.03);
+}
+function playHit() {
+    var a = ensureAudio();
+    if (!a)
+        return;
+    try {
+        var A = HF.audio;
+        var t = a.currentTime + 0.001;
+        var d = A.delayMs / 1000;
+        tone(a, t, "sine", A.baseA, A.baseB, A.toneMs, A.gain);
+        tone(a, t + d, "sine", A.baseA, A.baseB, A.toneMs, A.gain);
+    }
+    catch (e) { }
+}
+function playMiss() {
+    var a = ensureAudio();
+    if (!a)
+        return;
+    try {
+        var M = MF.audio;
+        tone(a, a.currentTime + 0.001, "sawtooth", M.from, M.to, M.ms, M.gain);
+    }
+    catch (e) { }
+}
+function render(t) { dialView.paint(gameState, particles, t); }
+function secondsLeft(t) {
+    return Math.max(0, gameState.secondsAtStart - Math.max(0, t - gameState.t0) * gameState.clockRate);
+}
+function update(dt, t) {
+    updateParticles(dt);
+    updateShake(t);
+    updatePop(t);
+    if (gameState.feedback === "miss" && t >= gameState.missUntil) {
+        gameState.feedback = null;
+        resultEl.textContent = "";
+        resultEl.className = "num";
+    }
+    if (gameState.running && !gameState.locked) {
+        var remaining = secondsLeft(t);
+        timerEl.textContent = remaining.toFixed(1);
+        if (remaining <= 0)
+            timeout();
+    }
+    if (gameState.running && !gameState.locked) {
+        var p = (gameState.phase0 + 2 * (t - gameState.t0) / gameState.period) % 2;
+        if (p < 0)
+            p += 2;
+        gameState.phase = p;
+    }
+    gameState.angle = CFG.arcHalf * tri(gameState.phase);
+    if (gameState.locked && gameState.nextAt > 0 && t >= gameState.nextAt) {
+        gameState.nextAt = 0;
+        endGameRound();
+    }
+}
+function frame(now) {
+    var dt = lastRaw ? Math.min((now - lastRaw) / 1000, 0.1) : 0;
+    lastRaw = now;
+    if (gameState.hitstopUntil > 0) {
+        if (now < gameState.hitstopUntil) {
+            pausedMs += dt * 1000;
+            vNow = (now - pausedMs) / 1000;
+            render(vNow);
+            gameFrameId = KQDial.frame(frame);
+            return;
+        }
+        gameState.hitstopUntil = 0;
+    }
+    vNow = (now - pausedMs) / 1000;
+    if (gameState.t0 === null)
+        gameState.t0 = vNow;
+    update(dt, vNow);
+    render(vNow);
+    gameState.armed = true;
+    if (!gameState.over)
+        gameFrameId = KQDial.frame(frame);
+}
+function beginRound() {
+    KQDial.cancelFrame(gameFrameId);
+    phase = 'dial';
+    $('round').textContent = 'ROUND ' + String(++roundNumber).padStart(2, '0');
+    lastRaw = 0;
+    pausedMs = 0;
+    vNow = performance.now() / 1000;
+    newGameRound();
+    gameState.armed = true;
+    update(0, vNow);
+    render(vNow);
+    gameFrameId = KQDial.frame(frame);
+}
+press($('arena'), stamp => {
+    if (phase !== 'dial' || gameState.locked || gameState.over)
+        return;
+    vNow = Math.max(vNow, stamp / 1000);
+    update(0, vNow);
+    judgeDialTap();
+    render(vNow);
+});
+function sendMessage() {
+    if (!KQHost.deliver(pending))
+        return;
+    KQDial.cancelFrame(gameFrameId);
+    const message = document.createElement('p');
+    message.className = 'message';
+    message.textContent = pending;
+    /* The active host owns the message history. */
+    draft = KQDraft.clear(draft);
+    pending = '';
+    swipeChoice = null;
+    clearUndo();
+    wordsUntilAd = adSpacing();
+    phase = 'chat';
+    hint = 'Inserted · 已填入应用';
+    hideOverlay();
+    show('chat');
+    renderChat();
+    $('log').scrollTop = $('log').scrollHeight;
+    $('draft').focus();
+}
+function sendDraft() {
+    if (phase !== 'chat' || sponsor.open || !draft.trim())
+        return;
+    pending = draft;
+    roundNumber = 0;
+    $('preview').textContent = pending;
+    show('game');
+    beginRound();
+    $('arena').focus();
+}
+againBtn.addEventListener('click', () => {
+    if (phase !== 'dial' || !gameState.over)
+        return;
+    if (gameState.feedback === 'hit')
+        sendMessage();
+    else
+        beginRound();
+});
+$('sendAnyway').addEventListener('click', () => {
+    if (phase === 'dial' && gameState.over)
+        sendMessage();
+});
+$('backToDraft').addEventListener('click', () => {
+    if (phase !== 'dial')
+        return;
+    KQDial.cancelFrame(gameFrameId);
+    pending = '';
+    phase = 'chat';
+    show('chat');
+    renderChat();
+    $('draft').focus();
+});
+$('send').addEventListener('click', sendDraft);
+const appTicket = KQHost.init(remaining);
+let appReady = true;
+window.kqIsIdle = () => phase === 'chat' && !draft && !sponsor.open;
+function appSave() {
+    if (!appReady)
+        return;
+    KQHost.save(remaining, phase === 'reload' && reloadKey ? { key: reloadKey, earned: earned, ad: reloadAd.open ? 'sponsor' : '' } : null);
+}
+window.kqActivate = () => { KQHost.init(remaining); if (phase === 'chat')
+    renderChat(); };
+if (appTicket && appTicket.key in remaining) {
+    reloadKey = appTicket.key;
+    earned = appTicket.earned || 0;
+    phase = 'reload';
+    show('reload');
+    $('tile').textContent = reloadKey.toUpperCase();
+    readyReload('Tap to reload · 点击换弹');
+    if (appTicket.ad)
+        presentReloadAd('Reload sponsor · 换弹赞助');
+}
+loadSavedTrends();
+renderChat();
+
+KQDraft.bind(() => { swipeChoice = null; clearUndo(); renderChat(); });
+</script>
+</body>
+</html>

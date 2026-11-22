@@ -1,0 +1,1081 @@
+<!doctype html><html class="ime comic"  lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Key Quota · 漫画贴纸</title><style>*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--outside);color:var(--ink);font-family:var(--sans);-webkit-text-size-adjust:100%}
+button,a{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:default}button:focus-visible,a:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.device{width:min(920px,100%);height:100vh;height:100dvh;margin:0 auto;display:flex;flex-direction:column;gap:var(--gap);padding:max(var(--pad),env(safe-area-inset-top)) max(var(--pad),env(safe-area-inset-right)) max(var(--pad),env(safe-area-inset-bottom)) max(var(--pad),env(safe-area-inset-left));background:var(--shell);overflow:hidden}
+.mast{flex:none;display:flex;align-items:center;gap:clamp(6px,2vw,20px);min-height:60px}.brand{display:flex;align-items:center;gap:8px;white-space:nowrap;font-weight:900;font-size:clamp(14px,3vw,25px);letter-spacing:-.05em}.emblem{display:grid;place-items:center;font-style:normal;line-height:1}.mast h1{margin:0;font-size:clamp(22px,4vw,40px);letter-spacing:-.07em;line-height:1}.stock{margin-left:auto;display:flex;align-items:center;gap:6px;flex:none;padding:5px 10px}.stock small{font-size:11px}.stock strong{font:700 clamp(24px,4vw,38px)/1 var(--mono);font-variant-numeric:tabular-nums}
+main,.console{min-height:0;flex:1;display:flex;flex-direction:column}.console{gap:var(--gap)}.journal{display:grid;gap:var(--gap);flex:none}.messagebox,.draftbox{min-width:0;position:relative;padding:9px 14px;background:var(--panel);border:var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.meta,.keyhead,.bar{display:flex;align-items:center;gap:8px}.meta{font-size:clamp(11px,1.8vw,13px);font-weight:650}.meta span,.bar span,.keyhead small{margin-left:auto;font:11px/1.2 var(--mono);color:var(--muted)}#log{max-height:clamp(34px,8vh,76px);overflow:auto}.message{margin:7px 0 0;text-align:right;font:600 15px/1.3 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere}#empty{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:clamp(12px,2vw,15px);min-height:30px}.bubbleIcon{width:16px;height:12px;border:2px solid currentColor;border-radius:4px;position:relative}.bubbleIcon:after{content:'';position:absolute;bottom:-4px;left:2px;width:3px;height:4px;background:currentColor;transform:skew(-24deg)}
+#draft,.preview p{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--mono)}#draft{font-size:clamp(24px,4.3vh,42px);line-height:1.24;min-height:1.24em;max-height:2.48em;overflow:auto;font-weight:650;margin-top:3px}#draft:after{content:'';display:inline-block;height:.9em;border-right:3px solid var(--cursor);vertical-align:-.03em}#draft:empty:after{margin-left:1px}
+.keyboard{min-height:0;flex:1;display:flex;flex-direction:column;gap:var(--gap)}.field{min-height:0;flex:1;display:flex;flex-direction:column;position:relative;border:var(--line);border-radius:var(--radius);background:var(--field);overflow:hidden;box-shadow:var(--shadow)}
+.keyhead{flex:none;padding:8px 12px 3px}.keyhead b{font-weight:850;font-size:clamp(14px,2vw,20px)}.keyhead .func{margin-left:4px;width:44px;height:32px;font-size:22px}#rows{flex:1;min-height:0;position:relative;overflow:hidden;margin:3px 5px 5px}.keyrow{display:flex;gap:2px;justify-content:center}.key{position:relative;min-width:0;padding:0;user-select:none;touch-action:none;width:8.5%;height:36px;display:flex;align-items:center;justify-content:center;color:var(--keyInk);background:var(--keyFill);border:var(--keyLine);border-radius:var(--keyRadius);box-shadow:var(--keyShadow);rotate:var(--tilt,0deg)}
+.moving .keyrow{display:contents}.moving .key{position:absolute;top:0;left:0;will-change:transform}.key span{font-family:var(--keyFont);font-size:1.17em;font-weight:850;line-height:1;margin-top:4%;letter-spacing:-.06em}.key small{position:absolute;right:7%;top:3%;font:700 max(9px,.44em)/1 var(--mono)}.key.spent{background:var(--dead);color:var(--deadInk);border-color:var(--deadInk);box-shadow:none;opacity:.74}
+.actions{display:grid;grid-template-columns:minmax(78px,1fr) minmax(125px,2fr) minmax(78px,1fr);gap:var(--gap);flex:none}
+.actions button,.func,.primary,.claim,.play-video,#clipResume{border:var(--ctlLine);border-radius:var(--ctlRadius);background:var(--control);color:var(--controlInk);box-shadow:var(--ctlShadow);font-weight:800}
+.actions button{min-height:clamp(40px,6vh,60px);font-size:clamp(15px,2.8vw,24px);padding:3px 6px}#space{font-family:var(--mono)}.actions #caseKey{font-size:clamp(13px,2.3vw,21px)}#send{background:var(--send);color:var(--sendInk)}#caseKey[aria-pressed=true]{background:var(--active);color:var(--activeInk)}.actions button:disabled,.primary:disabled,.func:disabled,.claim:disabled{filter:saturate(.45);opacity:.64}
+#offer{align-self:center;z-index:1;border:var(--ctlLine);padding:7px 14px;margin:5px 0 0;border-radius:var(--ctlRadius);background:var(--active);color:var(--activeInk);box-shadow:var(--ctlShadow);font-weight:800}
+.impact{position:absolute;pointer-events:none;z-index:1;color:var(--accent);font:bold 16px var(--mono);text-shadow:1px 1px var(--shell);animation:impact .22s ease-out forwards}@keyframes impact{0%{opacity:0;scale:.5}25%{opacity:1;scale:1}100%{opacity:0;scale:1.5}}
+.stage{position:relative;border:var(--line);border-radius:var(--radius);background:var(--panel);box-shadow:var(--shadow);overflow:hidden;gap:0}.bar{min-height:44px;flex:none;padding:6px 14px;border-bottom:var(--line);font-size:14px;background:var(--panel)}
+.stagebody,.poster{min-height:0;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:clamp(9px,2vh,20px);padding:clamp(12px,3vw,28px);overflow:auto;background:var(--field)}
+.stats,.preview{width:min(100%,430px)}.stats{display:flex;justify-content:space-between;gap:10px}.stats>div,.clock{background:var(--display);color:var(--displayInk);border:var(--line);border-radius:var(--radius);padding:8px 14px}.stats div{display:flex;flex-direction:column}.stats strong,.clock strong{font:800 clamp(24px,4vw,42px) var(--mono);font-variant-numeric:tabular-nums}.stats small,.clock small,.preview small,.verdictCard small{font-size:12px}.clock{display:flex;align-items:baseline;gap:12px}
+#rack,#arena{width:min(100%,440px);padding:16px;background:var(--screen);color:var(--screenInk);border:var(--line);border-radius:var(--radius);box-shadow:var(--shadow);touch-action:none}.track{position:relative;display:block;width:min(220px,100%);height:94px;border-bottom:4px double var(--track);margin:0 auto 14px}.socket,#tile{position:absolute;top:12px;height:62px;width:60px;border-radius:var(--keyRadius)}.socket{right:10px;background:var(--socket);border:4px solid var(--track)}.socket:after{content:'';position:absolute;inset:6px;border:2px dashed var(--track)}#tile{left:10px;display:grid;place-items:center;background:var(--keyFill);color:var(--keyInk);border:var(--keyLine);font:800 36px var(--keyFont);box-shadow:var(--keyShadow)}
+.load #tile{animation:slide .56s forwards}.jam #tile{animation:jam .56s forwards}@keyframes slide{65%,100%{transform:translateX(140px);background:var(--active);color:var(--activeInk)}}@keyframes jam{60%{transform:translateX(115px)}100%{transform:translateX(100px) rotate(-15deg);background:var(--fail);color:var(--failInk)}}
+.primary,.claim{padding:10px 22px;min-height:42px}.primary{background:var(--send);color:var(--sendInk)}.stage h2{margin:0;font-size:clamp(18px,3.1vw,30px);letter-spacing:-.045em}#arena{padding:7px}#shake{display:block;width:100%;height:clamp(124px,28vh,300px)}#cv{display:block;width:100%;height:100%}#result{display:block;min-height:1.3em;font:700 16px var(--sans)}#result:empty:before{content:'Tap to stop · 按下判定'}.preview p{margin:4px 0 0;max-height:3em;overflow:auto}#overlay{display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:var(--shade)}#overlay.show{display:flex}.verdictCard{background:var(--panel);border:var(--line);box-shadow:var(--shadow);border-radius:var(--radius);padding:24px;text-align:center}.verdictCard h2{margin:12px 0}.hit{color:var(--ok)}.miss{color:var(--fail)}
+.adPanel{display:flex;flex:1;min-height:0;flex-direction:column}.adcard{width:min(420px,100%);margin:auto;background:var(--panel);border:var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:10px}.adcard video{display:block;width:100%;height:min(48vh,360px);background:#110f13;object-fit:contain}.claim{margin-top:10px;width:100%;background:var(--send);color:var(--sendInk)}#xLogin{display:grid;place-items:center;width:37px;height:37px;background:var(--ink);color:var(--shell);border-radius:var(--ctlRadius)}#xLogin svg{width:19px}.play-video{display:block;margin:6px auto 0;padding:5px 10px}
+.clipSpace{display:flex;flex:1;min-height:0;align-items:center;justify-content:center;overflow:hidden;background:var(--field);container-type:size}#clipFrame{position:relative;isolation:isolate;flex:none;max-width:100%;background:#090810}#clipFrame.war{width:min(100%,40vh,430px);aspect-ratio:4/7}#clipFrame.island{width:min(100%,160vh,960px);aspect-ratio:80/37}@supports(width:1cqh){#clipFrame.war{width:min(100cqw,57.14286cqh)}#clipFrame.island{width:min(100cqw,216.2162cqh)}}
+#poolVideo,#clipStill{display:block;width:100%;height:100%;position:absolute;inset:0;object-fit:contain;pointer-events:none}#warLink,#warRed,#islandPlay,#islandDownload,#clipResume{position:absolute;z-index:1}#warLink{top:8px;right:8px;width:40px;height:40px;display:grid;place-items:center;border:1px solid #ccc;background:#191919b8;color:#fff;font:24px Arial;text-decoration:none;border-radius:50%}#warRed{left:50%;top:56.2%;transform:translate(-50%,-50%);width:clamp(30px,13%,52px);height:clamp(30px,7%,44px);padding:0;border:0;background:transparent}#islandPlay,#islandDownload{top:0;bottom:0;width:19%;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;text-orientation:upright;letter-spacing:.16em;font:bold clamp(14px,4vw,28px)/1.15 sans-serif;text-decoration:none;color:#4c3213;border:0;background:transparent}#islandPlay{left:0}#islandDownload{right:0}#islandPlay:disabled{opacity:.65}#clipResume{top:50%;left:50%;transform:translate(-50%,-50%);padding:12px}
+#launchStatus{padding:14px;background:var(--panel);color:var(--ink)}html:not(.script-started) #launchStatus~.device{display:none}
+@media(max-width:400px){.mast{min-height:46px}.stock small{display:none}.keyhead{padding:6px 8px 2px}.messagebox,.draftbox{padding:6px 10px}.actions{grid-template-columns:1fr 1.65fr 1fr}}
+@media(max-height:500px){.mast{min-height:27px}.mast h1{font-size:19px}.stock strong{font-size:20px}.mast .brand{font-size:15px}.journal{grid-template-columns:1fr 1fr}.keyhead{padding-block:1px}.keyhead .func{height:24px}.actions button{min-height:30px}.stagebody{gap:5px}.stagebody .preview{display:none}.meta{font-size:10px}#draft{font-size:19px}}
+@media(prefers-reduced-motion:reduce){.impact{display:none}}
+
+:root{--outside:#222126;--shell:#2678c8;--ink:#201b20;--muted:#514443;--panel:#fff5d9;--field:radial-gradient(#513d3540 1.1px,transparent 1.4px),#fff3cf;--screen:#ffe069;--screenInk:#201b20;--display:#ffdd38;--displayInk:#18161a;--accent:#272127;--cursor:#e3493a;--focus:#cf2828;--keyFill:#ffdb36;--keyInk:#151519;--keyLine:2px solid #1e191b;--keyRadius:8px;--keyShadow:inset 1px 2px #fff7d794,2px 3px #211a19;--ctlLine:3px solid #211a1b;--ctlRadius:7px;--control:#44a5eb;--controlInk:#211719;--send:#ff5a4e;--sendInk:#211719;--ctlShadow:2px 3px #211a19;--line:3px solid #211a19;--radius:7px;--shadow:2px 3px #211a19;--active:#ffcd27;--activeInk:#211719;--ok:#27571d;--fail:#b92121;--failInk:#fff3df;--track:#211a1b;--socket:#31568a;--shade:#ffdc3bef;--dead:#c5bbaa;--deadInk:#6d645d;--sans:"Arial Black","Microsoft YaHei",Arial,sans-serif;--mono:"Courier New",Consolas,monospace;--keyFont:"Arial Black",Impact,Arial,sans-serif;--gap:8px;--pad:clamp(8px,1.3vw,15px)}
+.device{background-color:#368fd7;background-image:radial-gradient(#21192c70 1.2px,transparent 1.5px),linear-gradient(142deg,#fc554a 0 16%,transparent 16% 69%,#ffcf29 69% 76%,transparent 76%);background-size:6px 6px,100% 100%}
+.mast{position:relative;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:0;isolation:isolate;padding:3px 12px 6px;min-height:74px}.mast h1{grid-area:1/1;font-size:clamp(32px,6.2vw,56px);font-weight:1000;letter-spacing:-.07em;transform:skew(-9deg) rotate(-2deg);-webkit-text-stroke:5px #fff7e1;paint-order:stroke fill;filter:drop-shadow(2px 2px #211a19)}
+.brand{grid-area:2/1;width:max-content;font-size:clamp(13px,2.5vw,21px);font-weight:950;font-style:italic;background:#ffdf38;border:2px solid #1d1919;transform:skew(-10deg) rotate(-2deg);padding:0 9px}.emblem{display:none}.stock{grid-area:1/2/3/3;position:relative;background:#fff2cf;border:var(--line);border-radius:4px;transform:rotate(3deg);box-shadow:3px 3px #ffcd2d,5px 5px #241a19;padding:4px 10px}.stock:before{content:'★';color:#ffd62e;-webkit-text-stroke:1px #1d1919;font-size:23px}.stock strong{font-family:var(--keyFont);font-weight:900;font-style:italic}.stock small{display:none}
+.journal{grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);gap:8px}.messagebox,.draftbox{padding:0 7px 6px;background-image:radial-gradient(#ac6f7645 .85px,transparent 1.2px);background-size:5px 5px}.meta{min-height:25px}.meta b{border:2px solid #211a1b;border-top:0;border-radius:0 0 4px 4px;background:#ffdf40;padding:2px 6px;font-weight:900}.meta span{font-size:10px}.journal #empty{gap:5px;font-size:12px}.bubbleIcon{display:none}.field,.stagebody,.poster,.clipSpace{background-size:6px 6px}.field{border-width:3px}.keyhead>b{font-style:italic;transform:rotate(-2deg);padding:1px 6px;background:#ffdc35;border:2px solid #211a1b}
+.key:nth-child(4n+2){--keyFill:#52a9ef}.key:nth-child(4n+3){--keyFill:#ff6556}.key:nth-child(4n){--keyFill:#fff6df}.key span{font-weight:1000;font-size:1.25em}.key.spent{background:#bdb1a6}.actions #space{background:#fff5d8}.actions button,.primary,.claim{font-weight:950}.bar{background:#ffd735}.clock,.stats>div{transform:rotate(-1deg)}#arena,#rack{background-image:radial-gradient(#c7985644 1px,transparent 1.4px);background-size:5px 5px}.verdictCard{transform:rotate(-2deg);background:#fff3cd}.impact{font-size:24px;text-shadow:2px 1px #e2a300}
+@media(max-width:380px){.journal .meta span{font-size:9px}.mast{min-height:65px}.journal #empty{font-size:11px}.keyhead small{font-size:9px}}
+@media(max-height:500px){.mast{grid-template-rows:1fr;grid-template-columns:auto auto 1fr;min-height:30px}.mast h1{font-size:22px}.brand{grid-area:1/2}.stock{grid-area:1/3}.mast{gap:10px}}
+
+.key{rotate:none}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.stock{font-size:clamp(24px,4vw,38px)}
+.key[data-char="1"]{--tilt:4deg;}
+.key[data-char="2"]{--tilt:3deg;}
+.key[data-char="3"]{--tilt:-6deg;}
+.key[data-char="4"]{--tilt:0deg;}
+.key[data-char="5"]{--tilt:-3deg;}
+.key[data-char="6"]{--tilt:-5deg;}
+.key[data-char="7"]{--tilt:7deg;}
+.key[data-char="8"]{--tilt:6deg;}
+.key[data-char="9"]{--tilt:-4deg;}
+.key[data-char="0"]{--tilt:-6deg;}
+.key[data-char="q"]{--tilt:0deg;}
+.key[data-char="w"]{--tilt:-3deg;}
+.key[data-char="e"]{--tilt:-5deg;}
+.key[data-char="r"]{--tilt:7deg;}
+.key[data-char="t"]{--tilt:6deg;}
+.key[data-char="y"]{--tilt:-4deg;}
+.key[data-char="u"]{--tilt:4deg;}
+.key[data-char="i"]{--tilt:3deg;}
+.key[data-char="o"]{--tilt:-3deg;}
+.key[data-char="p"]{--tilt:-5deg;}
+.key[data-char="a"]{--tilt:7deg;}
+.key[data-char="s"]{--tilt:6deg;}
+.key[data-char="d"]{--tilt:-4deg;}
+.key[data-char="f"]{--tilt:4deg;}
+.key[data-char="g"]{--tilt:3deg;}
+.key[data-char="h"]{--tilt:-6deg;}
+.key[data-char="j"]{--tilt:0deg;}
+.key[data-char="k"]{--tilt:7deg;}
+.key[data-char="l"]{--tilt:6deg;}
+.key[data-char="z"]{--tilt:-4deg;}
+.key[data-char="x"]{--tilt:4deg;}
+.key[data-char="c"]{--tilt:3deg;}
+.key[data-char="v"]{--tilt:-6deg;}
+.key[data-char="b"]{--tilt:0deg;}
+.key[data-char="n"]{--tilt:-3deg;}
+.key[data-char="m"]{--tilt:-5deg;}</style><link rel="stylesheet" href="ime.css"><script src="host.js"></script><script src="draft.js"></script><script src="dial-view.js"></script></head><body><aside id="launchStatus" role="status"><strong>Loading keyboard · 当前仅显示静态预览</strong><p>Update Android System WebView to load this keyboard. · 请更新系统 WebView。</p></aside>
+<script>(function () {
+    document.documentElement.classList.add('script-started');
+    var panel = document.getElementById('launchStatus');
+    panel.querySelector('strong').textContent = 'Starting keyboard · 正在启动键盘…';
+    panel.querySelector('p').textContent = '';
+    window.addEventListener('error', function (e) {
+        if (panel.hidden || !e.message)
+            return;
+        panel.querySelector('strong').textContent = 'Keyboard could not start · 键盘启动失败';
+        panel.querySelector('p').textContent = e.message + (e.lineno ? '（第 ' + e.lineno + ' 行）' : '');
+    });
+})();
+</script>
+<div class="device"><header class="mast"><div class="brand"><i class="emblem" aria-hidden="true"></i>Key Quota</div><h1>Chaos Keys · 混沌键盘</h1>
+<div class="stock"><small>Left · 剩余</small><strong id="stock" aria-label="Total uses · 字符总余量">108</strong></div></header><main><section class="console" id="chat"><div class="journal"><section class="messagebox"><div class="meta"><b>Messages · 消息记录</b><span id="count">00 sent · 已发送</span></div>
+<div id="log" role="log"><div id="empty"><i class="bubbleIcon" aria-hidden="true"></i><strong>No messages yet · 还没有发出的消息</strong></div><div id="messages"></div></div></section>
+<div class="draftbox"><div class="meta"><b>Draft · 当前草稿</b><span id="length">0 chars · 字符</span></div><div id="draft" aria-label="Draft · 草稿"></div></div></div><div class="keyboard"><div class="field"><div class="keyhead"><b>Collision field · 碰撞区</b><small>Numbers show uses left · 键帽数字为剩余次数</small><button type="button" id="del" class="func" aria-label="Delete this word · 删除当前整个词" disabled>⌫</button></div>
+<button id="offer" hidden></button>
+<div id="bootNotice" hidden></div>
+<div id="rows"><div class="keyrow"><button type="button" class="key" data-char="1" disabled><span>1</span><small>3</small></button><button type="button" class="key" data-char="2" disabled><span>2</span><small>3</small></button><button type="button" class="key" data-char="3" disabled><span>3</span><small>3</small></button><button type="button" class="key" data-char="4" disabled><span>4</span><small>3</small></button><button type="button" class="key" data-char="5" disabled><span>5</span><small>3</small></button><button type="button" class="key" data-char="6" disabled><span>6</span><small>3</small></button><button type="button" class="key" data-char="7" disabled><span>7</span><small>3</small></button><button type="button" class="key" data-char="8" disabled><span>8</span><small>3</small></button><button type="button" class="key" data-char="9" disabled><span>9</span><small>3</small></button><button type="button" class="key" data-char="0" disabled><span>0</span><small>3</small></button></div>
+<div class="keyrow"><button type="button" class="key" data-char="q" disabled><span>Q</span><small>3</small></button><button type="button" class="key" data-char="w" disabled><span>W</span><small>3</small></button><button type="button" class="key" data-char="e" disabled><span>E</span><small>3</small></button><button type="button" class="key" data-char="r" disabled><span>R</span><small>3</small></button><button type="button" class="key" data-char="t" disabled><span>T</span><small>3</small></button><button type="button" class="key" data-char="y" disabled><span>Y</span><small>3</small></button><button type="button" class="key" data-char="u" disabled><span>U</span><small>3</small></button><button type="button" class="key" data-char="i" disabled><span>I</span><small>3</small></button><button type="button" class="key" data-char="o" disabled><span>O</span><small>3</small></button><button type="button" class="key" data-char="p" disabled><span>P</span><small>3</small></button></div>
+<div class="keyrow"><button type="button" class="key" data-char="a" disabled><span>A</span><small>3</small></button><button type="button" class="key" data-char="s" disabled><span>S</span><small>3</small></button><button type="button" class="key" data-char="d" disabled><span>D</span><small>3</small></button><button type="button" class="key" data-char="f" disabled><span>F</span><small>3</small></button><button type="button" class="key" data-char="g" disabled><span>G</span><small>3</small></button><button type="button" class="key" data-char="h" disabled><span>H</span><small>3</small></button><button type="button" class="key" data-char="j" disabled><span>J</span><small>3</small></button><button type="button" class="key" data-char="k" disabled><span>K</span><small>3</small></button><button type="button" class="key" data-char="l" disabled><span>L</span><small>3</small></button></div>
+<div class="keyrow"><button type="button" class="key" data-char="z" disabled><span>Z</span><small>3</small></button><button type="button" class="key" data-char="x" disabled><span>X</span><small>3</small></button><button type="button" class="key" data-char="c" disabled><span>C</span><small>3</small></button><button type="button" class="key" data-char="v" disabled><span>V</span><small>3</small></button><button type="button" class="key" data-char="b" disabled><span>B</span><small>3</small></button><button type="button" class="key" data-char="n" disabled><span>N</span><small>3</small></button><button type="button" class="key" data-char="m" disabled><span>M</span><small>3</small></button></div></div></div><div class="actions"><button id="send" aria-label="Send · 发送" disabled><svg viewBox="0 0 28 24" aria-hidden="true" width="24" height="21" style="vertical-align:middle"><path fill="#fff2cf" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M2 10 26 2l-6 20-7-7-4 5v-7zm7 3L26 2 13 15"/></svg> Send · 发送</button><button id="space" disabled>Space · 空格 ∞</button><button id="caseKey" disabled aria-pressed="false" aria-label="Switch case · 切换大写输入">⇧ abc · ⇧ 小写</button></div></div></section>
+<section class="console stage" id="reload" hidden><div class="bar"><b><i class="light"></i> Reload a key · 字符换弹</b><span>RELOAD</span></div><div class="stagebody"><div class="stats"><div><small>Earned · 已获得</small><strong id="earned"></strong></div><div><small>Next odds · 下一发成功率</small><strong id="odds"></strong></div></div><button id="rack"><span class="track"><span class="socket"></span><span id="tile"></span></span><strong id="cue"></strong></button><button class="primary" id="finish">Bank uses ↗ · 完成换弹 ↗</button></div></section>
+<section class="console stage" id="ad" hidden><div id="classicAd" class="adPanel" hidden><div class="bar"><b>Sponsored · 模拟广告</b><span id="timer"></span><a id="xLogin" href="https://x.com/i/flow/login" target="_blank" rel="noopener noreferrer" aria-label="Open X login · 打开 X 登录页"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a></div><div class="poster"><div class="adcard"><video id="adVideo" muted playsinline loop preload="none"></video><button class="play-video" id="playVideo" hidden>Play video · 播放视频</button><button class="claim" id="claim">Claim · 待 查 收</button></div></div></div>
+<div id="clipAd" class="adPanel" hidden>
+  <div class="bar"><b>Sponsored · 模拟广告</b><span id="clipTime"></span></div>
+  <div class="clipSpace"><div id="clipFrame">
+    <video id="poolVideo" muted playsinline preload="none" disablepictureinpicture></video>
+    <img id="clipStill" hidden alt="">
+    <a id="warLink" href="https://warthunder.com/zh/game/about/" target="_blank" rel="noopener noreferrer" aria-label="打开战争雷霆游戏下载页面" hidden>×</a>
+    <button id="warRed" aria-label="Tap the red mark to return · 点击红色标志返回键盘" hidden></button>
+    <button id="islandPlay" hidden>Play · 点击即玩</button>
+    <a id="islandDownload" href="https://bb.qq.com/" target="_blank" rel="noopener noreferrer" hidden>Download · 立即下载</a>
+    <button id="clipResume" hidden>Play video · 播放视频</button>
+  </div></div>
+</div></section>
+<section class="console stage" id="game" hidden><div class="bar"><b><i class="light"></i> Send dial · 发送校准</b><span id="round"></span></div><div class="stagebody"><div class="clock"><small>TIME</small><strong id="dialTimer">10.0</strong></div><h2>Tap when the needle reaches red · 指针进入红区时按下</h2><button id="arena" aria-label="Aim for red · 尝试命中红区"><span id="shake"><svg id="cv" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg></span><strong id="result"></strong></button><div class="preview"><small>Pending · 待发送消息</small><p id="preview"></p></div></div><div id="overlay" aria-hidden="true"><div class="verdictCard"><small>Round result · 本局结果</small><h2 id="verdict"></h2><button id="again" class="primary"></button></div></div></section>
+</main></div><script>'use strict';
+const $ = id => document.getElementById(id);
+const config = { decay: 0.75, animationMs: 620, adMs: 5000, freezeMs: 500, arc: [30, 50], speed: [180, 270] };
+const remaining = Object.create(null);
+let phase = 'chat', draft = '', depleted = null, earned = 0, busy = false, messageCount = 0;
+let pending = '', roundNumber = 0;
+const buttons = new Map();
+let uppercase = false;
+const triple = () => /([a-zA-Z0-9])\1\1$/.test(KQDraft.before(draft));
+const chatPhase = () => phase === 'chat' || phase === 'depleted';
+function show(screen) {
+    for (const name of ['chat', 'reload', 'ad', 'game'])
+        $(name).hidden = name !== screen;
+}
+function renderChat() {
+    if (phase === 'chat') {
+        const empty = Object.keys(remaining).find(k => remaining[k] === 0);
+        if (empty) {
+            depleted = empty;
+            phase = 'depleted';
+        }
+    }
+    appSave();
+    $('rows').classList.toggle('upper-mode', uppercase);
+    const typing = phase === 'chat';
+    for (const [c, key] of buttons) {
+        key.disabled = !typing || remaining[c] === 0;
+        key.classList.toggle('spent', remaining[c] === 0);
+        key.lastChild.textContent = remaining[c];
+        const glyph = uppercase ? c.toUpperCase() : c;
+        key.firstElementChild.textContent = glyph;
+        key.setAttribute('aria-label', glyph + ' · uses left / 剩余 ' + remaining[c] + ' 次');
+    }
+    $('del').disabled = !chatPhase() || !triple();
+    $('space').disabled = !typing;
+    const toggle = $('caseKey');
+    toggle.disabled = !typing;
+    toggle.textContent = uppercase ? '⇧ ABC · ⇧ 大写' : '⇧ abc · ⇧ 小写';
+    toggle.setAttribute('aria-pressed', String(uppercase));
+    $('send').disabled = !typing || !draft.trim();
+    KQDraft.render(draft);
+    $('length').textContent = draft.length + ' chars · 字符';
+    $('stock').textContent = Object.values(remaining).reduce((a, b) => a + b, 0);
+    $('offer').hidden = phase !== 'depleted';
+    if (depleted)
+        $('offer').textContent = 'Reload · 获取【' + depleted.toUpperCase() + '】次数';
+}
+function type(c) {
+    if (phase !== 'chat' || (c !== ' ' && !remaining[c]))
+        return;
+    const edited = KQDraft.insert(draft,uppercase ? c.toUpperCase() : c);
+    draft = edited;
+    if (c !== ' ' && --remaining[c] === 0) {
+        depleted = c;
+        phase = 'depleted';
+    }
+    renderChat();
+}
+function erase() {
+    if (!chatPhase() || !triple())
+        return;
+    const edited = KQDraft.eraseWord(draft);
+    draft = edited;
+    renderChat();
+}
+const caps = document.querySelectorAll('#rows [data-char]');
+for (let i = 0; i < caps.length; i++) {
+    const key = caps[i];
+    const c = key.dataset.char;
+    remaining[c] = 3;
+    buttons.set(c, key);
+    press(key, () => type(c));
+}
+$('caseKey').onclick = () => { if (phase === 'chat') {
+    uppercase = !uppercase;
+    renderChat();
+} };
+$('del').onclick = erase;
+$('space').onclick = () => type(' ');
+function displayReload() {
+    appSave();
+    $('earned').textContent = '+' + earned;
+    $('odds').textContent = Number((100 * Math.pow(config.decay, earned)).toFixed(2)) + '%';
+    $('rack').disabled = busy;
+    $('finish').disabled = busy || !earned;
+}
+function animateRack(kind, label, done) {
+    busy = true;
+    displayReload();
+    const rack = $('rack');
+    rack.classList.remove('load', 'jam');
+    void rack.offsetWidth;
+    rack.classList.add(kind);
+    $('cue').textContent = label;
+    setTimeout(() => { rack.classList.remove(kind); done(); }, config.animationMs);
+}
+function ready(label) {
+    busy = false;
+    $('cue').textContent = label;
+    displayReload();
+}
+$('offer').onclick = () => {
+    if (phase !== 'depleted')
+        return;
+    phase = 'reload';
+    earned = 0;
+    show('reload');
+    $('tile').textContent = depleted.toUpperCase();
+    animateRack('load', 'Reload demo · 装填演示', () => ready('Tap the slot to reload · 点击卡槽，开始换弹'));
+};
+function attempt() {
+    if (phase !== 'reload' || busy)
+        return;
+    const success = Math.random() < Math.pow(config.decay, earned);
+    animateRack(success ? 'load' : 'jam', success ? 'Loaded · 装填成功' : 'Jammed · 卡槽受阻', () => {
+        if (success) {
+            earned++;
+            ready('Try again or bank your uses · 再装一发，或完成换弹');
+        }
+        else {
+            phase = 'ad';
+            show('ad');
+            adProvider.present(settle);
+        }
+    });
+}
+// Listen on press; a held touch released after an animation never becomes a new attempt.
+function press(button, handler) { KQDial.press(button, handler); }
+press($('rack'), attempt);
+function settle() {
+    if (!depleted || !earned || !(phase === 'ad' || (phase === 'reload' && !busy)))
+        return;
+    remaining[depleted] += earned;
+    depleted = null;
+    earned = 0;
+    busy = false;
+    phase = 'chat';
+    show('chat');
+    renderChat();
+}
+$('finish').onclick = settle;
+// Replace present(onDismiss) with an SDK adapter. Invoke onDismiss only after dismissal.
+function presentClassicAd(onDismiss) {
+    const end = performance.now() + config.adMs;
+    let dismissed = false;
+    const video = $('adVideo'), playButton = $('playVideo'), claim = $('claim');
+    if (!video.getAttribute('src')) {
+        video.src = 'media/adMedia.mp4';
+    }
+    video.currentTime = 0;
+    video.muted = true;
+    function play() {
+        playButton.hidden = true;
+        const playback = video.play();
+        if (playback && playback.catch)
+            playback.catch(() => { if (!dismissed)
+                playButton.hidden = false; });
+    }
+    playButton.onclick = play;
+    play();
+    claim.disabled = true;
+    claim.textContent = 'Claim · 待查收';
+    function tick() {
+        const seconds = Math.max(0, Math.ceil((end - performance.now()) / 1000));
+        $('timer').textContent = seconds ? seconds + 's to claim · 秒后可查收' : 'Ad finished · 广告已结束';
+        if (seconds === 0) {
+            claim.disabled = false;
+            clearInterval(clock);
+        }
+    }
+    const clock = setInterval(tick, 100);
+    tick();
+    claim.onclick = () => {
+        if (dismissed || claim.disabled || performance.now() < end)
+            return;
+        dismissed = true;
+        claim.disabled = true;
+        claim.onclick = null;
+        video.pause();
+        onDismiss();
+    };
+}
+const adPool = [
+    { kind: 'classic' },
+    { kind: 'war', media: 'warClip', poster: 'warEnd', duration: 8 },
+    { kind: 'island', media: 'islandClip', poster: 'islandEnd', duration: 8.057 }
+];
+let appAd = "";
+const adProvider = {
+    present(onDismiss, kind) {
+        const ad = adPool.find(entry => entry.kind === kind) || adPool[Math.floor(Math.random() * adPool.length)];
+        appAd = ad.kind;
+        appSave();
+        const classic = ad.kind === 'classic';
+        $('classicAd').hidden = !classic;
+        $('clipAd').hidden = classic;
+        if (classic) {
+            presentClassicAd(onDismiss);
+            return;
+        }
+        presentClipAd(ad, onDismiss);
+    }
+};
+function presentClipAd(ad, onDismiss) {
+    const war = ad.kind === 'war';
+    const video = $('poolVideo'), still = $('clipStill'), resume = $('clipResume');
+    const exitButton = war ? $('warRed') : $('islandPlay');
+    let ended = false, closed = false, fallbackClock = null;
+    $('clipFrame').className = ad.kind;
+    $('warLink').hidden = !war;
+    $('warRed').hidden = true;
+    $('islandPlay').hidden = war;
+    $('islandPlay').disabled = true;
+    $('islandDownload').hidden = war;
+    $('clipTime').textContent = '';
+    still.hidden = true;
+    still.src = 'media/' + ad.poster + '.jpg';
+    still.alt = war ? 'War Thunder 游戏名称和红色标志' : '海岛奇兵广告';
+    resume.hidden = true;
+    function finishClip() {
+        if (closed || ended)
+            return;
+        ended = true;
+        still.hidden = false;
+        resume.hidden = true;
+        $('clipTime').textContent = 'Ad finished · 广告已结束';
+        exitButton.hidden = false;
+        exitButton.disabled = false;
+    }
+    function updateTime() {
+        if (!ended && !closed && Number.isFinite(video.duration))
+            $('clipTime').textContent = Math.ceil(Math.max(0, video.duration - video.currentTime)) + 's · 秒';
+    }
+    function mediaUnavailable() {
+        if (closed || ended || fallbackClock !== null)
+            return;
+        still.hidden = false;
+        resume.hidden = true;
+        $('clipTime').textContent = 'Clip unavailable; timer running · 视频不可播放 · 等待广告结束';
+        fallbackClock = setTimeout(finishClip, Math.max(0, ad.duration - video.currentTime) * 1000);
+    }
+    function play() {
+        resume.hidden = true;
+        const result = video.play();
+        if (result && result.catch)
+            result.catch(() => {
+                if (!closed && !ended && fallbackClock === null)
+                    resume.hidden = false;
+            });
+    }
+    exitButton.onclick = () => {
+        if (!ended || closed)
+            return;
+        closed = true;
+        clearTimeout(fallbackClock);
+        exitButton.onclick = null;
+        resume.onclick = null;
+        video.onended = null;
+        video.ontimeupdate = null;
+        video.onerror = null;
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+        still.removeAttribute('src');
+        onDismiss();
+    };
+    video.onended = finishClip;
+    video.ontimeupdate = updateTime;
+    video.onerror = mediaUnavailable;
+    resume.onclick = play;
+    video.src = 'media/' + ad.media + '.mp4';
+    video.muted = true;
+    play();
+    const watchdog = setTimeout(() => { if (!closed && !ended && (video.paused || video.readyState < 3 || video.currentTime < .1))
+        mediaUnavailable(); }, 1200);
+    video.addEventListener('playing', () => clearTimeout(watchdog), { once: true });
+    const limit = setTimeout(() => { if (!closed && !ended)
+        finishClip(); }, ad.duration * 1000 + 4000);
+    const originalExit = exitButton.onclick;
+    exitButton.onclick = () => { if (ended) {
+        clearTimeout(watchdog);
+        clearTimeout(limit);
+    } originalExit(); };
+}
+function startKeyboard() {
+    const keyboard = $('rows');
+    let fieldWidth = 0, fieldHeight = 0, bodies = [], prev = 0, nextChange = 0;
+    const updateBounds = () => {
+        if (!keyboard.clientWidth || !keyboard.clientHeight)
+            return;
+        const oldW = fieldWidth, oldH = fieldHeight;
+        fieldWidth = keyboard.clientWidth;
+        fieldHeight = keyboard.clientHeight;
+        const size = Math.max(8, Math.min(64, Math.floor(Math.sqrt(fieldWidth * fieldHeight / 65)), Math.floor(fieldHeight / 4)));
+        if (!bodies.length) {
+            // Shuffle loose starting slots so all keys can be pressed on the first frame.
+            const cols = Math.floor(fieldWidth / size), rows = Math.floor(fieldHeight / size);
+            const slots = Array.from({ length: cols * rows }, (_, i) => i);
+            bodies = [...buttons.values()].map(el => {
+                const b = new KeyButton(el, size, size, 2);
+                const slot = slots.splice(Math.floor(Math.random() * slots.length), 1)[0];
+                b.x = (slot % cols + 0.5) * fieldWidth / cols - size / 2;
+                b.y = (Math.floor(slot / cols) + 0.5) * fieldHeight / rows - size / 2;
+                return b;
+            });
+        }
+        for (const b of bodies) {
+            if (oldW && oldH) {
+                b.x *= fieldWidth / oldW;
+                b.y *= fieldHeight / oldH;
+            }
+            b.width = b.height = size;
+            b.element.style.width = b.element.style.height = size + 'px';
+            b.element.style.fontSize = Math.max(10, Math.floor(size * .49)) + 'px';
+            place(b);
+        }
+        keyboard.classList.add('moving');
+    };
+    function place(b) {
+        b.x = Math.max(0, Math.min(fieldWidth - b.width, b.x));
+        b.y = Math.max(0, Math.min(fieldHeight - b.height, b.y));
+        const inset = Math.ceil(b.width * .067);
+        const x = inset + b.x * (1 - 2 * inset / Math.max(1, fieldWidth - b.width));
+        const y = inset + b.y * (1 - 2 * inset / Math.max(1, fieldHeight - b.height));
+        b.element.style.transform = 'translate(' + Math.round(x) + 'px,' + Math.round(y) + 'px) rotate(var(--tilt,0deg))';
+    }
+    class KeyButton {
+        constructor(element, width = 40, height = 40, speedMult = 1) {
+            this.element = element;
+            this.width = width;
+            this.height = height;
+            this.x = Math.random() * (fieldWidth - width);
+            this.y = Math.random() * (fieldHeight - height);
+            this.x = Math.max(0, Math.min(this.x, fieldWidth - width));
+            this.y = Math.max(0, Math.min(this.y, fieldHeight - height));
+            const baseSpeed = 3;
+            this.vx = (Math.random() - 0.5) * baseSpeed * speedMult;
+            this.vy = (Math.random() - 0.5) * baseSpeed * speedMult;
+        }
+        updateSpeed(speedMult) {
+            const baseSpeed = 3;
+            this.vx = (Math.random() - 0.5) * baseSpeed * speedMult;
+            this.vy = (Math.random() - 0.5) * baseSpeed * speedMult;
+        }
+        update(step) {
+            this.x += this.vx * step;
+            this.y += this.vy * step;
+            if (this.x <= 0) {
+                this.vx = Math.abs(this.vx) * 0.9;
+                this.x = 0;
+            }
+            else if (this.x + this.width >= fieldWidth) {
+                this.vx = -Math.abs(this.vx) * 0.9;
+                this.x = fieldWidth - this.width;
+            }
+            if (this.y <= 0) {
+                this.vy = Math.abs(this.vy) * 0.9;
+                this.y = 0;
+            }
+            else if (this.y + this.height >= fieldHeight) {
+                this.vy = -Math.abs(this.vy) * 0.9;
+                this.y = fieldHeight - this.height;
+            }
+        }
+        checkCollision(other) {
+            const centerX1 = this.x + this.width / 2;
+            const centerY1 = this.y + this.height / 2;
+            const centerX2 = other.x + other.width / 2;
+            const centerY2 = other.y + other.height / 2;
+            const dx = centerX2 - centerX1;
+            const dy = centerY2 - centerY1;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const minDistance = (this.width + other.width) / 2.2;
+            return distance < minDistance;
+        }
+        collideWith(other) {
+            const centerX1 = this.x + this.width / 2;
+            const centerY1 = this.y + this.height / 2;
+            const centerX2 = other.x + other.width / 2;
+            const centerY2 = other.y + other.height / 2;
+            const dx = centerX2 - centerX1;
+            const dy = centerY2 - centerY1;
+            const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+            const overlap = ((this.width + other.width) / 2.2) - distance;
+            const separationX = (dx / distance) * overlap / 2;
+            const separationY = (dy / distance) * overlap / 2;
+            this.x -= separationX;
+            this.y -= separationY;
+            other.x += separationX;
+            other.y += separationY;
+            const tempVx = this.vx;
+            const tempVy = this.vy;
+            this.vx = other.vx * 0.9;
+            this.vy = other.vy * 0.9;
+            other.vx = tempVx * 0.9;
+            other.vy = tempVy * 0.9;
+            this.x = Math.max(0, Math.min(this.x, fieldWidth - this.width));
+            this.y = Math.max(0, Math.min(this.y, fieldHeight - this.height));
+            other.x = Math.max(0, Math.min(other.x, fieldWidth - other.width));
+            other.y = Math.max(0, Math.min(other.y, fieldHeight - other.height));
+        }
+    }
+    let lastSpark = 0;
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function collisionSpark(a, b, t) {
+        if (reduceMotion || t - lastSpark < 340)
+            return;
+        lastSpark = t;
+        const fx = document.createElement('span');
+        fx.className = 'impact';
+        fx.setAttribute('aria-hidden', 'true');
+        fx.textContent = '✦';
+        fx.style.left = ((a.x + b.x + a.width) * .5) + 'px';
+        fx.style.top = ((a.y + b.y + a.height) * .5) + 'px';
+        keyboard.appendChild(fx);
+        setTimeout(() => fx.remove(), 230);
+    }
+    let active = !document.hidden, frameTicket = null, nativeVisibility = false;
+    function queueFrame() {
+        if (active && !frameTicket) frameTicket = KQDial.frame(animate);
+    }
+    function setActive(visible) {
+        active = visible;
+        if (active) { updateBounds(); prev = performance.now(); queueFrame(); }
+        else { KQDial.cancelFrame(frameTicket); frameTicket = null; }
+    }
+    window.kqSetKeyboardVisible = visible => { nativeVisibility = true; setActive(visible); };
+    document.addEventListener('visibilitychange', () => { if (!nativeVisibility) setActive(!document.hidden); });
+    function animate(t) {
+        frameTicket = null;
+        if (!active) return;
+        if (chatPhase() && (fieldWidth !== keyboard.clientWidth || fieldHeight !== keyboard.clientHeight)) updateBounds();
+        if (phase === 'chat') {
+            if (!bodies.length && keyboard.clientWidth && keyboard.clientHeight)
+                updateBounds();
+            if (t >= nextChange) {
+                const speed = 2 + Math.random();
+                bodies.forEach(b => b.updateSpeed(speed));
+                nextChange = t + 500;
+            }
+            const step = Math.min(2, (t - prev) * .06);
+            bodies.forEach(b => b.update(step));
+            for (let i = 0; i < bodies.length; i++)
+                for (let j = i + 1; j < bodies.length; j++) {
+                    if (bodies[i].checkCollision(bodies[j])) {
+                        bodies[i].collideWith(bodies[j]);
+                        collisionSpark(bodies[i], bodies[j], t);
+                    }
+                }
+            bodies.forEach(place);
+        }
+        prev = t;
+        queueFrame();
+    }
+    updateBounds();
+    if (typeof window.ResizeObserver === 'function') {
+        try {
+            new ResizeObserver(updateBounds).observe(keyboard);
+        }
+        catch (error) { /* resize and frame checks remain active */ }
+    }
+    window.addEventListener('resize', updateBounds);
+    queueFrame();
+}
+var DIAL_CONFIG = {
+    arcHalf: 80,
+    redWidthMin: 20,
+    redWidthMax: 45,
+    redCenterInsetDeg: 0,
+    roundSeconds: 10,
+    period: 1.6,
+    dwellMinSec: 0.14,
+    feedbackSec: 0.42,
+    colors: { "bg": "#ffe069", "text": "#211919", "tick": "#201c20", "red": "#e34237", "hit": "#288182", "flash": "#fff6dc", "pointer": "#211919", "overlay": "#ffe069" },
+    style: {
+        arcThickness: 8,
+        redThickness: 14,
+        redGlow: 0,
+        pointerThickness: 3,
+        pointerDotR: 2.5,
+        hubR: 4,
+        tickStepDeg: 10,
+        tickMajorEveryDeg: 40,
+        tickLen: 10,
+        tickMajorLen: 18
+    },
+    hitFx: {
+        hitstopMs: 80,
+        shakeAmp: 8,
+        shakeMs: 200,
+        shakeSegments: 3,
+        particleCount: 24,
+        particleMax: 48,
+        particleLifeMs: 400,
+        particleSpeedMin: 200,
+        particleSpeedMax: 600,
+        particleSizeMin: 2,
+        particleSizeMax: 4,
+        particleDamping: 0.92,
+        flashWhiteMs: 100,
+        flashFadeMs: 300,
+        popMs: 120,
+        popScale: 1.35,
+        audio: {
+            baseA: 660,
+            baseB: 990,
+            toneMs: 60,
+            delayMs: 40,
+            gain: 0.16
+        }
+    },
+    missFx: {
+        shakeAmp: 4,
+        shakeMs: 120,
+        dimAlpha: 0.4,
+        audio: {
+            from: 220,
+            to: 110,
+            ms: 180,
+            gain: 0.09
+        }
+    }
+};
+var CFG = DIAL_CONFIG;
+var C = CFG.colors;
+var S = CFG.style;
+var HF = CFG.hitFx;
+var MF = CFG.missFx;
+var TAU = Math.PI * 2;
+var DEG = Math.PI / 180;
+var cv = document.getElementById("cv");
+const dialView = KQDial.create(cv, CFG);
+var shakeEl = document.getElementById("shake");
+var resultEl = document.getElementById("result");
+var overlayEl = document.getElementById("overlay");
+var verdictEl = document.getElementById("verdict");
+var timerEl = document.getElementById("dialTimer");
+var againBtn = document.getElementById("again");
+const CX = dialView.cx, CY = dialView.cy, R = dialView.radius;
+var pausedMs = 0, lastRaw = 0, vNow = 0;
+var gameState = {
+    phase0: 0,
+    phase: 0,
+    t0: null,
+    angle: 0,
+    redWidth: 0,
+    center: 0,
+    period: CFG.period,
+    running: true,
+    locked: false,
+    over: false,
+    armed: false,
+    feedback: null,
+    hitstopUntil: 0,
+    nextAt: 0,
+    flashT0: 0,
+    popT0: -1,
+    shake: null
+};
+var particles = [];
+var audioCtx = null;
+var gameFrameId = null;
+function rand(a, b) { return a + Math.random() * (b - a); }
+function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+function tri(p) { return p < 1 ? 2 * p - 1 : 3 - 2 * p; }
+function easeOut(x) { return 1 - Math.pow(1 - x, 3); }
+function hex2rgb(h) {
+    h = String(h).replace("#", "");
+    if (h.length === 3)
+        h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    var n = parseInt(h, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function mix(h1, h2, k) {
+    var a = hex2rgb(h1), b = hex2rgb(h2);
+    return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * k) + "," +
+        Math.round(a[1] + (b[1] - a[1]) * k) + "," +
+        Math.round(a[2] + (b[2] - a[2]) * k) + ")";
+}
+function pickZone(afterMiss) {
+    const oldWidth = gameState.redWidth;
+    const width = afterMiss ? oldWidth * rand(0.7, 0.9) : rand(CFG.redWidthMin, CFG.redWidthMax);
+    const limit = CFG.arcHalf - width / 2 - CFG.redCenterInsetDeg;
+    let center;
+    if (afterMiss) {
+        // Sample uniformly from legal centers outside the previous target.
+        const gap = (oldWidth + width) / 2;
+        const leftEnd = Math.max(-limit, gameState.center - gap);
+        const rightStart = Math.min(limit, gameState.center + gap);
+        const leftLength = leftEnd + limit;
+        const offset = rand(0, leftLength + limit - rightStart);
+        center = offset < leftLength ? -limit + offset : rightStart + (offset - leftLength);
+    }
+    else {
+        center = rand(-limit, limit);
+    }
+    gameState.redWidth = width;
+    gameState.center = center;
+}
+function newGameRound() {
+    hideOverlay();
+    gameState.over = false;
+    gameState.running = true;
+    gameState.locked = false;
+    gameState.feedback = null;
+    gameState.nextAt = 0;
+    gameState.popT0 = -1;
+    gameState.flashT0 = 0;
+    gameState.hitstopUntil = 0;
+    gameState.shake = null;
+    shakeEl.style.transform = "";
+    particles.length = 0;
+    resultEl.textContent = "";
+    resultEl.className = "num";
+    resultEl.style.transform = "";
+    gameState.phase0 = Math.random() * 2;
+    gameState.phase = gameState.phase0;
+    gameState.t0 = vNow;
+    timerEl.textContent = CFG.roundSeconds.toFixed(1);
+    gameState.secondsAtStart = CFG.roundSeconds;
+    gameState.clockRate = 1;
+    gameState.period = CFG.period;
+    pickZone(false);
+}
+function endGameRound() {
+    var hit = gameState.feedback === "hit";
+    gameState.over = true;
+    gameState.running = false;
+    gameState.locked = true;
+    verdictEl.textContent = hit ? "Hit · 命中" : "Time expired · 游戏失败 · 时间耗尽";
+    verdictEl.className = "verdict " + (hit ? "hit" : "miss");
+    againBtn.textContent = hit ? "Insert · 填入应用" : "Try again · 再试一次";
+    overlayEl.classList.add("show");
+    overlayEl.setAttribute("aria-hidden", "false");
+    if (hit) {
+        const wonRound = roundNumber;
+        setTimeout(() => {
+            if (phase === 'dial' && roundNumber === wonRound && gameState.over && gameState.feedback === 'hit') againBtn.click();
+        }, 0);
+    }
+}
+function hideOverlay() {
+    overlayEl.classList.remove("show");
+    overlayEl.setAttribute("aria-hidden", "true");
+}
+function judgeDialTap() {
+    if (gameState.over)
+        return;
+    if (!gameState.armed || !gameState.running || gameState.locked)
+        return;
+    if (secondsLeft(vNow) <= 0) {
+        timeout();
+        return;
+    }
+    ensureAudio();
+    var delta = Math.abs(gameState.angle - gameState.center);
+    if (delta <= gameState.redWidth / 2) {
+        onHit();
+    }
+    else {
+        onMiss();
+    }
+}
+function timeout() {
+    if (gameState.locked || gameState.over)
+        return;
+    gameState.feedback = "timeout";
+    gameState.locked = true;
+    timerEl.textContent = "0.0";
+    resultEl.textContent = "Time up · 时间到";
+    resultEl.className = "num miss";
+    endGameRound();
+}
+function showResult(hit) {
+    resultEl.textContent = hit ? "Hit · 命中" : "Miss. Keep going! · 未命中 · 继续点击";
+    resultEl.className = "num " + (hit ? "hit" : "miss");
+    gameState.popT0 = vNow;
+}
+function onHit() {
+    gameState.feedback = "hit";
+    gameState.flashT0 = vNow;
+    gameState.locked = true;
+    gameState.nextAt = vNow + CFG.feedbackSec;
+    gameState.hitstopUntil = performance.now() + HF.hitstopMs;
+    startShake(HF.shakeAmp, HF.shakeMs, HF.shakeSegments);
+    spawnBurst(HF.particleCount);
+    showResult(true);
+    playHit();
+}
+function onMiss() {
+    // Anchor both clocks at the tap before applying the new speeds.
+    gameState.secondsAtStart = secondsLeft(vNow);
+    gameState.phase0 = gameState.phase;
+    gameState.t0 = vNow;
+    gameState.clockRate *= 2;
+    gameState.period /= 1.5;
+    pickZone(true);
+    gameState.feedback = "miss";
+    gameState.missUntil = vNow + CFG.feedbackSec;
+    startShake(MF.shakeAmp, MF.shakeMs, 1);
+    showResult(false);
+    playMiss();
+}
+function startShake(amp, ms, segs) {
+    gameState.shake = { t0: vNow, amp: amp, dur: ms / 1000, segs: Math.max(1, segs | 0), seg: -1, x: 0, y: 0 };
+    updateShake(vNow);
+}
+function updateShake(t) {
+    var sh = gameState.shake;
+    if (!sh)
+        return;
+    var p = (t - sh.t0) / sh.dur;
+    if (p >= 1) {
+        gameState.shake = null;
+        shakeEl.style.transform = "";
+        return;
+    }
+    var seg = Math.min(sh.segs - 1, Math.floor(p * sh.segs));
+    if (seg !== sh.seg) {
+        sh.seg = seg;
+        var r = sh.amp * (1 - seg / sh.segs);
+        var a = Math.random() * TAU;
+        sh.x = Math.cos(a) * r;
+        sh.y = Math.sin(a) * r;
+    }
+    shakeEl.style.transform = "translate3d(" + sh.x.toFixed(2) + "px," + sh.y.toFixed(2) + "px,0)";
+}
+function spawnBurst(count) {
+    var a = (gameState.angle - 90) * DEG;
+    var ox = CX + Math.cos(a) * R;
+    var oy = CY + Math.sin(a) * R;
+    var room = HF.particleMax - particles.length;
+    if (room <= 0)
+        return;
+    count = Math.min(count, room);
+    for (var i = 0; i < count; i++) {
+        var ang = Math.random() * TAU;
+        var sp = rand(HF.particleSpeedMin, HF.particleSpeedMax);
+        var life = HF.particleLifeMs / 1000;
+        particles.push({
+            x: ox, y: oy,
+            vx: Math.cos(ang) * sp,
+            vy: Math.sin(ang) * sp,
+            size: rand(HF.particleSizeMin, HF.particleSizeMax),
+            life: life, ttl: life
+        });
+    }
+}
+function updateParticles(dt) {
+    var damp = Math.pow(HF.particleDamping, dt * 60);
+    for (var i = particles.length - 1; i >= 0; i--) {
+        var p = particles[i];
+        p.vx *= damp;
+        p.vy *= damp;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.life -= dt;
+        if (p.life <= 0)
+            particles.splice(i, 1);
+    }
+}
+function updatePop(t) {
+    if (gameState.popT0 < 0)
+        return;
+    var ms = (t - gameState.popT0) * 1000;
+    var total = HF.popMs, half = total / 2;
+    if (ms >= total) {
+        gameState.popT0 = -1;
+        resultEl.style.transform = "";
+        return;
+    }
+    var k = ms < half ? easeOut(ms / half) : easeOut(1 - (ms - half) / half);
+    var scale = 1 + (HF.popScale - 1) * k;
+    resultEl.style.transform = "scale(" + scale.toFixed(3) + ")";
+}
+function ensureAudio() {
+    if (audioCtx) {
+        if (audioCtx.state === "suspended") {
+            try {
+                audioCtx.resume();
+            }
+            catch (e) { }
+        }
+        return audioCtx;
+    }
+    try {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC)
+            return null;
+        audioCtx = new AC();
+    }
+    catch (e) {
+        audioCtx = null;
+    }
+    return audioCtx;
+}
+function tone(a, when, type, f0, f1, durMs, peak) {
+    var o = a.createOscillator();
+    var g = a.createGain();
+    var dur = durMs / 1000;
+    o.type = type;
+    o.frequency.setValueAtTime(f0, when);
+    o.frequency.linearRampToValueAtTime(f1, when + dur);
+    g.gain.setValueAtTime(0.0001, when);
+    g.gain.exponentialRampToValueAtTime(peak, when + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+    o.connect(g);
+    g.connect(a.destination);
+    o.start(when);
+    o.stop(when + dur + 0.03);
+}
+function playHit() {
+    var a = ensureAudio();
+    if (!a)
+        return;
+    try {
+        var A = HF.audio;
+        var t = a.currentTime + 0.001;
+        var d = A.delayMs / 1000;
+        tone(a, t, "sine", A.baseA, A.baseB, A.toneMs, A.gain);
+        tone(a, t + d, "sine", A.baseA, A.baseB, A.toneMs, A.gain);
+    }
+    catch (e) { }
+}
+function playMiss() {
+    var a = ensureAudio();
+    if (!a)
+        return;
+    try {
+        var M = MF.audio;
+        tone(a, a.currentTime + 0.001, "sawtooth", M.from, M.to, M.ms, M.gain);
+    }
+    catch (e) { }
+}
+function render(t) { dialView.paint(gameState, particles, t); }
+function secondsLeft(t) {
+    return Math.max(0, gameState.secondsAtStart - Math.max(0, t - gameState.t0) * gameState.clockRate);
+}
+function update(dt, t) {
+    updateParticles(dt);
+    updateShake(t);
+    updatePop(t);
+    if (gameState.feedback === "miss" && t >= gameState.missUntil) {
+        gameState.feedback = null;
+        resultEl.textContent = "";
+        resultEl.className = "num";
+    }
+    if (gameState.running && !gameState.locked) {
+        var remaining = secondsLeft(t);
+        timerEl.textContent = remaining.toFixed(1);
+        if (remaining <= 0)
+            timeout();
+    }
+    if (gameState.running && !gameState.locked) {
+        var p = (gameState.phase0 + 2 * (t - gameState.t0) / gameState.period) % 2;
+        if (p < 0)
+            p += 2;
+        gameState.phase = p;
+    }
+    gameState.angle = CFG.arcHalf * tri(gameState.phase);
+    if (gameState.locked && gameState.nextAt > 0 && t >= gameState.nextAt) {
+        gameState.nextAt = 0;
+        endGameRound();
+    }
+}
+function frame(now) {
+    var dt = lastRaw ? Math.min((now - lastRaw) / 1000, 0.1) : 0;
+    lastRaw = now;
+    if (gameState.hitstopUntil > 0) {
+        if (now < gameState.hitstopUntil) {
+            pausedMs += dt * 1000;
+            vNow = (now - pausedMs) / 1000;
+            render(vNow);
+            gameFrameId = KQDial.frame(frame);
+            return;
+        }
+        gameState.hitstopUntil = 0;
+    }
+    vNow = (now - pausedMs) / 1000;
+    if (gameState.t0 === null)
+        gameState.t0 = vNow;
+    update(dt, vNow);
+    render(vNow);
+    gameState.armed = true;
+    if (!gameState.over)
+        gameFrameId = KQDial.frame(frame);
+}
+function beginRound() {
+    KQDial.cancelFrame(gameFrameId);
+    phase = 'dial';
+    $('round').textContent = 'ROUND ' + String(++roundNumber).padStart(2, '0');
+    lastRaw = 0;
+    pausedMs = 0;
+    vNow = performance.now() / 1000;
+    newGameRound();
+    gameState.armed = true;
+    update(0, vNow);
+    render(vNow);
+    gameFrameId = KQDial.frame(frame);
+}
+press($('arena'), stamp => {
+    if (phase !== 'dial' || gameState.locked || gameState.over)
+        return;
+    vNow = Math.max(vNow, stamp / 1000);
+    update(0, vNow);
+    judgeDialTap();
+    render(vNow);
+});
+againBtn.onclick = () => {
+    if (phase !== 'dial' || !gameState.over)
+        return;
+    if (gameState.feedback !== 'hit') {
+        beginRound();
+        return;
+    }
+    if (!KQHost.deliver(pending))
+        return;
+    draft = KQDraft.clear(draft);
+    pending = '';
+    phase = 'chat';
+    hideOverlay();
+    show('chat');
+    renderChat();
+    $('log').scrollTop = $('log').scrollHeight;
+};
+$('send').onclick = () => {
+    if (phase !== 'chat' || !draft.trim())
+        return;
+    pending = draft;
+    roundNumber = 0;
+    $('preview').textContent = pending;
+    show('game');
+    beginRound();
+};
+const appTicket = KQHost.init(remaining);
+let appReady = true;
+window.kqIsIdle = () => phase === 'chat' && !draft;
+function appSave() {
+    if (!appReady)
+        return;
+    KQHost.save(remaining, depleted && (phase === 'reload' || phase === 'ad') ? { key: depleted, earned: earned, ad: phase === 'ad' ? appAd : '' } : null);
+}
+window.kqActivate = () => { KQHost.init(remaining); if (chatPhase())
+    renderChat(); };
+if (appTicket && appTicket.key in remaining) {
+    depleted = appTicket.key;
+    earned = appTicket.earned || 0;
+    if (appTicket.ad) {
+        phase = 'ad';
+        show('ad');
+        adProvider.present(settle, appTicket.ad);
+    }
+    else {
+        phase = 'reload';
+        show('reload');
+        $('tile').textContent = depleted.toUpperCase();
+        ready('Tap to reload · 点击换弹');
+    }
+}
+renderChat();
+startKeyboard();
+$('bootNotice').hidden = true;
+document.getElementById('launchStatus').hidden = true;
+</script><script type="application/octet-stream" id="adMedia" data-file="media/adMedia.mp4"></script><script type="application/octet-stream" id="warClip" data-file="media/warClip.mp4"></script><script type="application/octet-stream" id="islandClip" data-file="media/islandClip.mp4"></script><script type="application/octet-stream" id="warEnd" data-file="media/warEnd.jpg"></script><script type="application/octet-stream" id="islandEnd" data-file="media/islandEnd.jpg">
+</script><script>
+KQDraft.bind(() => { renderChat(); });
+</script></body></html>
